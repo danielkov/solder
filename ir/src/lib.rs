@@ -35,7 +35,7 @@ impl<'a> BuildContext<'a> {
     #[allow(dead_code)]
     fn next_type_id(&mut self, base: &str) -> StableId {
         self.type_counter += 1;
-        StableId::new(format!("{}_{}", base, self.type_counter))
+        StableId::new(format!("{}{}", base, self.type_counter))
     }
 
     fn add_type(&mut self, decl: TypeDecl) {
@@ -72,7 +72,7 @@ fn generate_inline_type_name(
     let mut candidate = base_name.clone();
     let mut suffix = 2;
     while ctx.used_type_names.contains(&candidate) {
-        candidate = format!("{}_{}", base_name, suffix);
+        candidate = format!("{}{}", base_name, suffix);
         suffix += 1;
     }
 
@@ -342,10 +342,18 @@ fn convert_any_of_to_union(
         .enumerate()
         .filter_map(|(idx, schema_ref)| {
             let schema = schema_ref.resolve(ctx.spec).ok()?;
-            let variant_name = schema
-                .title
-                .clone()
-                .unwrap_or_else(|| format!("Variant{}", idx + 1));
+
+            // Get variant name: prefer reference name, then title, then generic name
+            let variant_name =
+                if let oas3::spec::ObjectOrReference::Ref { ref_path, .. } = schema_ref {
+                    // Extract type name from reference like "#/components/schemas/Cat"
+                    ref_path.split('/').last().unwrap_or("Unknown").to_string()
+                } else {
+                    schema
+                        .title
+                        .clone()
+                        .unwrap_or_else(|| format!("Variant{}", idx + 1))
+                };
 
             // For anyOf, we need to convert each schema to a TypeRef
             let ty = convert_schema_ref_to_type_ref(ctx, schema_ref);
@@ -382,10 +390,18 @@ fn convert_one_of_to_union(
         .enumerate()
         .filter_map(|(idx, schema_ref)| {
             let schema = schema_ref.resolve(ctx.spec).ok()?;
-            let variant_name = schema
-                .title
-                .clone()
-                .unwrap_or_else(|| format!("Variant{}", idx + 1));
+
+            // Get variant name: prefer reference name, then title, then generic name
+            let variant_name =
+                if let oas3::spec::ObjectOrReference::Ref { ref_path, .. } = schema_ref {
+                    // Extract type name from reference like "#/components/schemas/Cat"
+                    ref_path.split('/').last().unwrap_or("Unknown").to_string()
+                } else {
+                    schema
+                        .title
+                        .clone()
+                        .unwrap_or_else(|| format!("Variant{}", idx + 1))
+                };
 
             let ty = convert_schema_ref_to_type_ref(ctx, schema_ref);
 
@@ -1134,7 +1150,7 @@ fn convert_operation(
     let operation_id = operation
         .operation_id
         .clone()
-        .unwrap_or_else(|| format!("{}_{}", method_name, path.replace('/', "_")));
+        .unwrap_or_else(|| format!("{}{}", method_name, path.replace('/', "_")));
 
     // Set current operation ID in context for schema naming
     ctx.current_operation_id = Some(operation_id.clone());
@@ -1523,6 +1539,7 @@ fn convert_responses(
 #[cfg(test)]
 mod tests {
     use parser2::parse;
+    use pretty_assertions::assert_eq;
 
     use crate::gen_ir::{
         Additional, AliasTarget, CanonicalName, HttpMethod, Primitive, StableId, TypeKind,

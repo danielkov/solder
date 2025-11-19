@@ -8,3 +8,6 @@ serde = "1.0"
 serde_json = "1.0"
 oas3 = "0.20.0"
 parser2 = { path = "../parser2" }
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
