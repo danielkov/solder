@@ -44,7 +44,7 @@ impl VirtualFS {
     pub fn get_file_str(&self, path: &Path) -> Option<Result<&str>> {
         self.files
             .get(path)
-            .map(|v| std::str::from_utf8(v).map_err(|e| Error::Utf8Error(e)))
+            .map(|v| std::str::from_utf8(v).map_err(Error::Utf8Error))
     }
 
     /// Iterate over all files in the virtual file system.

@@ -24,7 +24,7 @@ impl TypeScriptGenerator {
         // Group types into a single index file for simplicity
         let mut type_declarations = Vec::new();
 
-        for (_id, type_decl) in &ir.types {
+        for type_decl in ir.types.values() {
             let rendered = self.render_type(type_decl, ir)?;
             type_declarations.push(rendered);
         }
@@ -58,11 +58,10 @@ impl TypeScriptGenerator {
                 };
                 data.render().map_err(|e| Error::TemplateError(Box::new(e)))
             }
-            TypeKind::Enum { base, values } => {
+            TypeKind::Enum { values, base: _ } => {
                 let data = EnumTemplate {
                     name: &type_decl.name,
                     docs: &type_decl.docs,
-                    base_type: self.render_primitive(*base),
                     values: values
                         .iter()
                         .map(|v| EnumValueData {
@@ -157,6 +156,7 @@ impl TypeScriptGenerator {
         }
     }
 
+    #[allow(clippy::only_used_in_recursion)]
     fn render_type_ref(&self, type_ref: &ir::gen_ir::TypeRef, ir: &GenIr) -> String {
         // Get the base type name
         let base = if let Some(type_decl) = ir.types.get(&type_ref.target) {
@@ -164,8 +164,7 @@ impl TypeScriptGenerator {
         } else {
             let target_str = type_ref.target.0.as_str();
 
-            if target_str.starts_with("Primitive_") {
-                let primitive_part = &target_str["Primitive_".len()..];
+            if let Some(primitive_part) = target_str.strip_prefix("Primitive_") {
                 match primitive_part {
                     "String" | "Uuid" | "Date" | "DateTime" | "Bytes" | "Decimal" => {
                         "string".to_string()
@@ -313,7 +312,6 @@ impl TypeScriptGenerator {
             path_params.push(PathParamData {
                 name: param.name.camel.clone(),
                 placeholder: format!("{{{}}}", param.wire),
-                wire: param.wire.clone(),
             });
         }
 
@@ -350,17 +348,17 @@ impl TypeScriptGenerator {
         }
 
         // Request body
-        if let Some(body) = &op.http.body {
-            if let Some(variant) = body.variants.first() {
-                let type_str = self.render_type_ref(&variant.ty, ir);
-                self.collect_type_imports(&variant.ty, ir, type_imports);
-                params.push(ParamData {
-                    name: "body".to_string(),
-                    type_str,
-                    optional: false,
-                    docs: None,
-                });
-            }
+        if let Some(body) = &op.http.body
+            && let Some(variant) = body.variants.first()
+        {
+            let type_str = self.render_type_ref(&variant.ty, ir);
+            self.collect_type_imports(&variant.ty, ir, type_imports);
+            params.push(ParamData {
+                name: "body".to_string(),
+                type_str,
+                optional: false,
+                docs: None,
+            });
         }
 
         // Response type
@@ -446,6 +444,7 @@ impl TypeScriptGenerator {
     }
 
     /// Collect type imports from a type reference.
+    #[allow(clippy::only_used_in_recursion)]
     fn collect_type_imports(
         &self,
         type_ref: &ir::gen_ir::TypeRef,
@@ -629,7 +628,6 @@ struct FieldData<'a> {
 struct EnumTemplate<'a> {
     name: &'a ir::gen_ir::CanonicalName,
     docs: &'a ir::gen_ir::Docs,
-    base_type: String,
     values: Vec<EnumValueData>,
 }
 
@@ -692,7 +690,6 @@ struct ParamData {
 struct PathParamData {
     name: String,
     placeholder: String,
-    wire: String,
 }
 
 struct QueryParamData {

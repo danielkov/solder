@@ -8,7 +8,6 @@ name = "oas-gen"
 path = "src/main.rs"
 
 [dependencies]
-ast = { path = "../ast" }
 generate = { path = "../generate" }
 codegen = { path = "../codegen" }
 parser2 = { path = "../parser2" }
