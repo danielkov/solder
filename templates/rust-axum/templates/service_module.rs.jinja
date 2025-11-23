@@ -87,7 +87,17 @@ impl IntoResponse for {{ op.name.pascal }}Error {
 /// # Example
 ///
 /// ```rust
-/// use super::*;
+/// use {{ package_name }}::shared::RequestContext;
+/// use {{ package_name }}::services::{{ module_name }}::{
+///     {{ trait_name }},
+{% for op_wrap in operations -%}
+{% set op = op_wrap.operation -%}
+///     {{ op.name.pascal }}Result,
+{% if op.http.query.len() > 0 -%}
+///     {{ op.name.pascal }}Query,
+{% endif -%}
+{% endfor -%}
+/// };
 ///
 /// // Define your application state
 /// #[derive(Clone)]
@@ -122,7 +132,7 @@ impl IntoResponse for {{ op.name.pascal }}Error {
 {% endif -%}
 {% if let Some(body) = op.http.body -%}
 {% if let Some(variant) = body.variants.first() -%}
-///         body: crate::types::{{ variant.ty.target }},
+///         body: {{ package_name }}::types::{{ variant.ty.target }},
 {% endif -%}
 {% endif -%}
 ///     ) -> {{ op.name.pascal }}Result {
@@ -130,7 +140,7 @@ impl IntoResponse for {{ op.name.pascal }}Error {
 {% if let Some(success) = op.success -%}
 {% if let Some(ty) = success.ty -%}
 ///         // Return Ok(your_{{ ty.target|lower }}) or Err(error)
-///         Err({{ op.name.pascal }}Error::InternalError("Not implemented".to_string()))
+///         todo!("implement {{ op.name.snake }}")
 {% else -%}
 ///         Ok(())
 {% endif -%}

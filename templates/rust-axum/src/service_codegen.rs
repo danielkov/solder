@@ -34,6 +34,8 @@ impl<'a> OperationTemplate<'a> {
 #[template(path = "service_module.rs.jinja", escape = "none")]
 struct ServiceModuleTemplate<'a> {
     trait_name: &'a str,
+    module_name: &'a str,
+    package_name: &'a str,
     has_bearer_auth: bool,
     has_api_key_auth: bool,
     operations: Vec<OperationTemplate<'a>>,
@@ -43,13 +45,15 @@ struct ServiceModuleTemplate<'a> {
 pub struct ServiceModuleGenerator<'a> {
     service: &'a Service,
     auth_schemes: &'a [AuthScheme],
+    package_name: &'a str,
 }
 
 impl<'a> ServiceModuleGenerator<'a> {
-    pub fn new(service: &'a Service, auth_schemes: &'a [AuthScheme]) -> Self {
+    pub fn new(service: &'a Service, auth_schemes: &'a [AuthScheme], package_name: &'a str) -> Self {
         Self {
             service,
             auth_schemes,
+            package_name,
         }
     }
 
@@ -89,6 +93,8 @@ impl<'a> ServiceModuleGenerator<'a> {
 
         let template = ServiceModuleTemplate {
             trait_name: &self.service.name.pascal,
+            module_name: &self.service.name.snake,
+            package_name: self.package_name,
             has_bearer_auth,
             has_api_key_auth,
             operations,

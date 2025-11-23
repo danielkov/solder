@@ -230,7 +230,7 @@ impl RustAxumGenerator {
     ) -> Result<()> {
         let module_name = &service.name.snake;
 
-        let generator = ServiceModuleGenerator::new(service, &ir.auth_schemes);
+        let generator = ServiceModuleGenerator::new(service, &ir.auth_schemes, &ir.api.package_name.snake);
         let content = generator.generate();
 
         let file_path = PathBuf::from("src")
