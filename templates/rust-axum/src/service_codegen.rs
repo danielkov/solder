@@ -3,6 +3,25 @@
 use askama::Template;
 use ir::gen_ir::{AuthKind, AuthScheme, HttpMethod, Operation, Service};
 
+/// Escape Rust keywords with r# prefix
+fn escape_keyword(name: &str) -> String {
+    match name {
+        "as" | "break" | "const" | "continue" | "crate" | "else" | "enum" | "extern" | "false"
+        | "fn" | "for" | "if" | "impl" | "in" | "let" | "loop" | "match" | "mod" | "move"
+        | "mut" | "pub" | "ref" | "return" | "self" | "Self" | "static" | "struct" | "super"
+        | "trait" | "true" | "type" | "unsafe" | "use" | "where" | "while" | "async" | "await"
+        | "dyn" | "abstract" | "become" | "box" | "do" | "final" | "macro" | "override"
+        | "priv" | "typeof" | "unsized" | "virtual" | "yield" | "try" => format!("r#{}", name),
+        _ => name.to_string(),
+    }
+}
+
+mod filters {
+    pub fn escape_rust_keyword(name: &str, _: &dyn askama::Values) -> askama::Result<String> {
+        Ok(super::escape_keyword(name))
+    }
+}
+
 /// Wrapper for operations with preprocessed data for templates
 #[derive(Debug, Clone)]
 struct OperationTemplate<'a> {
@@ -49,7 +68,11 @@ pub struct ServiceModuleGenerator<'a> {
 }
 
 impl<'a> ServiceModuleGenerator<'a> {
-    pub fn new(service: &'a Service, auth_schemes: &'a [AuthScheme], package_name: &'a str) -> Self {
+    pub fn new(
+        service: &'a Service,
+        auth_schemes: &'a [AuthScheme],
+        package_name: &'a str,
+    ) -> Self {
         Self {
             service,
             auth_schemes,

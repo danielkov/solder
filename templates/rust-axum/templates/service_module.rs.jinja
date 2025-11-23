@@ -125,7 +125,7 @@ impl IntoResponse for {{ op.name.pascal }}Error {
 ///         &self,
 ///         ctx: RequestContext<AppState>,
 {% for param in op.http.path_params -%}
-///         {{ param.name.snake }}: String,
+///         {{ param.name.snake|escape_rust_keyword }}: String,
 {% endfor -%}
 {% if op.http.query.len() > 0 -%}
 ///         query: {{ op.name.pascal }}Query,
@@ -173,7 +173,7 @@ where
         &self,
         ctx: RequestContext<S>,
         {% for param in op.http.path_params -%}
-        {{ param.name.snake }}: String,
+        {{ param.name.snake|escape_rust_keyword }}: String,
         {% endfor -%}
         {% if op.http.query .len() > 0 -%}
         query: {{ op.name.pascal }}Query,
@@ -200,17 +200,17 @@ where
         {% endif -%}
         | async move {
             {% if op.http.path_params .len() == 1 -%}
-            let {{ op.http.path_params[0].name.snake }} = path_params;
+            let {{ op.http.path_params[0].name.snake|escape_rust_keyword }} = path_params;
             {% else if op.http.path_params .len() > 1 -%}
             let ({% for p in op.http.path_params -%}
-                {{ p.name.snake }}{% if !loop.last %}, {% endif -%}
+                {{ p.name.snake|escape_rust_keyword }}{% if !loop.last %}, {% endif -%}
             {% endfor %}) = path_params;
             {% endif -%}
 
             match service.{{ op.name.snake }}(
                 ctx,
                 {% for param in op.http.path_params -%}
-                {{ param.name.snake }},
+                {{ param.name.snake|escape_rust_keyword }},
                 {% endfor -%}
                 {% if op.http.query .len() > 0 -%}
                 query,
@@ -260,9 +260,9 @@ where
 pub struct {{ op.name.pascal }}Query {
     {% for param in op.http.query -%}
     {% if param.required -%}
-    pub {{ param.name.snake }}: String,
+    pub {{ param.name.snake|escape_rust_keyword }}: String,
     {% else -%}
-    pub {{ param.name.snake }}: Option<String>,
+    pub {{ param.name.snake|escape_rust_keyword }}: Option<String>,
     {% endif -%}
     {% endfor %}
 }
