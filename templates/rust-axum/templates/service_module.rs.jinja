@@ -1,47 +1,14 @@
 //! {{ trait_name }} service module
-
 use axum::{
-    extract::{FromRequestParts, Path, Query},
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{delete, get, patch, post, put},
+    routing::{
+        {%- for method in methods %}{{ method }}{% if !loop.last %}, {% endif %}{% endfor -%}
+    },
     Extension, Json, Router,
 };
 
-/// Request context containing state and request metadata
-pub struct RequestContext<S> {
-    pub state: S,
-    pub method: axum::http::Method,
-    pub uri: axum::http::Uri,
-    pub headers: axum::http::HeaderMap,
-    pub extensions: axum::http::Extensions,
-}
-
-impl<S> RequestContext<S> {
-    pub fn state(&self) -> &S {
-        &self.state
-    }
-}
-
-impl<S> FromRequestParts<S> for RequestContext<S>
-where
-    S: Clone + Send + Sync + 'static,
-{
-    type Rejection = std::convert::Infallible;
-
-    async fn from_request_parts(
-        parts: &mut axum::http::request::Parts,
-        state: &S,
-    ) -> Result<Self, Self::Rejection> {
-        Ok(RequestContext {
-            state: state.clone(),
-            method: parts.method.clone(),
-            uri: parts.uri.clone(),
-            headers: parts.headers.clone(),
-            extensions: parts.extensions.clone(),
-        })
-    }
-}
+use crate::shared::RequestContext;
 
 {% if has_bearer_auth -%}
 /// Bearer authentication token
@@ -80,8 +47,8 @@ pub enum {{ op.name.pascal }}Error {
     {{ variant.name.pascal }}{% if let Some(ty) = variant.ty %}(crate::types::{{ ty.target }}){% endif %},
     {% endfor -%}
     {% when _ -%}
-    {% endmatch -%}
     InternalError(String),
+    {% endmatch -%}
 }
 
 impl IntoResponse for {{ op.name.pascal }}Error {
@@ -105,10 +72,10 @@ impl IntoResponse for {{ op.name.pascal }}Error {
             }
             {% endfor -%}
             {% when _ -%}
-            {% endmatch -%}
             {{ op.name.pascal }}Error::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
+            {% endmatch -%}
         }
     }
 }
@@ -214,10 +181,10 @@ where
     fn router(self) -> Router<S> {
         {% for op_wrap in operations -%}
         {% set op = op_wrap.operation -%}
-        let {{ op.name.snake }}_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>{% if op.http.path_params .len() > 0 %}, Path(path_params): Path<({% for p in op.http.path_params -%}
+        let {{ op.name.snake }}_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>{% if op.http.path_params .len() == 1 %}, axum::extract::Path(path_params): axum::extract::Path<String>{% else if op.http.path_params .len() > 1 %}, axum::extract::Path(path_params): axum::extract::Path<({% for p in op.http.path_params -%}
             String{% if !loop.last %}, {% endif -%}
         {% endfor %})>{% endif -%}
-        {% if op.http.query .len() > 0 %}, Query(query): Query<{{ op.name.pascal }}Query>{% endif -%}
+        {% if op.http.query .len() > 0 %}, axum::extract::Query(query): axum::extract::Query<{{ op.name.pascal }}Query>{% endif -%}
         {% if let Some(body) = op.http.body -%}
         {% if let Some(variant) = body.variants.first() %}, Json(body): Json<crate::types::{{ variant.ty.target }}>{% endif -%}
         {% endif -%}
@@ -244,7 +211,7 @@ where
                 {% endif -%}
                 {% endif -%}
             ).await {
-                Ok(result) => {
+                Ok({% if let Some(success) = op.success %}{% if success.ty.is_some() %}result{% else %}_{% endif %}{% else %}_{% endif %}) => {
                     {% if let Some(success) = op.success -%}
                     {% match success.status -%}
                     {% when ir::gen_ir::StatusSpec::Code with (code) -%}

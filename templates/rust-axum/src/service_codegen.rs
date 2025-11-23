@@ -37,6 +37,7 @@ struct ServiceModuleTemplate<'a> {
     has_bearer_auth: bool,
     has_api_key_auth: bool,
     operations: Vec<OperationTemplate<'a>>,
+    methods: Vec<&'static str>,
 }
 
 pub struct ServiceModuleGenerator<'a> {
@@ -77,11 +78,21 @@ impl<'a> ServiceModuleGenerator<'a> {
             .map(OperationTemplate::new)
             .collect();
 
+        // Collect unique HTTP methods used
+        let mut methods: Vec<&'static str> = operations
+            .iter()
+            .map(|op| op.method_fn)
+            .collect::<std::collections::HashSet<_>>()
+            .into_iter()
+            .collect();
+        methods.sort();
+
         let template = ServiceModuleTemplate {
             trait_name: &self.service.name.pascal,
             has_bearer_auth,
             has_api_key_auth,
             operations,
+            methods,
         };
 
         template

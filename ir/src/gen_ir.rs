@@ -391,8 +391,9 @@ pub enum StatusSpec {
 #[derive(Debug, Clone, Serialize)]
 pub enum ErrorUse {
     Inline(Box<ErrorDecl>), // small API: inline per-op
-    Shared(StableId),       // reference into GenIr.errors
-    None,                   // no errors (rare)
+    // NOTE: this isn't currently used - maybe in future, auto-merge common error schemas, or remove this
+    Shared(StableId), // reference into GenIr.errors
+    None,             // no errors (rare)
 }
 
 /// Error declaration can model status → tagged payloads → render to exception/union.

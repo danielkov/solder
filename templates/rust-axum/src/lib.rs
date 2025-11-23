@@ -285,11 +285,22 @@ impl RustAxumGenerator {
         Ok(())
     }
 
+    /// Generate shared types / utilities module
+    fn generate_shared_module(&self, vfs: &mut VirtualFS) -> Result<()> {
+        let data = Shared;
+        let content = data
+            .render()
+            .map_err(|e| Error::TemplateError(Box::new(e)))?;
+        vfs.add_file("src/shared.rs", content);
+        Ok(())
+    }
+
     /// Generate lib.rs
-    fn generate_lib_rs(&self, _ir: &GenIr, vfs: &mut VirtualFS) -> Result<()> {
+    fn generate_lib_rs(&self, vfs: &mut VirtualFS) -> Result<()> {
         let mut content = String::from("//! Generated Axum API\n\n");
         content.push_str("pub mod types;\n");
         content.push_str("pub mod services;\n");
+        content.push_str("pub mod shared;\n");
 
         vfs.add_file("src/lib.rs", content);
         Ok(())
@@ -303,7 +314,8 @@ impl Generator for RustAxumGenerator {
         self.generate_types(ir, config, &mut vfs)?;
         self.generate_services(ir, config, &mut vfs)?;
         self.generate_cargo_toml(ir, &mut vfs)?;
-        self.generate_lib_rs(ir, &mut vfs)?;
+        self.generate_shared_module(&mut vfs)?;
+        self.generate_lib_rs(&mut vfs)?;
 
         Ok(vfs)
     }
@@ -337,3 +349,7 @@ struct CargoTomlData<'a> {
     version: &'a str,
     tags: Vec<String>,
 }
+
+#[derive(Template)]
+#[template(path = "shared.rs.jinja", escape = "none")]
+struct Shared;

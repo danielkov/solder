@@ -1452,6 +1452,13 @@ fn convert_operation(
         (None, Vec::new())
     };
 
+    // Convert error responses
+    let errors = if let Some(responses) = &operation.responses {
+        convert_error_responses(ctx, responses, &operation_id)
+    } else {
+        ErrorUse::None
+    };
+
     // Clear current operation ID
     ctx.current_operation_id = None;
 
@@ -1484,7 +1491,7 @@ fn convert_operation(
         http,
         success,
         alt_success: Vec::new(),
-        errors: ErrorUse::None,
+        errors,
         auth,
         pagination: None,
         idempotent: matches!(
@@ -1769,6 +1776,129 @@ fn convert_responses(
     }
 
     (None, produces)
+}
+
+/// Convert error responses (4xx, 5xx) to ErrorUse
+fn convert_error_responses(
+    ctx: &mut BuildContext,
+    responses: &BTreeMap<String, oas3::spec::ObjectOrReference<oas3::spec::Response>>,
+    operation_id: &str,
+) -> ErrorUse {
+    let mut error_variants = Vec::new();
+
+    // Look for error responses (4xx, 5xx)
+    for (status_code, response_ref) in responses {
+        let code = if let Ok(parsed_code) = status_code.parse::<u16>() {
+            parsed_code
+        } else {
+            // Skip non-numeric status codes like "default"
+            continue;
+        };
+
+        // Only process error status codes
+        if !(400..600).contains(&code) {
+            continue;
+        }
+
+        // Resolve the response
+        if let Ok(response) = response_ref.resolve(ctx.spec) {
+            // Generate a name for this error variant based on status code
+            let variant_name = match code {
+                400 => "BadRequest",
+                401 => "Unauthorized",
+                403 => "Forbidden",
+                404 => "NotFound",
+                405 => "MethodNotAllowed",
+                409 => "Conflict",
+                422 => "UnprocessableEntity",
+                429 => "TooManyRequests",
+                500 => "InternalServerError",
+                502 => "BadGateway",
+                503 => "ServiceUnavailable",
+                504 => "GatewayTimeout",
+                _ => {
+                    // For other codes, generate a generic name
+                    &format!("Status{}", code)
+                }
+            };
+
+            let mut content_type = None;
+            let mut ty = None;
+
+            // Get the error schema if present
+            if let Some((ct, media_type)) = response.content.iter().next() {
+                content_type = Some(ct.clone());
+
+                if let Some(schema_ref) = &media_type.schema {
+                    // Check if this is an inline schema that should be hoisted
+                    ty = Some(match schema_ref {
+                        oas3::spec::ObjectOrReference::Ref { .. } => {
+                            // Reference - use normal conversion
+                            convert_schema_ref_to_type_ref(ctx, schema_ref)
+                        }
+                        oas3::spec::ObjectOrReference::Object(inline_schema) => {
+                            // Inline schema - check if we should hoist it
+                            if should_hoist_schema(inline_schema) {
+                                // Hoist inline schema
+                                let type_name = generate_inline_type_name(
+                                    ctx,
+                                    Some(operation_id),
+                                    "Error",
+                                    Some(variant_name),
+                                );
+                                let type_id = hoist_inline_schema_with_parent(
+                                    ctx,
+                                    type_name.clone(),
+                                    inline_schema,
+                                    Some(&type_name),
+                                );
+                                TypeRef {
+                                    target: type_id,
+                                    optional: false,
+                                    nullable: inline_schema.is_nullable().unwrap_or(false),
+                                    by_ref: false,
+                                    modifiers: Vec::new(),
+                                }
+                            } else {
+                                // Simple inline schema - use normal conversion
+                                convert_schema_ref_to_type_ref(ctx, schema_ref)
+                            }
+                        }
+                    });
+                }
+            }
+
+            let variant = ErrorVariant {
+                name: CanonicalName::from_string(variant_name),
+                status: StatusSpec::Code(code),
+                content_type,
+                ty,
+                docs: Docs {
+                    summary: None,
+                    description: response.description.clone(),
+                    deprecated: false,
+                    since: None,
+                    examples: Vec::new(),
+                    external_urls: Vec::new(),
+                },
+            };
+
+            error_variants.push(variant);
+        }
+    }
+
+    // If we found error variants, create an inline error declaration
+    if !error_variants.is_empty() {
+        let error_name = format!("{}Error", to_pascal_case(operation_id));
+        ErrorUse::Inline(Box::new(ErrorDecl {
+            id: StableId::new(&error_name),
+            name: CanonicalName::from_string(&error_name),
+            docs: Docs::default(),
+            variants: error_variants,
+        }))
+    } else {
+        ErrorUse::None
+    }
 }
 
 #[cfg(test)]
