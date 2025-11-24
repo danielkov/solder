@@ -60,7 +60,7 @@ impl IntoResponse for {{ op.name.pascal }}Error {
             {{ op.name.pascal }}Error::{{ variant.name.pascal }}{% if variant.ty.is_some() %}(err){% endif %} => {
                 {% match variant.status -%}
                 {% when ir::gen_ir::StatusSpec::Code with (code) -%}
-                let status = StatusCode::from_u16({{ code }}).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+                let status = {{ code|status_code_const }};
                 {% when _ -%}
                 let status = StatusCode::BAD_REQUEST;
                 {% endmatch -%}
@@ -225,7 +225,7 @@ where
                     {% if let Some(success) = op.success -%}
                     {% match success.status -%}
                     {% when ir::gen_ir::StatusSpec::Code with (code) -%}
-                    let status = StatusCode::from_u16({{ code }}).unwrap_or(StatusCode::OK);
+                    let status = {{ code|status_code_const }};
                     {% when _ -%}
                     let status = StatusCode::OK;
                     {% endmatch -%}
