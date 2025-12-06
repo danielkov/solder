@@ -10,6 +10,7 @@ use gen_ir::*;
 struct BuildContext<'a> {
     types: BTreeMap<StableId, TypeDecl>,
     inline_schema_cache: HashMap<u64, StableId>, // Schema hash -> StableId (for inline deduplication)
+    type_structure_cache: HashMap<u64, StableId>, // TypeKind structural hash -> StableId (for type deduplication)
     type_counter: usize,
     used_type_names: HashSet<String>, // Track used names for collision detection
     spec: &'a oas3::spec::Spec,
@@ -21,6 +22,7 @@ impl<'a> BuildContext<'a> {
         Self {
             types: BTreeMap::new(),
             inline_schema_cache: HashMap::new(),
+            type_structure_cache: HashMap::new(),
             type_counter: 0,
             used_type_names: HashSet::new(),
             spec,
@@ -34,9 +36,32 @@ impl<'a> BuildContext<'a> {
         StableId::new(format!("{}{}", base, self.type_counter))
     }
 
-    fn add_type(&mut self, decl: TypeDecl) {
-        self.used_type_names.insert(decl.id.0.clone());
-        self.types.insert(decl.id.clone(), decl);
+    fn add_type(&mut self, decl: TypeDecl) -> StableId {
+        // Simply add the type without structural deduplication
+        // Named types from components.schemas should not be deduplicated
+        let id = decl.id.clone();
+        self.used_type_names.insert(id.0.clone());
+        self.types.insert(id.clone(), decl);
+        id
+    }
+
+    fn add_type_with_dedup(&mut self, decl: TypeDecl, context_name: &str) -> StableId {
+        // Check if we already have a type with the same structure AND context
+        // This ensures we only deduplicate types that are semantically the same
+        // e.g., multiple "account" expandable fields deduplicate, but "account" and "bank_account" don't
+        let structure_hash = hash_type_kind_with_context(&decl.kind, context_name);
+
+        if let Some(existing_id) = self.type_structure_cache.get(&structure_hash) {
+            // Reuse existing type with same structure and context
+            return existing_id.clone();
+        }
+
+        // New unique type - add it
+        let id = decl.id.clone();
+        self.used_type_names.insert(id.0.clone());
+        self.type_structure_cache.insert(structure_hash, id.clone());
+        self.types.insert(id.clone(), decl);
+        id
     }
 }
 
@@ -89,6 +114,24 @@ fn hash_schema(schema: &oas3::spec::ObjectSchema) -> u64 {
     hasher.finish()
 }
 
+/// Hash a TypeKind with context name for semantic deduplication
+/// This ensures we only deduplicate types that have the same structure AND semantic meaning
+/// e.g., "account" expandable fields deduplicate, but "account" vs "bank_account" don't
+fn hash_type_kind_with_context(kind: &TypeKind, context_name: &str) -> u64 {
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+
+    let mut hasher = DefaultHasher::new();
+
+    // Hash both the structure and the context name
+    if let Ok(json) = serde_json::to_string(kind) {
+        json.hash(&mut hasher);
+    }
+    context_name.hash(&mut hasher);
+
+    hasher.finish()
+}
+
 /// Check if a schema is an inline object that should be hoisted
 fn should_hoist_schema(schema: &oas3::spec::ObjectSchema) -> bool {
     // Hoist if it's an object type with properties or additional constraints
@@ -136,13 +179,21 @@ fn hoist_inline_schema_with_parent(
     ctx.current_operation_id = saved_op_id;
 
     if let Some(decl) = type_decl {
-        let id = decl.id.clone();
+        // Extract the base name without numeric suffix for deduplication
+        // e.g., "AccountExpandable2" -> "AccountExpandable"
+        let base_name = type_name
+            .trim_end_matches(|c: char| c.is_ascii_digit())
+            .to_string();
 
-        // Cache and register
-        ctx.inline_schema_cache.insert(schema_hash, id.clone());
-        ctx.add_type(decl);
+        // Add the type with deduplication based on structure AND base context name
+        // This ensures all "account" expandable fields deduplicate to the same type
+        let actual_id = ctx.add_type_with_dedup(decl, &base_name);
 
-        id
+        // Cache both the schema hash and the actual ID
+        ctx.inline_schema_cache
+            .insert(schema_hash, actual_id.clone());
+
+        actual_id
     } else {
         // Fallback to Any if conversion fails
         StableId::new("Any")
@@ -341,7 +392,7 @@ fn convert_schemas(ctx: &mut BuildContext, components: &oas3::spec::Components) 
         if let Ok(schema) = schema_ref.resolve(ctx.spec) {
             let type_decl = convert_schema_to_type(ctx, name, &schema);
             if let Some(decl) = type_decl {
-                ctx.add_type(decl);
+                let _ = ctx.add_type(decl);
             }
         }
     }
@@ -893,6 +944,52 @@ fn convert_object_schema_to_type_ref(
     convert_object_schema_to_type_ref_with_hint(ctx, schema, None)
 }
 
+/// Check if a schema represents the Stripe "expandable" pattern:
+/// anyOf/oneOf with exactly 2 variants where one is a simple type and one is a reference
+fn is_expandable_pattern(schema: &oas3::spec::ObjectSchema) -> bool {
+    let schemas = if !schema.any_of.is_empty() {
+        &schema.any_of
+    } else if !schema.one_of.is_empty() {
+        &schema.one_of
+    } else {
+        return false;
+    };
+
+    if schemas.len() != 2 {
+        return false;
+    }
+
+    // Check if one variant is a simple type (string, number, etc.) and the other is a reference
+    let mut has_simple = false;
+    let mut has_ref = false;
+
+    for schema_ref in schemas {
+        match schema_ref {
+            oas3::spec::ObjectOrReference::Ref { .. } => {
+                has_ref = true;
+            }
+            oas3::spec::ObjectOrReference::Object(s) => {
+                // Check if it's a simple type (not an object with properties)
+                if let Some(schema_type) = &s.schema_type {
+                    match schema_type {
+                        oas3::spec::SchemaTypeSet::Single(
+                            oas3::spec::SchemaType::String
+                            | oas3::spec::SchemaType::Integer
+                            | oas3::spec::SchemaType::Number
+                            | oas3::spec::SchemaType::Boolean,
+                        ) => {
+                            has_simple = true;
+                        }
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+
+    has_simple && has_ref
+}
+
 /// Convert an ObjectSchema to a TypeRef with optional naming hint
 fn convert_object_schema_to_type_ref_with_hint(
     ctx: &mut BuildContext,
@@ -903,6 +1000,55 @@ fn convert_object_schema_to_type_ref_with_hint(
 
     // Check for anyOf/oneOf/allOf - these need to be hoisted to named types
     if !schema.any_of.is_empty() || !schema.one_of.is_empty() || !schema.all_of.is_empty() {
+        // Special case: anyOf/oneOf with a single reference - just return the reference
+        // This avoids creating unnecessary wrapper types
+        let schemas = if !schema.any_of.is_empty() {
+            &schema.any_of
+        } else if !schema.one_of.is_empty() {
+            &schema.one_of
+        } else {
+            &schema.all_of
+        };
+
+        if schemas.len() == 1 {
+            if let oas3::spec::ObjectOrReference::Ref { .. } = &schemas[0] {
+                // Single reference - just return it directly without hoisting
+                return convert_schema_ref_to_type_ref(ctx, &schemas[0]);
+            }
+        }
+
+        // Special case: detect the "expandable" pattern (string | Reference)
+        // Instead of hoisting this to a named type that might conflict with the reference,
+        // we'll create an inline union type directly
+        if is_expandable_pattern(schema) {
+            // Don't hoist - the TypeScript generator will handle this inline
+            // We still need to return a TypeRef, so we'll create a synthetic union type
+            // For now, we'll hoist it but with a better name to avoid conflicts
+            let base_name = if let Some(h) = hint {
+                format!("{}Expandable", h)
+            } else {
+                "ExpandableUnion".to_string()
+            };
+
+            let type_name = generate_inline_type_name(
+                ctx,
+                ctx.current_operation_id.as_deref(),
+                "",
+                Some(&base_name),
+            );
+
+            let type_id =
+                hoist_inline_schema_with_parent(ctx, type_name.clone(), schema, Some(&type_name));
+
+            return TypeRef {
+                target: type_id,
+                optional: false,
+                nullable,
+                by_ref: false,
+                modifiers: Vec::new(),
+            };
+        }
+
         // Generate a name for this inline union type using the hint if available
         // If we have a hint, use it directly; otherwise use "Union" as context
         let type_name = if let Some(h) = hint {
