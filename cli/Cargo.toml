@@ -10,7 +10,7 @@ path = "src/main.rs"
 [dependencies]
 generate = { path = "../generate" }
 codegen = { path = "../codegen" }
-parser2 = { path = "../parser2" }
+parser = { path = "../parser" }
 oas = "0.2.1"
 clap = { version = "4.5", features = ["derive"] }
 anyhow = "1.0"

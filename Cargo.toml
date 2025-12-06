@@ -5,7 +5,7 @@ members = [
   "codegen",
   "generate",
   "ir",
-  "parser2",
+  "parser",
   "templates/typescript",
   "templates/rust-axum",
 ]

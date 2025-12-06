@@ -2,7 +2,7 @@
 
 use anyhow::{Context, Result};
 use clap::Parser as ClapParser;
-use parser2::{parse, read};
+use parser::{parse, read};
 use std::path::PathBuf;
 
 #[derive(ClapParser, Debug)]

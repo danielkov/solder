@@ -42,14 +42,12 @@ cargo doc --open
 
 | Crate                  | Purpose                                           | Type    | Key Files                         |
 | ---------------------- | ------------------------------------------------- | ------- | --------------------------------- |
-| `parser2`              | Parse OpenAPI 3.x JSON/YAML (uses oas3)           | Library | `parser2/src/lib.rs`              |
+| `parser`               | Parse OpenAPI 3.x JSON/YAML (uses oas3)           | Library | `parser/src/lib.rs`               |
 | `ir`                   | Convert OpenAPI → GenIR                           | Library | `ir/src/lib.rs`                   |
 | `codegen`              | Core traits & types (Generator, VirtualFS, GenIR) | Library | `codegen/src/lib.rs`              |
 | `generate`             | Generator registry & plugin system                | Library | `generate/src/lib.rs`             |
 | `templates/typescript` | TypeScript code generator                         | Library | `templates/typescript/src/lib.rs` |
 | `cli`                  | Command-line interface                            | Binary  | `cli/src/main.rs`                 |
-
-**Note:** Legacy crates `parser/` and `ast/` are being phased out. Use `parser2/` and `ir/` instead.
 
 ## Data Flow
 
@@ -57,7 +55,7 @@ cargo doc --open
 ┌──────────────┐
 │ OpenAPI JSON │
 └──────┬───────┘
-       │ parse (parser2 crate)
+       │ parse (parser crate)
        ▼
 ┌──────────────┐
 │ oas3::Spec   │ (strongly-typed OpenAPI)
@@ -310,7 +308,7 @@ Group by OpenAPI tags (similar to PerService).
 ### Converting OpenAPI to GenIR
 
 ```rust
-let spec: oas3::spec::Spec = parser2::parse(&json)?;
+let spec: oas3::spec::Spec = parser::parse(&json)?;
 let gen_ir: GenIr = spec.into();  // Uses From trait in ir crate
 ```
 
@@ -417,7 +415,7 @@ oas-gen2/
 ├── ir/src/gen_ir.rs             → GenIR data structures
 ├── generate/src/lib.rs          → Generator registry
 ├── templates/typescript/src/    → TypeScript generator
-├── parser2/src/lib.rs           → OpenAPI parser (uses oas3)
+├── parser/src/lib.rs            → OpenAPI parser (uses oas3)
 ├── examples/petstore.json       → Test data
 └── docs/                        → All documentation
 ```
@@ -443,8 +441,8 @@ Verify: Compile generated code
 
 ### Parser Changes
 
-Edit: `parser2/src/lib.rs`
-Test: `cargo test -p parser2`
+Edit: `parser/src/lib.rs`
+Test: `cargo test -p parser`
 
 ### IR Changes
 

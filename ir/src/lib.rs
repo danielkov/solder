@@ -1899,7 +1899,7 @@ fn convert_error_responses(
 
 #[cfg(test)]
 mod tests {
-    use parser2::parse;
+    use parser::parse;
     use pretty_assertions::assert_eq;
 
     use crate::gen_ir::{

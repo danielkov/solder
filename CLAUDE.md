@@ -57,19 +57,17 @@ make doc
 ### Pipeline Flow
 
 ```
-OpenAPI Spec → Parser (parser2) → AST Conversion (ir) → GenIR (codegen) → Generator (templates/*) → VirtualFS → Disk
+OpenAPI Spec → Parser (parser) → AST Conversion (ir) → GenIR (codegen) → Generator (templates/*) → VirtualFS → Disk
 ```
 
 ### Workspace Crates
 
-- **`parser2/`**: Parses OpenAPI 3.x JSON/YAML specifications (uses `oas3` crate)
+- **`parser/`**: Parses OpenAPI 3.x JSON/YAML specifications (uses `oas3` crate)
 - **`ir/`**: Converts OpenAPI AST to language-agnostic GenIR (Intermediate Representation)
 - **`codegen/`**: Core abstractions - `Generator` trait, `VirtualFS`, `Config`, and `GenIr` type
 - **`generate/`**: Generator registry and plugin loading system
 - **`templates/typescript/`**: TypeScript SDK generator (reference implementation)
 - **`cli/`**: Command-line interface (`oas-gen` binary)
-
-Note: There are legacy crates (`parser/`, `ast/`) that are being phased out. Use `parser2/` and `ir/` instead.
 
 ### Key Data Structures
 
@@ -174,7 +172,7 @@ members = [..., "templates/python"]
 The conversion happens in `ir/src/lib.rs`:
 
 ```rust
-let spec: oas3::spec::Spec = parser2::parse(&json)?;
+let spec: oas3::spec::Spec = parser::parse(&json)?;
 let gen_ir: GenIr = spec.into();  // Uses From trait
 ```
 
@@ -226,16 +224,6 @@ gen_ir.types.get(&id)  // Access type by stable ID
 
 ## Development Notes
 
-### Two Parser Crates
-
-- `parser/`: Legacy parser (being phased out)
-- `parser2/`: Current parser using `oas3` crate - **use this one**
-
-### Two AST Crates
-
-- `ast/`: Legacy AST conversion (being phased out)
-- `ir/`: Current IR generation - **use this one**
-
 The conversion from OpenAPI to GenIR happens in `ir/src/lib.rs` with `impl From<oas3::spec::Spec> for GenIr`.
 
 ### File Organization
@@ -247,7 +235,7 @@ oas-gen2/
 ├── ir/src/lib.rs                # OpenAPI → GenIR conversion logic
 ├── ir/src/gen_ir.rs             # GenIr data structures
 ├── generate/src/lib.rs          # GeneratorRegistry, plugin system
-├── parser2/src/lib.rs           # OpenAPI parser (uses oas3 crate)
+├── parser/src/lib.rs            # OpenAPI parser (uses oas3 crate)
 ├── templates/typescript/src/    # TypeScript generator implementation
 └── examples/                    # Test OpenAPI specs
 ```
@@ -292,10 +280,10 @@ oas-gen spec.json -t typescript -o ./sdk --service-style single-client -v
 2. Test: `cargo run --bin oas-gen -- examples/petstore.json -t <lang> -v`
 3. Verify generated code compiles in target language
 
-**Parser Changes** (in `parser2/`):
+**Parser Changes** (in `parser/`):
 
 1. Modify parsing logic
-2. Test: `cargo test -p parser2`
+2. Test: `cargo test -p parser`
 3. Ensure GenIR conversion in `ir/` handles new structures
 
 **CLI Changes** (in `cli/`):
