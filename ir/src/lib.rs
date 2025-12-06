@@ -40,7 +40,9 @@ impl<'a> BuildContext<'a> {
         // Simply add the type without structural deduplication
         // Named types from components.schemas should not be deduplicated
         let id = decl.id.clone();
-        self.used_type_names.insert(id.0.clone());
+        // Normalize to PascalCase for collision detection
+        let normalized_name = to_pascal_case(&id.0);
+        self.used_type_names.insert(normalized_name);
         self.types.insert(id.clone(), decl);
         id
     }
@@ -58,7 +60,9 @@ impl<'a> BuildContext<'a> {
 
         // New unique type - add it
         let id = decl.id.clone();
-        self.used_type_names.insert(id.0.clone());
+        // Normalize to PascalCase for collision detection
+        let normalized_name = to_pascal_case(&id.0);
+        self.used_type_names.insert(normalized_name);
         self.type_structure_cache.insert(structure_hash, id.clone());
         self.types.insert(id.clone(), decl);
         id
@@ -1017,25 +1021,26 @@ fn convert_object_schema_to_type_ref_with_hint(
             }
         }
 
-        // Special case: detect the "expandable" pattern (string | Reference)
-        // Instead of hoisting this to a named type that might conflict with the reference,
-        // we'll create an inline union type directly
+        // Special case: detect the "string | reference" pattern
+        // This commonly appears as "expandable" fields in APIs but could be any string-or-object union
         if is_expandable_pattern(schema) {
-            // Don't hoist - the TypeScript generator will handle this inline
-            // We still need to return a TypeRef, so we'll create a synthetic union type
-            // For now, we'll hoist it but with a better name to avoid conflicts
-            let base_name = if let Some(h) = hint {
-                format!("{}Expandable", h)
+            // Use contextual naming with "OrRef" suffix to avoid collisions with schema names
+            // E.g., for property "application": "ApplicationOrRef"
+            let type_name = if let Some(h) = hint {
+                generate_inline_type_name(
+                    ctx,
+                    ctx.current_operation_id.as_deref(),
+                    "OrRef",
+                    Some(h),
+                )
             } else {
-                "ExpandableUnion".to_string()
+                generate_inline_type_name(
+                    ctx,
+                    ctx.current_operation_id.as_deref(),
+                    "StringOrRef",
+                    None,
+                )
             };
-
-            let type_name = generate_inline_type_name(
-                ctx,
-                ctx.current_operation_id.as_deref(),
-                "",
-                Some(&base_name),
-            );
 
             let type_id =
                 hoist_inline_schema_with_parent(ctx, type_name.clone(), schema, Some(&type_name));
@@ -1050,9 +1055,9 @@ fn convert_object_schema_to_type_ref_with_hint(
         }
 
         // Generate a name for this inline union type using the hint if available
-        // If we have a hint, use it directly; otherwise use "Union" as context
+        // Always add "Union" suffix to avoid collisions with schema names
         let type_name = if let Some(h) = hint {
-            generate_inline_type_name(ctx, ctx.current_operation_id.as_deref(), "", Some(h))
+            generate_inline_type_name(ctx, ctx.current_operation_id.as_deref(), "Union", Some(h))
         } else {
             generate_inline_type_name(ctx, ctx.current_operation_id.as_deref(), "Union", None)
         };
@@ -3892,5 +3897,269 @@ type Extended = {
         } else {
             panic!("Pet type should be a Struct");
         }
+    }
+
+    #[test]
+    fn test_string_or_ref_pattern() {
+        // Test 2-variant expandable pattern: string | Reference
+        let json = r##"{
+            "openapi": "3.0.0",
+            "info": {
+                "title": "Test API",
+                "version": "1.0.0"
+            },
+            "paths": {},
+            "components": {
+                "schemas": {
+                    "Account": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"}
+                        }
+                    },
+                    "Charge": {
+                        "type": "object",
+                        "properties": {
+                            "account": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {"$ref": "#/components/schemas/Account"}
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }"##;
+
+        let doc = parse(json).expect("Failed to parse OpenAPI");
+        let gen_ir = GenIr::from(doc);
+
+        // Should have Account, Charge, and AccountOrRef types
+        assert_eq!(gen_ir.types.len(), 3, "Should have 3 types");
+
+        // Verify Account schema exists
+        let account_id = StableId::new("Account");
+        assert!(
+            gen_ir.types.contains_key(&account_id),
+            "Account schema should exist"
+        );
+
+        // Verify AccountOrRef union type was created
+        let account_or_ref = gen_ir
+            .types
+            .values()
+            .find(|t| t.name.pascal == "AccountOrRef")
+            .expect("AccountOrRef type should be created for string | Account pattern");
+
+        // Verify it's a union type
+        if let TypeKind::Union { variants, .. } = &account_or_ref.kind {
+            assert_eq!(
+                variants.len(),
+                2,
+                "Should have 2 variants: string and Account"
+            );
+        } else {
+            panic!("AccountOrRef should be a Union type");
+        }
+
+        // Verify Charge has a field pointing to AccountOrRef
+        let charge_id = StableId::new("Charge");
+        let charge = gen_ir.types.get(&charge_id).expect("Charge should exist");
+
+        if let TypeKind::Struct { fields, .. } = &charge.kind {
+            let account_field = fields
+                .iter()
+                .find(|f| f.name.canonical == "account")
+                .expect("account field should exist");
+
+            assert_eq!(
+                account_field.ty.target.0, "AccountOrRef",
+                "account field should reference AccountOrRef type"
+            );
+        } else {
+            panic!("Charge should be a struct");
+        }
+    }
+
+    #[test]
+    fn test_multi_variant_union_pattern() {
+        // Test 3+ variant union pattern: string | Reference | Reference
+        let json = r##"{
+            "openapi": "3.0.0",
+            "info": {
+                "title": "Test API",
+                "version": "1.0.0"
+            },
+            "paths": {},
+            "components": {
+                "schemas": {
+                    "Customer": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"}
+                        }
+                    },
+                    "DeletedCustomer": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "deleted": {"type": "boolean"}
+                        }
+                    },
+                    "Invoice": {
+                        "type": "object",
+                        "properties": {
+                            "customer": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {"$ref": "#/components/schemas/Customer"},
+                                    {"$ref": "#/components/schemas/DeletedCustomer"}
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }"##;
+
+        let doc = parse(json).expect("Failed to parse OpenAPI");
+        let gen_ir = GenIr::from(doc);
+
+        // Should have Customer, DeletedCustomer, Invoice, and CustomerUnion types
+        assert_eq!(gen_ir.types.len(), 4, "Should have 4 types");
+
+        // Verify base schemas exist
+        let customer_id = StableId::new("Customer");
+        let deleted_customer_id = StableId::new("DeletedCustomer");
+        assert!(
+            gen_ir.types.contains_key(&customer_id),
+            "Customer schema should exist"
+        );
+        assert!(
+            gen_ir.types.contains_key(&deleted_customer_id),
+            "DeletedCustomer schema should exist"
+        );
+
+        // Verify CustomerUnion type was created (not CustomerOrRef since it has 3 variants)
+        let customer_union = gen_ir
+            .types
+            .values()
+            .find(|t| t.name.pascal == "CustomerUnion")
+            .expect("CustomerUnion type should be created for 3-variant pattern");
+
+        // Verify it's a union with 3 variants
+        if let TypeKind::Union { variants, .. } = &customer_union.kind {
+            assert_eq!(
+                variants.len(),
+                3,
+                "Should have 3 variants: string, Customer, DeletedCustomer"
+            );
+        } else {
+            panic!("CustomerUnion should be a Union type");
+        }
+
+        // Verify Invoice has a field pointing to CustomerUnion
+        let invoice_id = StableId::new("Invoice");
+        let invoice = gen_ir.types.get(&invoice_id).expect("Invoice should exist");
+
+        if let TypeKind::Struct { fields, .. } = &invoice.kind {
+            let customer_field = fields
+                .iter()
+                .find(|f| f.name.canonical == "customer")
+                .expect("customer field should exist");
+
+            assert_eq!(
+                customer_field.ty.target.0, "CustomerUnion",
+                "customer field should reference CustomerUnion type"
+            );
+        } else {
+            panic!("Invoice should be a struct");
+        }
+    }
+
+    #[test]
+    fn test_no_collision_between_schema_and_union() {
+        // Test that schema names don't collide with generated union types
+        let json = r##"{
+            "openapi": "3.0.0",
+            "info": {
+                "title": "Test API",
+                "version": "1.0.0"
+            },
+            "paths": {},
+            "components": {
+                "schemas": {
+                    "application": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"}
+                        }
+                    },
+                    "deleted_application": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "deleted": {"type": "boolean"}
+                        }
+                    },
+                    "charge": {
+                        "type": "object",
+                        "properties": {
+                            "application": {
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {"$ref": "#/components/schemas/application"},
+                                    {"$ref": "#/components/schemas/deleted_application"}
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }"##;
+
+        let doc = parse(json).expect("Failed to parse OpenAPI");
+        let gen_ir = GenIr::from(doc);
+
+        // Should have: application, deleted_application, charge, and ApplicationUnion
+        assert_eq!(gen_ir.types.len(), 4, "Should have 4 types");
+
+        // Verify the application schema exists
+        let app_id = StableId::new("application");
+        let app_type = gen_ir
+            .types
+            .get(&app_id)
+            .expect("application schema should exist");
+        assert_eq!(
+            app_type.name.pascal, "Application",
+            "application schema should be PascalCased"
+        );
+
+        // Verify it's a struct (the actual schema)
+        assert!(
+            matches!(app_type.kind, TypeKind::Struct { .. }),
+            "application schema should be a struct"
+        );
+
+        // Verify ApplicationUnion exists and is different from Application
+        let app_union = gen_ir
+            .types
+            .values()
+            .find(|t| t.name.pascal == "ApplicationUnion")
+            .expect("ApplicationUnion should exist for the union type");
+
+        // Verify it's a union (not a struct)
+        assert!(
+            matches!(app_union.kind, TypeKind::Union { .. }),
+            "ApplicationUnion should be a Union"
+        );
+
+        // Ensure they have different StableIds
+        assert_ne!(
+            app_type.id, app_union.id,
+            "Application schema and ApplicationUnion should have different StableIds"
+        );
     }
 }
