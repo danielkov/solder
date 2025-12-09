@@ -1,0 +1,233 @@
+Order:
+  type: object
+  description: A customer order
+  required:
+    - id
+    - userId
+    - items
+    - totalAmount
+    - status
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Unique identifier for the order
+      example: "ord-123e4567-e89b-12d3-a456-426614174000"
+    userId:
+      type: string
+      format: uuid
+      description: ID of the user who placed the order
+      example: "123e4567-e89b-12d3-a456-426614174000"
+    orderNumber:
+      type: string
+      description: Human-readable order number
+      example: "ORD-2024-00123"
+    items:
+      type: array
+      items:
+        $ref: '#/OrderItem'
+      description: List of items in the order
+    subtotal:
+      type: number
+      format: double
+      minimum: 0
+      description: Subtotal before tax and shipping
+      example: 299.97
+    tax:
+      type: number
+      format: double
+      minimum: 0
+      description: Tax amount
+      example: 24.00
+    shippingCost:
+      type: number
+      format: double
+      minimum: 0
+      description: Shipping cost
+      example: 9.99
+    totalAmount:
+      type: number
+      format: double
+      minimum: 0
+      description: Total order amount including tax and shipping
+      example: 333.96
+    currency:
+      type: string
+      default: USD
+      example: "USD"
+    status:
+      type: string
+      enum:
+        - pending
+        - confirmed
+        - processing
+        - shipped
+        - delivered
+        - cancelled
+        - refunded
+      description: Current status of the order
+      example: "confirmed"
+    paymentMethod:
+      type: string
+      enum:
+        - credit_card
+        - debit_card
+        - paypal
+        - bank_transfer
+      description: Payment method used
+      example: "credit_card"
+    paymentStatus:
+      type: string
+      enum:
+        - pending
+        - paid
+        - failed
+        - refunded
+      description: Payment status
+      example: "paid"
+    shippingAddress:
+      $ref: '#/Address'
+    billingAddress:
+      $ref: '#/Address'
+    notes:
+      type: string
+      description: Additional notes or instructions
+    trackingNumber:
+      type: string
+      description: Shipping tracking number
+      example: "1Z999AA10123456784"
+    createdAt:
+      type: string
+      format: date-time
+      description: Timestamp when the order was created
+    updatedAt:
+      type: string
+      format: date-time
+      description: Timestamp when the order was last updated
+    completedAt:
+      type: string
+      format: date-time
+      description: Timestamp when the order was completed
+
+OrderItem:
+  type: object
+  description: An item in an order
+  required:
+    - productId
+    - quantity
+    - unitPrice
+  properties:
+    productId:
+      type: string
+      format: uuid
+      description: ID of the product
+      example: "prod-123e4567-e89b-12d3-a456-426614174000"
+    productName:
+      type: string
+      description: Name of the product at time of order
+      example: "Wireless Bluetooth Headphones"
+    quantity:
+      type: integer
+      minimum: 1
+      description: Quantity ordered
+      example: 3
+    unitPrice:
+      type: number
+      format: double
+      minimum: 0
+      description: Price per unit at time of order
+      example: 99.99
+    totalPrice:
+      type: number
+      format: double
+      minimum: 0
+      description: Total price for this item (quantity × unitPrice)
+      example: 299.97
+
+Address:
+  type: object
+  description: A physical address
+  required:
+    - street
+    - city
+    - country
+    - postalCode
+  properties:
+    street:
+      type: string
+      description: Street address
+      example: "123 Main St, Apt 4B"
+    city:
+      type: string
+      description: City name
+      example: "San Francisco"
+    state:
+      type: string
+      description: State or province
+      example: "CA"
+    country:
+      type: string
+      description: Country code (ISO 3166-1 alpha-2)
+      example: "US"
+    postalCode:
+      type: string
+      description: Postal or ZIP code
+      example: "94102"
+
+OrderCreate:
+  type: object
+  description: Request body for creating a new order
+  required:
+    - items
+    - shippingAddress
+  properties:
+    items:
+      type: array
+      items:
+        type: object
+        required:
+          - productId
+          - quantity
+        properties:
+          productId:
+            type: string
+            format: uuid
+          quantity:
+            type: integer
+            minimum: 1
+    shippingAddress:
+      $ref: '#/Address'
+    billingAddress:
+      $ref: '#/Address'
+    paymentMethod:
+      type: string
+      enum:
+        - credit_card
+        - debit_card
+        - paypal
+        - bank_transfer
+    notes:
+      type: string
+
+OrderList:
+  type: object
+  description: Paginated list of orders
+  required:
+    - data
+    - total
+    - page
+    - pageSize
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '#/Order'
+    total:
+      type: integer
+      example: 250
+    page:
+      type: integer
+      example: 1
+    pageSize:
+      type: integer
+      example: 20

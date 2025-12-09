@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: Multi-File Reference API
+  description: |
+    An example OpenAPI specification demonstrating external file references.
+    This spec pulls together components and paths from separate files to
+    show how real-world APIs can be organized across multiple files.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: https://staging-api.example.com/v1
+    description: Staging server
+
+tags:
+  - name: users
+    description: User management operations
+  - name: products
+    description: Product catalog operations
+  - name: orders
+    description: Order processing operations
+
+components:
+  schemas:
+    User:
+      $ref: './components/schemas/user.yaml#/User'
+    Product:
+      $ref: './components/schemas/product.yaml#/Product'
+    Order:
+      $ref: './components/schemas/order.yaml#/Order'
+    Error:
+      $ref: './components/schemas/error.yaml#/Error'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+security:
+  - bearerAuth: []
+
+paths:
+  # User service paths
+  /users:
+    $ref: './paths/users.yaml#/~1users'
+  /users/{userId}:
+    $ref: './paths/users.yaml#/~1users~1{userId}'
+
+  # Product service paths
+  /products:
+    $ref: './paths/products.yaml#/~1products'
+  /products/{productId}:
+    $ref: './paths/products.yaml#/~1products~1{productId}'
+  /products/{productId}/inventory:
+    $ref: './paths/products.yaml#/~1products~1{productId}~1inventory'
+
+  # Order service paths
+  /orders:
+    $ref: './paths/orders.yaml#/~1orders'
+  /orders/{orderId}:
+    $ref: './paths/orders.yaml#/~1orders~1{orderId}'
+  /orders/{orderId}/cancel:
+    $ref: './paths/orders.yaml#/~1orders~1{orderId}~1cancel'

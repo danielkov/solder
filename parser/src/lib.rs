@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 pub mod error;
+pub mod resolve;
 
 pub fn read(path: impl Into<PathBuf>) -> Result<String, error::ParserError> {
     let path = path.into();

@@ -45,6 +45,12 @@ run-axum-petstore:
 run-axum-openrouter:
 	cargo run --bin oas-gen -- examples/openrouter.yml -t rust-axum -v -o test-generated/openrouter-axum
 
+run-axum-multi-file:
+	cargo run --bin oas-gen -- examples/multi-file/spec.yaml -r -t rust-axum -v -o test-generated/multi-file-axum
+
+run-multi-file:
+	cargo run --bin oas-gen -- examples/multi-file/spec.yaml -r -t typescript -v -o test-generated/multi-file-typescript
+
 run-all: run run-unkey run-stripe run-openrouter
 
 # Clean build artifacts
@@ -145,4 +151,3 @@ debug-run:
 # Check for outdated dependencies
 outdated:
 	cargo outdated
-

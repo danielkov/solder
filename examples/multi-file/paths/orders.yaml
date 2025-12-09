@@ -1,0 +1,235 @@
+/orders:
+  get:
+    tags:
+      - orders
+    summary: List all orders
+    description: Retrieve a paginated list of orders
+    operationId: listOrders
+    parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: userId
+        in: query
+        description: Filter orders by user ID
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: status
+        in: query
+        description: Filter by order status
+        required: false
+        schema:
+          type: string
+          enum:
+            - pending
+            - confirmed
+            - processing
+            - shipped
+            - delivered
+            - cancelled
+            - refunded
+      - name: paymentStatus
+        in: query
+        description: Filter by payment status
+        required: false
+        schema:
+          type: string
+          enum:
+            - pending
+            - paid
+            - failed
+            - refunded
+      - name: startDate
+        in: query
+        description: Filter orders created after this date
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: endDate
+        in: query
+        description: Filter orders created before this date
+        required: false
+        schema:
+          type: string
+          format: date-time
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/order.yaml#/OrderList'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  post:
+    tags:
+      - orders
+    summary: Create a new order
+    description: Place a new order
+    operationId: createOrder
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/order.yaml#/OrderCreate'
+    responses:
+      '201':
+        description: Order created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/order.yaml#/Order'
+      '400':
+        description: Bad request (e.g., invalid items, insufficient inventory)
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+
+/orders/{orderId}:
+  parameters:
+    - name: orderId
+      in: path
+      description: Order ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - orders
+    summary: Get order by ID
+    description: Retrieve a specific order by its ID
+    operationId: getOrderById
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/order.yaml#/Order'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Order not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  delete:
+    tags:
+      - orders
+    summary: Delete order
+    description: Delete an order (only allowed for pending orders)
+    operationId: deleteOrder
+    responses:
+      '204':
+        description: Order deleted successfully
+      '400':
+        description: Cannot delete order in current status
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Order not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+
+/orders/{orderId}/cancel:
+  parameters:
+    - name: orderId
+      in: path
+      description: Order ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  post:
+    tags:
+      - orders
+    summary: Cancel an order
+    description: Cancel an existing order (not allowed for shipped or delivered orders)
+    operationId: cancelOrder
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+                description: Reason for cancellation
+                example: "Customer requested cancellation"
+    responses:
+      '200':
+        description: Order cancelled successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/order.yaml#/Order'
+      '400':
+        description: Cannot cancel order in current status
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Order not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'

@@ -1,0 +1,200 @@
+/users:
+  get:
+    tags:
+      - users
+    summary: List all users
+    description: Retrieve a paginated list of users
+    operationId: listUsers
+    parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: status
+        in: query
+        description: Filter by user status
+        required: false
+        schema:
+          type: string
+          enum:
+            - active
+            - inactive
+            - suspended
+      - name: role
+        in: query
+        description: Filter by user role
+        required: false
+        schema:
+          type: string
+          enum:
+            - admin
+            - user
+            - guest
+      - name: search
+        in: query
+        description: Search users by username or email
+        required: false
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/user.yaml#/UserList'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  post:
+    tags:
+      - users
+    summary: Create a new user
+    description: Create a new user account
+    operationId: createUser
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/user.yaml#/UserCreate'
+    responses:
+      '201':
+        description: User created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/user.yaml#/User'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '409':
+        description: User already exists
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+
+/users/{userId}:
+  parameters:
+    - name: userId
+      in: path
+      description: User ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - users
+    summary: Get user by ID
+    description: Retrieve a specific user by their ID
+    operationId: getUserById
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/user.yaml#/User'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  put:
+    tags:
+      - users
+    summary: Update user
+    description: Update an existing user
+    operationId: updateUser
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/user.yaml#/UserUpdate'
+    responses:
+      '200':
+        description: User updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/user.yaml#/User'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  delete:
+    tags:
+      - users
+    summary: Delete user
+    description: Delete a user account
+    operationId: deleteUser
+    responses:
+      '204':
+        description: User deleted successfully
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'

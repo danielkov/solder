@@ -1,0 +1,215 @@
+Product:
+  type: object
+  description: A product in the catalog
+  required:
+    - id
+    - name
+    - sku
+    - price
+    - category
+    - status
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Unique identifier for the product
+      example: "prod-123e4567-e89b-12d3-a456-426614174000"
+    name:
+      type: string
+      description: Product name
+      example: "Wireless Bluetooth Headphones"
+    description:
+      type: string
+      description: Detailed product description
+      example: "High-quality wireless headphones with noise cancellation"
+    sku:
+      type: string
+      description: Stock Keeping Unit
+      example: "WBH-2024-BLK"
+    price:
+      type: number
+      format: double
+      minimum: 0
+      description: Product price in USD
+      example: 99.99
+    currency:
+      type: string
+      default: USD
+      description: Currency code
+      example: "USD"
+    category:
+      type: string
+      enum:
+        - electronics
+        - clothing
+        - books
+        - home
+        - sports
+        - toys
+      description: Product category
+      example: "electronics"
+    status:
+      type: string
+      enum:
+        - available
+        - out_of_stock
+        - discontinued
+      description: Product availability status
+      example: "available"
+    inventory:
+      type: integer
+      minimum: 0
+      description: Current inventory count
+      example: 150
+    tags:
+      type: array
+      items:
+        type: string
+      description: Product tags for search and filtering
+      example: ["wireless", "audio", "bluetooth"]
+    images:
+      type: array
+      items:
+        type: string
+        format: uri
+      description: Product image URLs
+      example: ["https://example.com/images/product1.jpg"]
+    specifications:
+      type: object
+      additionalProperties: true
+      description: Technical specifications
+      example:
+        weight: "250g"
+        batteryLife: "30 hours"
+    createdAt:
+      type: string
+      format: date-time
+      description: Timestamp when the product was created
+    updatedAt:
+      type: string
+      format: date-time
+      description: Timestamp when the product was last updated
+
+ProductCreate:
+  type: object
+  description: Request body for creating a new product
+  required:
+    - name
+    - sku
+    - price
+    - category
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    sku:
+      type: string
+    price:
+      type: number
+      format: double
+      minimum: 0
+    currency:
+      type: string
+      default: USD
+    category:
+      type: string
+      enum:
+        - electronics
+        - clothing
+        - books
+        - home
+        - sports
+        - toys
+    inventory:
+      type: integer
+      minimum: 0
+      default: 0
+    tags:
+      type: array
+      items:
+        type: string
+    images:
+      type: array
+      items:
+        type: string
+        format: uri
+    specifications:
+      type: object
+      additionalProperties: true
+
+ProductUpdate:
+  type: object
+  description: Request body for updating a product
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    price:
+      type: number
+      format: double
+      minimum: 0
+    status:
+      type: string
+      enum:
+        - available
+        - out_of_stock
+        - discontinued
+    inventory:
+      type: integer
+      minimum: 0
+    tags:
+      type: array
+      items:
+        type: string
+    images:
+      type: array
+      items:
+        type: string
+        format: uri
+    specifications:
+      type: object
+      additionalProperties: true
+
+ProductList:
+  type: object
+  description: Paginated list of products
+  required:
+    - data
+    - total
+    - page
+    - pageSize
+  properties:
+    data:
+      type: array
+      items:
+        $ref: '#/Product'
+    total:
+      type: integer
+      example: 500
+    page:
+      type: integer
+      example: 1
+    pageSize:
+      type: integer
+      example: 50
+
+InventoryUpdate:
+  type: object
+  description: Update product inventory
+  required:
+    - quantity
+  properties:
+    quantity:
+      type: integer
+      description: New inventory quantity
+      example: 200
+    operation:
+      type: string
+      enum:
+        - set
+        - add
+        - subtract
+      default: set
+      description: How to update the inventory (set absolute value, add, or subtract)

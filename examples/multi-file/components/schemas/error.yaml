@@ -1,0 +1,31 @@
+Error:
+  type: object
+  description: Standard error response
+  required:
+    - code
+    - message
+  properties:
+    code:
+      type: string
+      description: Error code for programmatic handling
+      example: "VALIDATION_ERROR"
+    message:
+      type: string
+      description: Human-readable error message
+      example: "Invalid input provided"
+    details:
+      type: array
+      items:
+        type: object
+        properties:
+          field:
+            type: string
+            description: Field that caused the error
+          message:
+            type: string
+            description: Specific error message for this field
+      description: Additional details about the error
+    requestId:
+      type: string
+      description: Unique identifier for this request for support purposes
+      example: "req-123e4567-e89b-12d3-a456-426614174000"

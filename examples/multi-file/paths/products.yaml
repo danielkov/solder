@@ -1,0 +1,272 @@
+/products:
+  get:
+    tags:
+      - products
+    summary: List all products
+    description: Retrieve a paginated list of products from the catalog
+    operationId: listProducts
+    parameters:
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        description: Number of items per page
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - name: category
+        in: query
+        description: Filter by product category
+        required: false
+        schema:
+          type: string
+          enum:
+            - electronics
+            - clothing
+            - books
+            - home
+            - sports
+            - toys
+      - name: status
+        in: query
+        description: Filter by product status
+        required: false
+        schema:
+          type: string
+          enum:
+            - available
+            - out_of_stock
+            - discontinued
+      - name: minPrice
+        in: query
+        description: Minimum price filter
+        required: false
+        schema:
+          type: number
+          format: double
+          minimum: 0
+      - name: maxPrice
+        in: query
+        description: Maximum price filter
+        required: false
+        schema:
+          type: number
+          format: double
+          minimum: 0
+      - name: search
+        in: query
+        description: Search products by name or description
+        required: false
+        schema:
+          type: string
+      - name: tags
+        in: query
+        description: Filter by tags (comma-separated)
+        required: false
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/product.yaml#/ProductList'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  post:
+    tags:
+      - products
+    summary: Create a new product
+    description: Add a new product to the catalog
+    operationId: createProduct
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/product.yaml#/ProductCreate'
+    responses:
+      '201':
+        description: Product created successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/product.yaml#/Product'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '409':
+        description: Product with same SKU already exists
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+
+/products/{productId}:
+  parameters:
+    - name: productId
+      in: path
+      description: Product ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - products
+    summary: Get product by ID
+    description: Retrieve a specific product by its ID
+    operationId: getProductById
+    responses:
+      '200':
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/product.yaml#/Product'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Product not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  put:
+    tags:
+      - products
+    summary: Update product
+    description: Update an existing product
+    operationId: updateProduct
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/product.yaml#/ProductUpdate'
+    responses:
+      '200':
+        description: Product updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/product.yaml#/Product'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Product not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+  delete:
+    tags:
+      - products
+    summary: Delete product
+    description: Remove a product from the catalog
+    operationId: deleteProduct
+    responses:
+      '204':
+        description: Product deleted successfully
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Product not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+
+/products/{productId}/inventory:
+  parameters:
+    - name: productId
+      in: path
+      description: Product ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  put:
+    tags:
+      - products
+    summary: Update product inventory
+    description: Update the inventory quantity for a product
+    operationId: updateProductInventory
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/product.yaml#/InventoryUpdate'
+    responses:
+      '200':
+        description: Inventory updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/product.yaml#/Product'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
+      '404':
+        description: Product not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/error.yaml#/Error'
