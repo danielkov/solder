@@ -19,12 +19,12 @@ use std::path::{Path, PathBuf};
 /// A JSON string containing the fully resolved OpenAPI specification
 pub fn resolve(spec_path: impl AsRef<Path>) -> Result<String> {
     let spec_path = spec_path.as_ref();
-    let base_dir = spec_path
-        .parent()
-        .ok_or_else(|| ParserError::Io(std::io::Error::new(
+    let base_dir = spec_path.parent().ok_or_else(|| {
+        ParserError::Io(std::io::Error::new(
             std::io::ErrorKind::InvalidInput,
             "Cannot determine parent directory of spec file",
-        )))?;
+        ))
+    })?;
 
     // Parse the main spec
     let content = std::fs::read_to_string(spec_path)?;
@@ -57,7 +57,7 @@ fn parse_as_json(content: &str) -> Result<Value> {
     }
 
     // Fall back to YAML
-    let value: Value = serde_yaml::from_str(content)?;
+    let value: Value = serde_saphyr::from_str(content)?;
     Ok(value)
 }
 
@@ -90,9 +90,8 @@ fn resolve_refs_with_context(
 
                     // Resolve the file path relative to base_dir
                     let full_path = base_dir.join(file_path);
-                    let canonical_path = full_path
-                        .canonicalize()
-                        .map_err(|e| ParserError::Io(e))?;
+                    let canonical_path =
+                        full_path.canonicalize().map_err(|e| ParserError::Io(e))?;
 
                     // Load the external file (use cache if available)
                     let external_doc = if let Some(cached) = file_cache.get(&canonical_path) {
@@ -124,18 +123,27 @@ fn resolve_refs_with_context(
                         collect_dependencies(&referenced_value, &external_doc, collected_schemas)?;
 
                         // Replace external ref with internal ref
-                        map.insert("$ref".to_string(), Value::String(format!("#/components/schemas/{}", schema_name)));
+                        map.insert(
+                            "$ref".to_string(),
+                            Value::String(format!("#/components/schemas/{}", schema_name)),
+                        );
                     } else {
                         // This is a path or other item - inline it
-                        let new_base_dir = canonical_path
-                            .parent()
-                            .ok_or_else(|| ParserError::Io(std::io::Error::new(
+                        let new_base_dir = canonical_path.parent().ok_or_else(|| {
+                            ParserError::Io(std::io::Error::new(
                                 std::io::ErrorKind::InvalidInput,
                                 "Cannot determine parent directory of external file",
-                            )))?;
+                            ))
+                        })?;
 
                         // Recursively resolve refs in the inlined content
-                        resolve_refs_with_context(&mut referenced_value, new_base_dir, file_cache, collected_schemas, path)?;
+                        resolve_refs_with_context(
+                            &mut referenced_value,
+                            new_base_dir,
+                            file_cache,
+                            collected_schemas,
+                            path,
+                        )?;
 
                         // Replace the entire object with the referenced value
                         *value = referenced_value;
@@ -149,7 +157,13 @@ fn resolve_refs_with_context(
                 for (key, v) in map.iter_mut() {
                     let mut new_path = path.to_vec();
                     new_path.push(key.as_str());
-                    resolve_refs_with_context(v, base_dir, file_cache, collected_schemas, &new_path)?;
+                    resolve_refs_with_context(
+                        v,
+                        base_dir,
+                        file_cache,
+                        collected_schemas,
+                        &new_path,
+                    )?;
                 }
             }
         }
@@ -254,7 +268,10 @@ fn normalize_internal_refs(value: &mut Value) {
                             .unwrap_or("");
 
                         if !name.is_empty() {
-                            map.insert("$ref".to_string(), Value::String(format!("#/components/schemas/{}", name)));
+                            map.insert(
+                                "$ref".to_string(),
+                                Value::String(format!("#/components/schemas/{}", name)),
+                            );
                         }
                     }
                 }
@@ -371,16 +388,17 @@ fn extract_by_pointer(doc: &Value, pointer: &str) -> Result<Value> {
 
     for segment in segments {
         // Decode JSON pointer escapes
-        let decoded = segment
-            .replace("~1", "/")
-            .replace("~0", "~");
+        let decoded = segment.replace("~1", "/").replace("~0", "~");
 
         match current {
             Value::Object(map) => {
                 current = map.get(&decoded).ok_or_else(|| {
                     ParserError::Io(std::io::Error::new(
                         std::io::ErrorKind::NotFound,
-                        format!("JSON pointer path not found: {} (looking for '{}')", pointer, decoded),
+                        format!(
+                            "JSON pointer path not found: {} (looking for '{}')",
+                            pointer, decoded
+                        ),
                     ))
                 })?;
             }
@@ -401,7 +419,10 @@ fn extract_by_pointer(doc: &Value, pointer: &str) -> Result<Value> {
             _ => {
                 return Err(ParserError::Io(std::io::Error::new(
                     std::io::ErrorKind::InvalidInput,
-                    format!("Cannot traverse into non-object/array value at: {}", pointer),
+                    format!(
+                        "Cannot traverse into non-object/array value at: {}",
+                        pointer
+                    ),
                 )));
             }
         }

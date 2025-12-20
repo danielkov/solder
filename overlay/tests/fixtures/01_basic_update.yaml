@@ -1,0 +1,35 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Original API",
+    "version": "1.0.0"
+  },
+  "paths": {}
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Update title overlay",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.info",
+      "update": {
+        "title": "Updated API",
+        "description": "A new description"
+      }
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Updated API",
+    "version": "1.0.0",
+    "description": "A new description"
+  },
+  "paths": {}
+}

@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "tags": [
+    {
+      "name": "pets",
+      "description": "Pet operations"
+    },
+    {
+      "name": "internal",
+      "description": "Internal operations"
+    },
+    {
+      "name": "users",
+      "description": "User operations"
+    }
+  ]
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Remove second tag",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.tags[1]",
+      "remove": true
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "tags": [
+    {
+      "name": "pets",
+      "description": "Pet operations"
+    },
+    {
+      "name": "users",
+      "description": "User operations"
+    }
+  ]
+}

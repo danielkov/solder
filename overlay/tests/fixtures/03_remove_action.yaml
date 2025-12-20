@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0",
+    "description": "To be removed"
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/internal": {
+      "get": {
+        "operationId": "internalOp",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Remove internal path",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.info.description",
+      "remove": true
+    },
+    {
+      "target": "$.paths['/internal']",
+      "remove": true
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

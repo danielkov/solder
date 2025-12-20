@@ -111,7 +111,7 @@ fn hash_schema(schema: &oas3::spec::ObjectSchema) -> u64 {
 
     // Hash the schema structure (type, properties, etc.)
     // We serialize to JSON for a stable hash
-    if let Ok(json) = serde_json::to_string(schema) {
+    if let Ok(json) = serde_saphyr::to_string(schema) {
         json.hash(&mut hasher);
     }
 
@@ -128,7 +128,7 @@ fn hash_type_kind_with_context(kind: &TypeKind, context_name: &str) -> u64 {
     let mut hasher = DefaultHasher::new();
 
     // Hash both the structure and the context name
-    if let Ok(json) = serde_json::to_string(kind) {
+    if let Ok(json) = serde_saphyr::to_string(kind) {
         json.hash(&mut hasher);
     }
     context_name.hash(&mut hasher);
@@ -974,18 +974,14 @@ fn is_expandable_pattern(schema: &oas3::spec::ObjectSchema) -> bool {
             }
             oas3::spec::ObjectOrReference::Object(s) => {
                 // Check if it's a simple type (not an object with properties)
-                if let Some(schema_type) = &s.schema_type {
-                    match schema_type {
-                        oas3::spec::SchemaTypeSet::Single(
-                            oas3::spec::SchemaType::String
-                            | oas3::spec::SchemaType::Integer
-                            | oas3::spec::SchemaType::Number
-                            | oas3::spec::SchemaType::Boolean,
-                        ) => {
-                            has_simple = true;
-                        }
-                        _ => {}
-                    }
+                if let Some(oas3::spec::SchemaTypeSet::Single(
+                    oas3::spec::SchemaType::String
+                    | oas3::spec::SchemaType::Integer
+                    | oas3::spec::SchemaType::Number
+                    | oas3::spec::SchemaType::Boolean,
+                )) = &s.schema_type
+                {
+                    has_simple = true;
                 }
             }
         }
@@ -1014,11 +1010,9 @@ fn convert_object_schema_to_type_ref_with_hint(
             &schema.all_of
         };
 
-        if schemas.len() == 1 {
-            if let oas3::spec::ObjectOrReference::Ref { .. } = &schemas[0] {
-                // Single reference - just return it directly without hoisting
-                return convert_schema_ref_to_type_ref(ctx, &schemas[0]);
-            }
+        if schemas.len() == 1 && matches!(schemas[0], oas3::spec::ObjectOrReference::Ref { .. }) {
+            // Single reference - just return it directly without hoisting
+            return convert_schema_ref_to_type_ref(ctx, &schemas[0]);
         }
 
         // Special case: detect the "string | reference" pattern

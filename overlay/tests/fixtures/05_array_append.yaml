@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "tags": [
+    {
+      "name": "pets",
+      "description": "Pet operations"
+    }
+  ]
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Add more tags",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.tags",
+      "update": [
+        {
+          "name": "users",
+          "description": "User operations"
+        }
+      ]
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "tags": [
+    {
+      "name": "pets",
+      "description": "Pet operations"
+    },
+    {
+      "name": "users",
+      "description": "User operations"
+    }
+  ]
+}

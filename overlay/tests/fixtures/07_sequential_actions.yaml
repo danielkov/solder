@@ -1,0 +1,39 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0",
+    "description": "Old description"
+  },
+  "paths": {}
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Delete and recreate description",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.info.description",
+      "remove": true
+    },
+    {
+      "target": "$.info",
+      "update": {
+        "description": "New description"
+      }
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0",
+    "description": "New description"
+  },
+  "paths": {}
+}

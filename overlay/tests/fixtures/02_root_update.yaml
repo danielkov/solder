@@ -1,0 +1,46 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Original API",
+    "version": "1.0.0"
+  },
+  "paths": {}
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Root update overlay",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$",
+      "update": {
+        "info": {
+          "contact": {
+            "name": "API Support"
+          }
+        },
+        "externalDocs": {
+          "url": "https://example.com/docs"
+        }
+      }
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Original API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "paths": {},
+  "externalDocs": {
+    "url": "https://example.com/docs"
+  }
+}

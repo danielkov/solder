@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Original Name",
+      "email": "original@example.com"
+    }
+  },
+  "paths": {}
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Nested merge test",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.info.contact",
+      "update": {
+        "name": "Updated Name",
+        "url": "https://example.com"
+      }
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Updated Name",
+      "email": "original@example.com",
+      "url": "https://example.com"
+    }
+  },
+  "paths": {}
+}

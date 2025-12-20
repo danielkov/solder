@@ -13,7 +13,7 @@ pub fn parse(input: &str) -> Result<oas3::Spec, error::ParserError> {
     let document: oas3::Spec = match serde_json::from_str(input) {
         Ok(document) => document,
         // fallback to yaml if json parsing fails
-        Err(_) => serde_yaml::from_str(input)?,
+        Err(_) => serde_saphyr::from_str(input)?,
     };
     Ok(document)
 }

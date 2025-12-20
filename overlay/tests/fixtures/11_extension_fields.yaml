@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "Add extension fields",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.paths['/pets'].get",
+      "update": {
+        "x-custom-field": "custom value",
+        "x-rate-limit": 100
+      }
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "x-custom-field": "custom value",
+        "x-rate-limit": 100,
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

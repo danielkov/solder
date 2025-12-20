@@ -89,8 +89,8 @@ all: check build
 test-parser:
 	cargo test -p parser
 
-test-ast:
-	cargo test -p ast
+test-ir:
+	cargo test -p ir
 
 test-codegen:
 	cargo test -p codegen
@@ -100,6 +100,11 @@ test-generate:
 
 test-typescript:
 	cargo test -p typescript
+
+test-overlay:
+	cargo test -p overlay
+
+test-all: test-parser test-ir test-codegen test-generate test-typescript test-overlay
 
 # Watch mode (requires cargo-watch)
 watch:

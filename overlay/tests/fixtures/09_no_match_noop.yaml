@@ -1,0 +1,33 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {}
+}
+---
+{
+  "overlay": "1.0.0",
+  "info": {
+    "title": "No match should succeed",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "target": "$.paths['/nonexistent']",
+      "update": {
+        "get": {}
+      }
+    }
+  ]
+}
+---
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API",
+    "version": "1.0.0"
+  },
+  "paths": {}
+}

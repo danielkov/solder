@@ -2,7 +2,7 @@
 pub enum ParserError {
     Io(std::io::Error),
     Json(serde_json::Error),
-    Yaml(serde_yaml::Error),
+    Yaml(serde_saphyr::Error),
 }
 
 impl From<std::io::Error> for ParserError {
@@ -17,8 +17,8 @@ impl From<serde_json::Error> for ParserError {
     }
 }
 
-impl From<serde_yaml::Error> for ParserError {
-    fn from(error: serde_yaml::Error) -> Self {
+impl From<serde_saphyr::Error> for ParserError {
+    fn from(error: serde_saphyr::Error) -> Self {
         ParserError::Yaml(error)
     }
 }
