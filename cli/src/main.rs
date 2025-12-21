@@ -57,6 +57,25 @@ enum Commands {
         #[arg(short, long)]
         verbose: bool,
     },
+
+    /// Lint an OpenAPI specification
+    Lint {
+        /// Path to the OpenAPI specification file (JSON or YAML)
+        #[arg(value_name = "SPEC")]
+        spec: PathBuf,
+
+        /// Comma-separated list of rulesets to enable (e.g., "recommended,strict")
+        #[arg(long, value_name = "RULESETS")]
+        rulesets: Option<String>,
+
+        /// Comma-separated list of specific rules to enable (e.g., "operation-id-required,paths-not-empty")
+        #[arg(long, value_name = "RULES")]
+        rules: Option<String>,
+
+        /// Filter by severity levels (e.g., "error,warning"). Available: error, warning, info, hint
+        #[arg(long, value_name = "SEVERITY")]
+        severity: Option<String>,
+    },
 }
 
 #[derive(Debug, Clone, Copy, clap::ValueEnum)]
@@ -82,6 +101,9 @@ fn main() -> Result<()> {
     match cli.command {
         Some(Commands::Resolve { spec, output, verbose }) => {
             handle_resolve(spec, output, verbose)
+        }
+        Some(Commands::Lint { spec, rulesets, rules, severity }) => {
+            handle_lint(spec, rulesets, rules, severity)
         }
         None => {
             // Default command: generate
@@ -246,4 +268,251 @@ fn handle_generate(
     }
 
     Ok(())
+}
+
+fn handle_lint(
+    spec: PathBuf,
+    rulesets: Option<String>,
+    rules: Option<String>,
+    severity: Option<String>,
+) -> Result<()> {
+    // Read the spec file
+    let spec_content = std::fs::read_to_string(&spec)
+        .with_context(|| format!("Failed to read spec file: {}", spec.display()))?;
+
+    // Build the ruleset based on provided options
+    let rule_set = if let Some(ruleset_str) = rulesets {
+        build_ruleset_from_names(&ruleset_str)?
+    } else if let Some(rules_str) = rules {
+        // Parse individual rules
+        let rule_names: Vec<&str> = rules_str.split(',').map(|s| s.trim()).collect();
+        lint::RuleSet::from_slice(&rule_names)
+    } else {
+        // Default to all rules
+        lint::RuleSet::all()
+    };
+
+    // Parse severity filter
+    let severity_filter = if let Some(severity_str) = severity {
+        Some(parse_severity_filter(&severity_str)?)
+    } else {
+        None
+    };
+
+    // Run the linter
+    let result = lint::lint_with_ruleset(&spec_content, rule_set)
+        .context("Failed to lint specification")?;
+
+    // Print diagnostics in rustc-style format
+    let spec_display = spec.display().to_string();
+    print_diagnostics(&result, &spec_display, &spec_content, severity_filter.as_ref());
+
+    // Exit with error code if there are errors (only if we're showing errors)
+    if result.has_errors() && (severity_filter.is_none() || severity_filter.as_ref().unwrap().contains(&lint::Severity::Error)) {
+        std::process::exit(1);
+    }
+
+    Ok(())
+}
+
+fn parse_severity_filter(severity_str: &str) -> Result<Vec<lint::Severity>> {
+    let mut severities = Vec::new();
+
+    for s in severity_str.split(',').map(|s| s.trim()) {
+        match s {
+            "error" => severities.push(lint::Severity::Error),
+            "warning" => severities.push(lint::Severity::Warning),
+            "info" => severities.push(lint::Severity::Info),
+            "hint" => severities.push(lint::Severity::Hint),
+            other => {
+                anyhow::bail!("Unknown severity level: '{}'. Available levels: error, warning, info, hint", other);
+            }
+        }
+    }
+
+    Ok(severities)
+}
+
+fn build_ruleset_from_names(ruleset_str: &str) -> Result<lint::RuleSet> {
+    let mut rule_set = lint::RuleSet::new();
+
+    for name in ruleset_str.split(',').map(|s| s.trim()) {
+        match name {
+            "all" => {
+                rule_set = lint::RuleSet::all();
+            }
+            "recommended" => {
+                // Add recommended rules for good API design
+                for rule in &[
+                    "openapi-version-31",
+                    "info-title-required",
+                    "info-version-required",
+                    "info-description-present",
+                    "paths-not-empty",
+                    "operation-id-required",
+                    "operation-id-unique",
+                    "responses-exist",
+                    "response-description-required",
+                    "path-params-declared",
+                    "path-params-required",
+                ] {
+                    rule_set.enable(lint::RuleId::parse(rule).unwrap());
+                }
+            }
+            "strict" => {
+                // Add all error-level rules
+                for rule in lint::available_rules() {
+                    if matches!(rule.default_severity(), lint::Severity::Error) {
+                        rule_set.enable(*rule);
+                    }
+                }
+            }
+            "security" => {
+                // Security-focused rules
+                for rule in &[
+                    "servers-https-required",
+                    "security-schemes-defined",
+                    "security-declared",
+                    "security-no-api-key-in-query",
+                    "security-oauth2-complete",
+                ] {
+                    if let Some(rule_id) = lint::RuleId::parse(rule) {
+                        rule_set.enable(rule_id);
+                    }
+                }
+            }
+            "style" => {
+                // Style and consistency rules
+                for rule in &[
+                    "path-style-normalized",
+                    "path-no-verbs",
+                    "param-naming-consistent",
+                    "schema-naming-conventions",
+                    "operation-summary-required",
+                ] {
+                    if let Some(rule_id) = lint::RuleId::parse(rule) {
+                        rule_set.enable(rule_id);
+                    }
+                }
+            }
+            other => {
+                anyhow::bail!("Unknown ruleset: '{}'. Available rulesets: all, recommended, strict, security, style", other);
+            }
+        }
+    }
+
+    Ok(rule_set)
+}
+
+fn print_diagnostics(
+    result: &lint::Validation,
+    spec_path: &str,
+    spec_content: &str,
+    severity_filter: Option<&Vec<lint::Severity>>,
+) {
+    // Filter diagnostics by severity if specified
+    let filtered_diagnostics: Vec<_> = result.diagnostics.iter()
+        .filter(|d| {
+            if let Some(filter) = severity_filter {
+                filter.contains(&d.severity)
+            } else {
+                true
+            }
+        })
+        .collect();
+
+    if filtered_diagnostics.is_empty() {
+        println!("✅ No issues found");
+        return;
+    }
+
+    let lines: Vec<&str> = spec_content.lines().collect();
+    let error_count = filtered_diagnostics.iter()
+        .filter(|d| matches!(d.severity, lint::Severity::Error))
+        .count();
+    let warning_count = filtered_diagnostics.iter()
+        .filter(|d| matches!(d.severity, lint::Severity::Warning))
+        .count();
+
+    for diag in &filtered_diagnostics {
+        let severity_str = match diag.severity {
+            lint::Severity::Error => "\x1b[1;31merror\x1b[0m",
+            lint::Severity::Warning => "\x1b[1;33mwarning\x1b[0m",
+            lint::Severity::Info => "\x1b[1;36minfo\x1b[0m",
+            lint::Severity::Hint => "\x1b[1;34mhint\x1b[0m",
+        };
+
+        // Print the main diagnostic line
+        println!(
+            "{}: {}\x1b[1m[{}]\x1b[0m",
+            severity_str,
+            diag.message,
+            diag.rule.as_str()
+        );
+
+        // Print location
+        let line_num = diag.range.start.line + 1;
+        let col_num = diag.range.start.col + 1;
+        println!(
+            "  \x1b[1;36m-->\x1b[0m {}:{}:{}",
+            spec_path,
+            line_num,
+            col_num
+        );
+
+        // Print the source line with context
+        if let Some(line_text) = lines.get(diag.range.start.line as usize) {
+            // Calculate gutter width based on line number
+            let gutter_width = line_num.to_string().len();
+            let gutter_padding = " ".repeat(gutter_width);
+
+            println!("{} \x1b[1;36m|\x1b[0m", gutter_padding);
+            println!(
+                "\x1b[1;36m{:>width$} |\x1b[0m {}",
+                line_num,
+                line_text,
+                width = gutter_width
+            );
+
+            // Print the caret indicator
+            let spaces = " ".repeat(diag.range.start.col as usize);
+            let carets = if diag.range.end.line == diag.range.start.line {
+                let len = (diag.range.end.col - diag.range.start.col).max(1);
+                "^".repeat(len as usize)
+            } else {
+                "^".to_string()
+            };
+
+            let caret_color = match diag.severity {
+                lint::Severity::Error => "\x1b[1;31m",
+                lint::Severity::Warning => "\x1b[1;33m",
+                lint::Severity::Info => "\x1b[1;36m",
+                lint::Severity::Hint => "\x1b[1;34m",
+            };
+
+            println!(
+                "{} \x1b[1;36m|\x1b[0m {}{}{}\x1b[0m",
+                gutter_padding,
+                spaces,
+                caret_color,
+                carets
+            );
+            println!("{} \x1b[1;36m|\x1b[0m", gutter_padding);
+        }
+
+        println!();
+    }
+
+    // Print summary
+    let mut summary_parts = Vec::new();
+    if error_count > 0 {
+        summary_parts.push(format!("\x1b[1;31m{} error{}\x1b[0m", error_count, if error_count == 1 { "" } else { "s" }));
+    }
+    if warning_count > 0 {
+        summary_parts.push(format!("\x1b[1;33m{} warning{}\x1b[0m", warning_count, if warning_count == 1 { "" } else { "s" }));
+    }
+
+    if !summary_parts.is_empty() {
+        println!("{}", summary_parts.join(", "));
+    }
 }

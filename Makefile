@@ -104,7 +104,10 @@ test-typescript:
 test-overlay:
 	cargo test -p overlay
 
-test-all: test-parser test-ir test-codegen test-generate test-typescript test-overlay
+test-lint:
+	cargo test -p lint
+
+test-all: test-parser test-ir test-codegen test-generate test-typescript test-overlay test-lint
 
 # Watch mode (requires cargo-watch)
 watch:

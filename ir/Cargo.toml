@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 serde = "1.0"
 serde_json = "1.0"
-oas3 = "0.20.0"
+oas3 = "0.20.1"
 parser = { path = "../parser" }
 serde-saphyr = "0.0.11"
 

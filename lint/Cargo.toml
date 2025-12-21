@@ -1,0 +1,27 @@
+[package]
+name = "lint"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# YAML parsing with spans
+saphyr-parser = "0.0.6"
+
+# YAML deserialization
+serde-saphyr = "0.0.11"
+
+# OpenAPI model
+oas3 = "0.20.1"
+
+# Fast hash maps
+hashbrown = "0.15"
+rustc-hash = "2.1"
+
+# Error handling
+thiserror = "2.0"
+
+# Serde path tracking for better error messages
+serde_path_to_error = "0.1"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
