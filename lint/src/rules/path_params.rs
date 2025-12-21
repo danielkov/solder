@@ -79,131 +79,220 @@ pub fn path_params_required(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
-
-    use super::*;
-    use oas3::spec::{ObjectOrReference, Operation, Parameter, ParameterIn, PathItem};
-
-    fn make_ctx_with_path_params(
-        path: &str,
-        params: Vec<(&str, Option<bool>)>,
-    ) -> (oas3::Spec, crate::lint::Indexes, crate::model::SpanDb) {
-        let mut spec = oas3::Spec {
-            openapi: "3.1.0".to_string(),
-            info: oas3::spec::Info {
-                title: "".to_string(),
-                version: "1.0.0".to_string(),
-                summary: None,
-                description: None,
-                terms_of_service: None,
-                contact: None,
-                license: None,
-                extensions: BTreeMap::new(),
-            },
-            paths: Some(BTreeMap::new()),
-            components: None,
-            tags: Vec::new(),
-            external_docs: None,
-            servers: Vec::new(),
-            webhooks: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-            security: Vec::new(),
-        };
-
-        let mut operation = Operation {
-            operation_id: Some("testOp".to_string()),
-            parameters: Vec::new(),
-            ..Operation::default()
-        };
-
-        for (name, required) in params {
-            let param = Parameter {
-                name: name.to_string(),
-                location: ParameterIn::Path,
-                required,
-                description: None,
-                deprecated: None,
-                allow_empty_value: None,
-                style: None,
-                explode: None,
-                allow_reserved: None,
-                schema: None,
-                example: None,
-                examples: BTreeMap::new(),
-                content: None,
-                extensions: BTreeMap::new(),
-            };
-            operation.parameters.push(ObjectOrReference::Object(param));
-        }
-
-        let path_item = PathItem {
-            get: Some(operation),
-            ..PathItem::default()
-        };
-        spec.paths
-            .as_mut()
-            .unwrap()
-            .insert(path.to_string(), path_item);
-
-        let indexes = crate::lint::Indexes::build(&spec);
-        let span_db = crate::model::SpanDb::new();
-        (spec, indexes, span_db)
-    }
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
 
     #[test]
     fn test_declared_params() {
-        let (spec, indexes, span_db) =
-            make_ctx_with_path_params("/pets/{petId}", vec![("petId", Some(true))]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsDeclared.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
 
-        let mut findings = Vec::new();
-        path_params_declared(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsDeclared.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_undeclared_params() {
-        let (spec, indexes, span_db) = make_ctx_with_path_params("/pets/{petId}", vec![]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsDeclared.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        path_params_declared(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::PathParamsDeclared);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathParamsDeclared);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter '{petId}' in /pets/{petId} is not declared in parameters"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsDeclared.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter '{petId}' in /pets/{petId} is not declared in parameters"
+        );
     }
 
     #[test]
     fn test_required_true() {
-        let (spec, indexes, span_db) =
-            make_ctx_with_path_params("/pets/{petId}", vec![("petId", Some(true))]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
 
-        let mut findings = Vec::new();
-        path_params_required(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_required_false() {
-        let (spec, indexes, span_db) =
-            make_ctx_with_path_params("/pets/{petId}", vec![("petId", Some(false))]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsRequired.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        path_params_required(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::PathParamsRequired);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathParamsRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter 'petId' must have required: true"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter 'petId' must have required: true"
+        );
     }
 
     #[test]
     fn test_required_missing() {
-        let (spec, indexes, span_db) =
-            make_ctx_with_path_params("/pets/{petId}", vec![("petId", None)]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsRequired.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        path_params_required(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::PathParamsRequired);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathParamsRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter 'petId' is missing required: true"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter 'petId' is missing required: true"
+        );
     }
 }

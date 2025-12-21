@@ -93,3 +93,300 @@ fn get_operation<'a>(
         _ => None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
+
+    #[test]
+    fn test_operation_summary_required_present() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      summary: List pets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationSummaryRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationSummaryRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_operation_summary_required_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationSummaryRequired.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::OperationSummaryRequired
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets should have a summary"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationSummaryRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets should have a summary"
+        );
+    }
+
+    #[test]
+    fn test_operation_method_semantics_get_no_body() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationMethodSemantics.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationMethodSemantics.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_operation_method_semantics_get_with_body() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationMethodSemantics.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::OperationMethodSemantics
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "GET /pets should not define a request body; GET requests should be idempotent"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationMethodSemantics.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "GET /pets should not define a request body; GET requests should be idempotent"
+        );
+    }
+
+    #[test]
+    fn test_operation_method_semantics_delete_with_body() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{id}:
+    delete:
+      operationId: deletePet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: Deleted
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationMethodSemantics.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::OperationMethodSemantics
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "DELETE /pets/{id} should not define a request body; DELETE requests should be idempotent"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationMethodSemantics.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "DELETE /pets/{id} should not define a request body; DELETE requests should be idempotent"
+        );
+    }
+
+    #[test]
+    fn test_operation_deprecated_note_present() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      deprecated: true
+      description: "Deprecated: Use /animals instead"
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationDeprecatedNote.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationDeprecatedNote.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_operation_deprecated_note_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      deprecated: true
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OperationDeprecatedNote.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::OperationDeprecatedNote
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Deprecated operation GET /pets should document the replacement in description"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OperationDeprecatedNote.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Deprecated operation GET /pets should document the replacement in description"
+        );
+    }
+}

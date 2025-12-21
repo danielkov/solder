@@ -63,70 +63,297 @@ pub fn info_contact_license_present(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
-
-    use super::*;
-
-    fn make_ctx_with_info(
-        title: &str,
-        version: &str,
-    ) -> (oas3::Spec, crate::lint::Indexes, crate::model::SpanDb) {
-        let spec = oas3::Spec {
-            openapi: "3.1.0".to_string(),
-            info: oas3::spec::Info {
-                title: title.to_string(),
-                version: version.to_string(),
-                summary: None,
-                description: None,
-                terms_of_service: None,
-                contact: None,
-                license: None,
-                extensions: BTreeMap::new(),
-            },
-            paths: Some(BTreeMap::new()),
-            components: None,
-            tags: Vec::new(),
-            external_docs: None,
-            servers: Vec::new(),
-            webhooks: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-            security: Vec::new(),
-        };
-        let indexes = crate::lint::Indexes::build(&spec);
-        let span_db = crate::model::SpanDb::new();
-        (spec, indexes, span_db)
-    }
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
 
     #[test]
     fn test_valid_info() {
-        let (spec, indexes, span_db) = make_ctx_with_info("My API", "1.0.0");
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[
+                RuleId::InfoTitleRequired.as_str(),
+                RuleId::InfoVersionRequired.as_str(),
+            ]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        info_title_required(&ctx, &mut findings);
-        info_version_required(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[
+                RuleId::InfoTitleRequired.as_str(),
+                RuleId::InfoVersionRequired.as_str(),
+            ]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_empty_title() {
-        let (spec, indexes, span_db) = make_ctx_with_info("", "1.0.0");
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: ""
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoTitleRequired.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        info_title_required(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::InfoTitleRequired);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::InfoTitleRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.title must be present and non-empty"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoTitleRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.title must be present and non-empty"
+        );
     }
 
     #[test]
     fn test_empty_version() {
-        let (spec, indexes, span_db) = make_ctx_with_info("My API", "");
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: ""
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoVersionRequired.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        info_version_required(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::InfoVersionRequired);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::InfoVersionRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.version must be present and non-empty"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoVersionRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.version must be present and non-empty"
+        );
+    }
+
+    #[test]
+    fn test_description_present_with_good_description() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+  description: This is a comprehensive API for managing resources
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoDescriptionPresent.as_str()]),
+        )
+        .unwrap();
+
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoDescriptionPresent.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_description_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoDescriptionPresent.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::InfoDescriptionPresent
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.description should be present"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoDescriptionPresent.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.description should be present"
+        );
+    }
+
+    #[test]
+    fn test_description_too_short() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+  description: "Short"
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoDescriptionPresent.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::InfoDescriptionPresent
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.description should be meaningful (at least 10 characters)"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoDescriptionPresent.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "info.description should be meaningful (at least 10 characters)"
+        );
+    }
+
+    #[test]
+    fn test_contact_license_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoContactLicensePresent.as_str()]),
+        )
+        .unwrap();
+
+        // Should report both missing contact and license
+        assert_eq!(validation.diagnostics.len(), 2);
+        assert!(
+            validation
+                .diagnostics
+                .iter()
+                .all(|d| d.rule == RuleId::InfoContactLicensePresent)
+        );
+        assert!(
+            validation
+                .diagnostics
+                .iter()
+                .any(|d| d.message.contains("contact"))
+        );
+        assert!(
+            validation
+                .diagnostics
+                .iter()
+                .any(|d| d.message.contains("license"))
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoContactLicensePresent.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 2);
+    }
+
+    #[test]
+    fn test_contact_license_present() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: My API
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::InfoContactLicensePresent.as_str()]),
+        )
+        .unwrap();
+
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::InfoContactLicensePresent.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 }

@@ -183,3 +183,395 @@ fn normalize_path_template(path: &str) -> String {
 
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
+
+    #[test]
+    fn test_paths_not_empty_with_paths() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::PathsNotEmpty.as_str()]))
+                .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathsNotEmpty.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_paths_not_empty_empty() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::PathsNotEmpty.as_str()]))
+                .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathsNotEmpty);
+        assert_eq!(validation.diagnostics[0].message, "paths must not be empty");
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathsNotEmpty.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].message, "paths must not be empty");
+    }
+
+    #[test]
+    fn test_path_style_normalized_trailing_slash() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathStyleNormalized.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathStyleNormalized);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets/' should not have a trailing slash"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathStyleNormalized.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets/' should not have a trailing slash"
+        );
+    }
+
+    #[test]
+    fn test_path_style_normalized_double_slash() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets//list:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathStyleNormalized.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathStyleNormalized);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets//list' should not contain '//'"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathStyleNormalized.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets//list' should not contain '//'"
+        );
+    }
+
+    #[test]
+    fn test_path_style_normalized_file_extension() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets.json:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathStyleNormalized.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathStyleNormalized);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets.json' should not include file extensions; use content negotiation instead"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathStyleNormalized.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets.json' should not include file extensions; use content negotiation instead"
+        );
+    }
+
+    #[test]
+    fn test_path_no_verbs_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::PathNoVerbs.as_str()])).unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::PathNoVerbs.as_str()])).unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_path_no_verbs_bad() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/create:
+    post:
+      operationId: createPet
+      responses:
+        '201':
+          description: Created
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::PathNoVerbs.as_str()])).unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathNoVerbs);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets/create' contains verb 'create'; prefer nouns for resource paths"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::PathNoVerbs.as_str()])).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path '/pets/create' contains verb 'create'; prefer nouns for resource paths"
+        );
+    }
+
+    #[test]
+    fn test_path_templating_ambiguous() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{id}:
+    get:
+      operationId: getPet
+      responses:
+        '200':
+          description: Success
+  /pets/{petId}:
+    get:
+      operationId: getPetById
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathTemplatingAmbiguous.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::PathTemplatingAmbiguous
+        );
+        assert!(
+            validation.diagnostics[0]
+                .message
+                .contains("is ambiguous with")
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathTemplatingAmbiguous.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+    }
+
+    #[test]
+    fn test_path_params_unused_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{id}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsUnused.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsUnused.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_path_params_unused_bad() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets/{id}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: unused
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::PathParamsUnused.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::PathParamsUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter 'unused' is declared but not used in path template '/pets/{id}'"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::PathParamsUnused.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Path parameter 'unused' is declared but not used in path template '/pets/{id}'"
+        );
+    }
+}

@@ -1,5 +1,4 @@
 use oas3::spec::{ObjectOrReference, ObjectSchema};
-use rustc_hash::FxHashSet;
 
 use crate::{
     lint::{Finding, LintCtx, RuleId, Severity},
@@ -70,8 +69,7 @@ pub fn component_no_unused(ctx: &LintCtx, out: &mut Vec<Finding>) {
         return;
     };
 
-    // Collect all $ref references in the spec
-    let used_refs = collect_all_refs(ctx);
+    let used_refs = ctx.used_refs();
 
     // Check for unused schemas
     for name in components.schemas.keys() {
@@ -148,34 +146,6 @@ fn is_complex_schema(schema: &ObjectSchema) -> bool {
     property_count > 3 || uses_composition
 }
 
-/// Collect all $ref paths used in the specification
-fn collect_all_refs(ctx: &LintCtx) -> FxHashSet<String> {
-    let mut refs = FxHashSet::default();
-
-    // Walk through the source text looking for $ref patterns
-    // This is a simple string-based approach that works without serde_json
-    let source = ctx.source;
-    let mut pos = 0;
-    while let Some(idx) = source[pos..].find("$ref") {
-        let start = pos + idx;
-        // Find the value after "$ref": "..."
-        if let Some(quote_start) = source[start..].find('"') {
-            let value_start = start + quote_start + 1;
-            if let Some(quote_end) = source[value_start..].find('"') {
-                let ref_value = &source[value_start..value_start + quote_end];
-                if ref_value.starts_with('#') {
-                    refs.insert(ref_value.to_string());
-                }
-                pos = value_start + quote_end;
-                continue;
-            }
-        }
-        pos = start + 4;
-    }
-
-    refs
-}
-
 fn iter_operations(
     path_item: &oas3::spec::PathItem,
 ) -> impl Iterator<Item = (&'static str, &oas3::spec::Operation)> {
@@ -193,4 +163,528 @@ fn iter_operations(
     methods
         .into_iter()
         .filter_map(|(method, op)| op.map(|o| (method, o)))
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
+
+    #[test]
+    fn test_component_reuse_schemas_complex_request_body() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    post:
+      operationId: createPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                species:
+                  type: string
+                age:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentReuseSchemas);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::ComponentReuseSchemas
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Complex inline schema in request body should be moved to components/schemas"
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::ComponentReuseSchemas
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Complex inline schema in request body should be moved to components/schemas"
+        );
+    }
+
+    #[test]
+    fn test_component_reuse_schemas_complex_response() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: getPets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  species:
+                    type: string
+                  age:
+                    type: integer
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentReuseSchemas);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::ComponentReuseSchemas
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Complex inline schema in response should be moved to components/schemas"
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::ComponentReuseSchemas
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Complex inline schema in response should be moved to components/schemas"
+        );
+    }
+
+    #[test]
+    fn test_component_reuse_schemas_simple_inline_ok() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    post:
+      operationId: createPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentReuseSchemas);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_component_reuse_schemas_composition() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    post:
+      operationId: createPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    id:
+                      type: string
+      responses:
+        '200':
+          description: OK
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentReuseSchemas);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::ComponentReuseSchemas
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::ComponentReuseSchemas
+        );
+    }
+
+    #[test]
+    fn test_component_no_unused_has_unused() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: getPets
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentNoUnused);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema 'Pet' is defined but never referenced"
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema 'Pet' is defined but never referenced"
+        );
+    }
+
+    #[test]
+    fn test_component_no_unused_all_used() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: getPets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentNoUnused);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_component_no_unused_parameters() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: getPets
+      responses:
+        '200':
+          description: OK
+components:
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentNoUnused);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Parameter 'LimitParam' is defined but never referenced"
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Parameter 'LimitParam' is defined but never referenced"
+        );
+    }
+
+    #[test]
+    fn test_component_no_unused_responses() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: getPets
+      responses:
+        '200':
+          description: OK
+components:
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            type: object
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentNoUnused);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Response 'ErrorResponse' is defined but never referenced"
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Response 'ErrorResponse' is defined but never referenced"
+        );
+    }
+
+    #[test]
+    fn test_component_no_unused_request_bodies() {
+        let spec_yaml = r#"
+openapi: 3.0.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    post:
+      operationId: createPet
+      responses:
+        '200':
+          description: OK
+components:
+  requestBodies:
+    PetBody:
+      content:
+        application/json:
+          schema:
+            type: object
+"#;
+
+        let mut ruleset = RuleSet::new();
+        ruleset.enable(RuleId::ComponentNoUnused);
+
+        let validation = lint_with_ruleset(spec_yaml, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "RequestBody 'PetBody' is defined but never referenced"
+        );
+
+        // Test with JSON as well
+        let spec_json = yaml_to_json(spec_yaml);
+        let validation = lint_with_ruleset(&spec_json, ruleset).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "RequestBody 'PetBody' is defined but never referenced"
+        );
+    }
+
+    #[test]
+    fn test_component_no_unused_all_used_2() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    post:
+      operationId: createPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ComponentNoUnused.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ComponentNoUnused.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_component_no_unused_has_unused_2() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+    UnusedSchema:
+      type: object
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ComponentNoUnused.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ComponentNoUnused);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema 'UnusedSchema' is defined but never referenced"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ComponentNoUnused.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema 'UnusedSchema' is defined but never referenced"
+        );
+    }
 }

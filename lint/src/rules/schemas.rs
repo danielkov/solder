@@ -315,3 +315,617 @@ fn is_snake_case(s: &str) -> bool {
     s.chars()
         .all(|c| c.is_lowercase() || c == '_' || c.is_ascii_digit())
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
+
+    #[test]
+    fn test_schema_type_required_present() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaTypeRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaTypeRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_type_required_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      properties:
+        name:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaTypeRequired.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::SchemaTypeRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema at /components/schemas/Pet should define a type"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaTypeRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema at /components/schemas/Pet should define a type"
+        );
+    }
+
+    #[test]
+    fn test_schema_array_items_required_present() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    PetList:
+      type: array
+      items:
+        type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaArrayItemsRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaArrayItemsRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_array_items_required_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    PetList:
+      type: array
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaArrayItemsRequired.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SchemaArrayItemsRequired
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Array schema at /components/schemas/PetList must define items"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaArrayItemsRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Array schema at /components/schemas/PetList must define items"
+        );
+    }
+
+    #[test]
+    fn test_schema_naming_conventions_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    PetResponse:
+      type: object
+      properties:
+        petName:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaNamingConventions.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaNamingConventions.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_naming_conventions_bad_schema_name() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    pet_response:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaNamingConventions.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SchemaNamingConventions
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema name 'pet_response' should be PascalCase"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaNamingConventions.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema name 'pet_response' should be PascalCase"
+        );
+    }
+
+    #[test]
+    fn test_schema_object_properties_required_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaObjectPropertiesRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaObjectPropertiesRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_object_properties_required_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaObjectPropertiesRequired.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SchemaObjectPropertiesRequired
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Object schema at /components/schemas/Pet should define properties or additionalProperties"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaObjectPropertiesRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Object schema at /components/schemas/Pet should define properties or additionalProperties"
+        );
+    }
+
+    #[test]
+    fn test_schema_additional_properties_explicit_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+      additionalProperties: false
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaAdditionalPropertiesExplicit.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaAdditionalPropertiesExplicit.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_additional_properties_explicit_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaAdditionalPropertiesExplicit.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SchemaAdditionalPropertiesExplicit
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Object schema at /components/schemas/Pet should explicitly set additionalProperties"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaAdditionalPropertiesExplicit.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Object schema at /components/schemas/Pet should explicitly set additionalProperties"
+        );
+    }
+
+    #[test]
+    fn test_schema_enum_valid_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Status:
+      type: string
+      enum:
+        - available
+        - pending
+        - sold
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaEnumValid.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaEnumValid.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_enum_valid_missing_type() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Status:
+      enum:
+        - available
+        - pending
+        - sold
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaEnumValid.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::SchemaEnumValid);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Enum schema at /components/schemas/Status must define a type"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaEnumValid.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Enum schema at /components/schemas/Status must define a type"
+        );
+    }
+
+    #[test]
+    fn test_schema_read_write_only_correct_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaReadWriteOnlyCorrect.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaReadWriteOnlyCorrect.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_read_write_only_correct_both_set() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          writeOnly: true
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SchemaReadWriteOnlyCorrect.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SchemaReadWriteOnlyCorrect
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Property 'id' cannot be both readOnly and writeOnly"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SchemaReadWriteOnlyCorrect.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Property 'id' cannot be both readOnly and writeOnly"
+        );
+    }
+
+    #[test]
+    fn test_schema_no_any_good() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        name:
+          type: string
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::SchemaNoAny.as_str()])).unwrap();
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::SchemaNoAny.as_str()])).unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_schema_no_any_empty_schema() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    AnyValue: {}
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::SchemaNoAny.as_str()])).unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::SchemaNoAny);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema at /components/schemas/AnyValue has no constraints (accepts any value); add type or other constraints"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::SchemaNoAny.as_str()])).unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Schema at /components/schemas/AnyValue has no constraints (accepts any value); add type or other constraints"
+        );
+    }
+}

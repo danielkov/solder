@@ -45,6 +45,7 @@ mod lint;
 mod model;
 mod parse;
 mod rules;
+mod testutil;
 
 pub use api::{Validation, available_rules, lint, lint_all, lint_with_ruleset};
 pub use lint::{Diagnostic, Finding, FixPlan, RuleId, RuleSet, Severity, TextEdit};

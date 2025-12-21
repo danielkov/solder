@@ -55,8 +55,9 @@ pub fn security_schemes_defined(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
 /// Every operation should declare security (or explicitly opt out with empty array)
 pub fn security_declared(ctx: &LintCtx, out: &mut Vec<Finding>) {
-    // Check if global security is defined in the source
-    let has_global_security = ctx.source.contains("\nsecurity:");
+    // Check if global security is defined in the source using span_db
+    let has_global_security = ctx.span_db.value_spans.contains_key("/security")
+        || ctx.span_db.key_spans.contains_key("/security");
 
     if has_global_security {
         // If global security is defined, operations inherit it
@@ -73,34 +74,22 @@ pub fn security_declared(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
         for (method, _operation) in iter_operations(path_item) {
             let op_ptr = format!("{}/{}", path_ptr, method);
+            let security_ptr = format!("{}/security", op_ptr);
 
-            // Check if operation has security in source (simple heuristic)
-            let op_pattern = format!("{}:", method);
-            if let Some(op_start) = ctx.source.find(&op_pattern) {
-                // Look for security: within this operation section
-                let op_section = &ctx.source[op_start..];
-                let next_method = [
-                    "get:", "post:", "put:", "delete:", "patch:", "options:", "head:", "trace:",
-                ]
-                .iter()
-                .filter(|m| **m != op_pattern)
-                .filter_map(|m| op_section.find(m))
-                .min();
+            // Check if operation has security field in source using span_db
+            let has_security = ctx.span_db.value_spans.contains_key(&security_ptr)
+                || ctx.span_db.key_spans.contains_key(&security_ptr);
 
-                let section_end = next_method.unwrap_or(op_section.len());
-                let op_section = &op_section[..section_end];
-
-                if !op_section.contains("security:") {
-                    out.push(Finding::new(
-                        RuleId::SecurityDeclared,
-                        format!("{}/security", op_ptr),
-                        format!(
-                            "Operation {} {} has no security defined; use security: [] to explicitly mark as public",
-                            method.to_uppercase(),
-                            path
-                        ),
-                    ));
-                }
+            if !has_security {
+                out.push(Finding::new(
+                    RuleId::SecurityDeclared,
+                    security_ptr,
+                    format!(
+                        "Operation {} {} has no security defined; use security: [] to explicitly mark as public",
+                        method.to_uppercase(),
+                        path
+                    ),
+                ));
             }
         }
     }
@@ -227,4 +216,572 @@ fn iter_operations(
     methods
         .into_iter()
         .filter_map(|(method, op)| op.map(|o| (method, o)))
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
+
+    #[test]
+    fn test_security_declared_with_global_security() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+security:
+  - api_key: []
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+
+        // Should pass because global security is defined and operations inherit it
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_security_declared_operation_level() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      security:
+        - api_key: []
+      responses:
+        '200':
+          description: Success
+  /public:
+    get:
+      operationId: getPublic
+      security: []
+      responses:
+        '200':
+          description: Success
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+
+        // Should pass - both operations have explicit security
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_security_declared_missing_in_operation() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+    post:
+      operationId: createPet
+      security: []
+      responses:
+        '201':
+          description: Created
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+
+        // Should fail - GET /pets has no security declaration
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::SecurityDeclared);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets has no security defined; use security: [] to explicitly mark as public"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets has no security defined; use security: [] to explicitly mark as public"
+        );
+    }
+
+    #[test]
+    fn test_security_declared_multiple_operations_missing() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+    post:
+      operationId: createPet
+      responses:
+        '201':
+          description: Created
+  /users:
+    get:
+      operationId: listUsers
+      security: []
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+
+        // Should fail for GET /pets and POST /pets (both missing security)
+        assert_eq!(validation.diagnostics.len(), 2);
+        assert!(
+            validation
+                .diagnostics
+                .iter()
+                .all(|d| d.rule == RuleId::SecurityDeclared)
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets has no security defined; use security: [] to explicitly mark as public"
+        );
+        assert_eq!(
+            validation.diagnostics[1].message,
+            "Operation POST /pets has no security defined; use security: [] to explicitly mark as public"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityDeclared.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 2);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets has no security defined; use security: [] to explicitly mark as public"
+        );
+    }
+
+    #[test]
+    fn test_security_schemes_defined_all_valid() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+security:
+  - api_key: []
+  - bearer: []
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      security:
+        - oauth2: [read:pets]
+      responses:
+        '200':
+          description: Success
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    bearer:
+      type: http
+      scheme: bearer
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read:pets: Read pets
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecuritySchemesDefined.as_str()]),
+        )
+        .unwrap();
+
+        // All referenced schemes are defined
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecuritySchemesDefined.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_security_schemes_defined_undefined_global() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+security:
+  - undefined_scheme: []
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecuritySchemesDefined.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SecuritySchemesDefined
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Security scheme 'undefined_scheme' is referenced but not defined in components/securitySchemes"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecuritySchemesDefined.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Security scheme 'undefined_scheme' is referenced but not defined in components/securitySchemes"
+        );
+    }
+
+    #[test]
+    fn test_security_schemes_defined_undefined_operation() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      security:
+        - missing_scheme: []
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecuritySchemesDefined.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SecuritySchemesDefined
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Security scheme 'missing_scheme' is referenced but not defined in components/securitySchemes"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecuritySchemesDefined.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Security scheme 'missing_scheme' is referenced but not defined in components/securitySchemes"
+        );
+    }
+
+    #[test]
+    fn test_security_no_api_key_in_query_valid() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  securitySchemes:
+    api_key_header:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    bearer:
+      type: http
+      scheme: bearer
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityNoApiKeyInQuery.as_str()]),
+        )
+        .unwrap();
+
+        // No API keys in query params
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityNoApiKeyInQuery.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_security_no_api_key_in_query_invalid() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  securitySchemes:
+    api_key_query:
+      type: apiKey
+      in: query
+      name: api_key
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityNoApiKeyInQuery.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SecurityNoApiKeyInQuery
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Security scheme 'api_key_query' uses API key in query parameter; prefer header for security"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityNoApiKeyInQuery.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Security scheme 'api_key_query' uses API key in query parameter; prefer header for security"
+        );
+    }
+
+    #[test]
+    fn test_security_oauth2_complete_valid() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read:pets: Read pets
+            write:pets: Write pets
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityOAuth2Complete.as_str()]),
+        )
+        .unwrap();
+
+        // OAuth2 has scopes defined
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityOAuth2Complete.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_security_oauth2_complete_missing_scopes() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityOAuth2Complete.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SecurityOAuth2Complete
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OAuth2 authorization code flow in 'oauth2' should define scopes"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityOAuth2Complete.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OAuth2 authorization code flow in 'oauth2' should define scopes"
+        );
+    }
+
+    #[test]
+    fn test_security_oauth2_complete_no_flows() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::SecurityOAuth2Complete.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].rule,
+            RuleId::SecurityOAuth2Complete
+        );
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OAuth2 security scheme 'oauth2' must define at least one flow"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::SecurityOAuth2Complete.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OAuth2 security scheme 'oauth2' must define at least one flow"
+        );
+    }
 }

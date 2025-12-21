@@ -15,54 +15,133 @@ pub fn openapi_version_31(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use std::collections::BTreeMap;
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
 
-    fn make_ctx_with_version(
-        version: &str,
-    ) -> (oas3::Spec, crate::lint::Indexes, crate::model::SpanDb) {
-        let spec = oas3::Spec {
-            openapi: version.to_string(),
-            info: oas3::spec::Info {
-                title: "Test".to_string(),
-                version: "1.0".to_string(),
-                summary: None,
-                description: None,
-                terms_of_service: None,
-                contact: None,
-                license: None,
-                extensions: BTreeMap::new(),
-            },
-            paths: Some(BTreeMap::new()),
-            components: None,
-            tags: Vec::new(),
-            external_docs: None,
-            servers: Vec::new(),
-            webhooks: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-            security: Vec::new(),
-        };
-        let indexes = crate::lint::Indexes::build(&spec);
-        let span_db = crate::model::SpanDb::new();
-        (spec, indexes, span_db)
+    #[test]
+    fn test_valid_version_310() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
-    fn test_valid_version() {
-        let (spec, indexes, span_db) = make_ctx_with_version("3.1.0");
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
-        let mut findings = Vec::new();
-        openapi_version_31(&ctx, &mut findings);
-        assert!(findings.is_empty());
+    fn test_valid_version_311() {
+        let yaml = r#"
+openapi: 3.1.1
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
-    fn test_invalid_version() {
-        let (spec, indexes, span_db) = make_ctx_with_version("3.0.3");
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
-        let mut findings = Vec::new();
-        openapi_version_31(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::OpenApiVersion31);
+    fn test_invalid_version_30() {
+        let yaml = r#"
+openapi: 3.0.3
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::OpenApiVersion31);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OpenAPI version must be 3.1.x, found '3.0.3'"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OpenAPI version must be 3.1.x, found '3.0.3'"
+        );
+    }
+
+    #[test]
+    fn test_invalid_version_20() {
+        let yaml = r#"
+openapi: 2.0
+info:
+  title: Test API
+  version: 1.0.0
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::OpenApiVersion31);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OpenAPI version must be 3.1.x, found '2.0'"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::OpenApiVersion31.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "OpenAPI version must be 3.1.x, found '2.0'"
+        );
     }
 }

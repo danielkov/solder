@@ -219,123 +219,193 @@ fn iter_operations(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use oas3::spec::{ObjectOrReference, Operation, PathItem, Response};
-    use std::collections::BTreeMap;
-
-    fn make_response() -> Response {
-        Response {
-            description: Some("OK".to_string()),
-            headers: BTreeMap::new(),
-            content: BTreeMap::new(),
-            links: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-        }
-    }
-
-    fn make_ctx_with_responses(
-        response_codes: Vec<&str>,
-    ) -> (oas3::Spec, crate::lint::Indexes, crate::model::SpanDb) {
-        let mut responses_map: BTreeMap<String, ObjectOrReference<Response>> = BTreeMap::new();
-        for code in response_codes {
-            responses_map.insert(code.to_string(), ObjectOrReference::Object(make_response()));
-        }
-
-        let operation = Operation {
-            operation_id: Some("testOp".to_string()),
-            responses: if responses_map.is_empty() {
-                None
-            } else {
-                Some(responses_map)
-            },
-            ..Operation::default()
-        };
-
-        let path_item = PathItem {
-            get: Some(operation),
-            ..PathItem::default()
-        };
-
-        let mut spec = oas3::Spec {
-            openapi: "3.1.0".to_string(),
-            info: oas3::spec::Info {
-                title: "".to_string(),
-                version: "1.0.0".to_string(),
-                summary: None,
-                description: None,
-                terms_of_service: None,
-                contact: None,
-                license: None,
-                extensions: BTreeMap::new(),
-            },
-            paths: Some(BTreeMap::new()),
-            components: None,
-            tags: Vec::new(),
-            external_docs: None,
-            servers: Vec::new(),
-            webhooks: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-            security: Vec::new(),
-        };
-        spec.paths
-            .as_mut()
-            .unwrap()
-            .insert("/test".to_string(), path_item);
-
-        let indexes = crate::lint::Indexes::build(&spec);
-        let span_db = crate::model::SpanDb::new();
-        (spec, indexes, span_db)
-    }
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
 
     #[test]
     fn test_has_responses() {
-        let (spec, indexes, span_db) = make_ctx_with_responses(vec!["200"]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ResponsesExist.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        responses_exist(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ResponsesExist.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_no_responses() {
-        let (spec, indexes, span_db) = make_ctx_with_responses(vec![]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ResponsesExist.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        responses_exist(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::ResponsesExist);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ResponsesExist);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets must have at least one response"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ResponsesExist.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets must have at least one response"
+        );
     }
 
     #[test]
     fn test_has_2xx() {
-        let (spec, indexes, span_db) = make_ctx_with_responses(vec!["200", "400"]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ResponsesHave2xx.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        responses_have_2xx(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ResponsesHave2xx.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_no_2xx() {
-        let (spec, indexes, span_db) = make_ctx_with_responses(vec!["400", "500"]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '400':
+          description: Bad Request
+        '500':
+          description: Server Error
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ResponsesHave2xx.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        responses_have_2xx(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::ResponsesHave2xx);
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ResponsesHave2xx);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets should have a 2xx success response"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ResponsesHave2xx.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Operation GET /pets should have a 2xx success response"
+        );
     }
 
     #[test]
     fn test_default_counts_as_2xx() {
-        let (spec, indexes, span_db) = make_ctx_with_responses(vec!["default"]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        default:
+          description: Default response
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ResponsesHave2xx.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        responses_have_2xx(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        // default counts as success
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ResponsesHave2xx.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 }

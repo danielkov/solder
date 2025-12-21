@@ -42,73 +42,192 @@ pub fn servers_https_required(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use oas3::spec::Server;
-    use std::collections::BTreeMap;
-
-    fn make_server(url: &str) -> Server {
-        Server {
-            url: url.to_string(),
-            description: None,
-            variables: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-        }
-    }
-
-    fn make_ctx_with_servers(
-        urls: Vec<&str>,
-    ) -> (oas3::Spec, crate::lint::Indexes, crate::model::SpanDb) {
-        let servers: Vec<Server> = urls.iter().map(|u| make_server(u)).collect();
-
-        let spec = oas3::Spec {
-            openapi: "3.1.0".to_string(),
-            info: oas3::spec::Info {
-                title: "".to_string(),
-                version: "1.0.0".to_string(),
-                summary: None,
-                description: None,
-                terms_of_service: None,
-                contact: None,
-                license: None,
-                extensions: BTreeMap::new(),
-            },
-            paths: Some(BTreeMap::new()),
-            components: None,
-            tags: Vec::new(),
-            external_docs: None,
-            servers,
-            webhooks: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-            security: Vec::new(),
-        };
-
-        let indexes = crate::lint::Indexes::build(&spec);
-        let span_db = crate::model::SpanDb::new();
-        (spec, indexes, span_db)
-    }
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
 
     #[test]
-    fn test_valid_urls() {
-        let (spec, indexes, span_db) = make_ctx_with_servers(vec![
-            "https://api.example.com",
-            "https://staging.example.com",
-        ]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+    fn test_valid_https_urls() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: https://staging.example.com
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[
+                RuleId::ServerUrlNonEmpty.as_str(),
+                RuleId::ServersHttpsRequired.as_str(),
+            ]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        server_url_non_empty(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[
+                RuleId::ServerUrlNonEmpty.as_str(),
+                RuleId::ServersHttpsRequired.as_str(),
+            ]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_empty_url() {
-        let (spec, indexes, span_db) = make_ctx_with_servers(vec!["https://api.example.com", ""]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: ""
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ServerUrlNonEmpty.as_str()]),
+        )
+        .unwrap();
 
-        let mut findings = Vec::new();
-        server_url_non_empty(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::ServerUrlNonEmpty);
-        assert!(findings[0].ptr.contains("/servers/1"));
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ServerUrlNonEmpty);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Server 1 has an empty URL"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ServerUrlNonEmpty.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Server 1 has an empty URL"
+        );
+    }
+
+    #[test]
+    fn test_http_url_production() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+servers:
+  - url: http://api.example.com
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ServersHttpsRequired.as_str()]),
+        )
+        .unwrap();
+
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ServersHttpsRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Server URL 'http://api.example.com' uses HTTP; production servers should use HTTPS"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ServersHttpsRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Server URL 'http://api.example.com' uses HTTP; production servers should use HTTPS"
+        );
+    }
+
+    #[test]
+    fn test_http_localhost_allowed() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+  - url: http://127.0.0.1:8080
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ServersHttpsRequired.as_str()]),
+        )
+        .unwrap();
+
+        // Localhost should be allowed on HTTP
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ServersHttpsRequired.as_str()]),
+        )
+        .unwrap();
+        assert!(validation.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn test_mixed_http_https() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+  - url: http://staging.example.com
+  - url: http://localhost:3000
+paths: {}
+"#;
+        let validation = lint_with_ruleset(
+            yaml,
+            RuleSet::from_slice(&[RuleId::ServersHttpsRequired.as_str()]),
+        )
+        .unwrap();
+
+        // Should only flag the non-localhost HTTP URL
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::ServersHttpsRequired);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Server URL 'http://staging.example.com' uses HTTP; production servers should use HTTPS"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation = lint_with_ruleset(
+            &json,
+            RuleSet::from_slice(&[RuleId::ServersHttpsRequired.as_str()]),
+        )
+        .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Server URL 'http://staging.example.com' uses HTTP; production servers should use HTTPS"
+        );
     }
 }

@@ -21,85 +21,153 @@ pub fn tags_declared(ctx: &LintCtx, out: &mut Vec<Finding>) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use oas3::spec::{Operation, PathItem, Tag};
-    use std::collections::BTreeMap;
-
-    fn make_tag(name: &str) -> Tag {
-        Tag {
-            name: name.to_string(),
-            description: None,
-            extensions: BTreeMap::new(),
-        }
-    }
-
-    fn make_ctx_with_tags(
-        declared: Vec<&str>,
-        used: Vec<&str>,
-    ) -> (oas3::Spec, crate::lint::Indexes, crate::model::SpanDb) {
-        let tags: Vec<Tag> = declared.iter().map(|t| make_tag(t)).collect();
-
-        let operation = Operation {
-            operation_id: Some("testOp".to_string()),
-            tags: used.into_iter().map(String::from).collect(),
-            ..Operation::default()
-        };
-
-        let path_item = PathItem {
-            get: Some(operation),
-            ..PathItem::default()
-        };
-
-        let mut spec = oas3::Spec {
-            openapi: "3.1.0".to_string(),
-            info: oas3::spec::Info {
-                title: "".to_string(),
-                version: "1.0.0".to_string(),
-                summary: None,
-                description: None,
-                terms_of_service: None,
-                contact: None,
-                license: None,
-                extensions: BTreeMap::new(),
-            },
-            paths: Some(BTreeMap::new()),
-            components: None,
-            tags,
-            external_docs: None,
-            servers: Vec::new(),
-            webhooks: BTreeMap::new(),
-            extensions: BTreeMap::new(),
-            security: Vec::new(),
-        };
-        spec.paths
-            .as_mut()
-            .unwrap()
-            .insert("/test".to_string(), path_item);
-
-        let indexes = crate::lint::Indexes::build(&spec);
-        let span_db = crate::model::SpanDb::new();
-        (spec, indexes, span_db)
-    }
+    use crate::lint::RuleId;
+    use crate::testutil::yaml_to_json;
+    use crate::{RuleSet, lint_with_ruleset};
 
     #[test]
     fn test_all_tags_declared() {
-        let (spec, indexes, span_db) = make_ctx_with_tags(vec!["pets", "users"], vec!["pets"]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+tags:
+  - name: pets
+  - name: users
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      tags:
+        - pets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()])).unwrap();
 
-        let mut findings = Vec::new();
-        tags_declared(&ctx, &mut findings);
-        assert!(findings.is_empty());
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()]))
+                .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 
     #[test]
     fn test_undeclared_tag() {
-        let (spec, indexes, span_db) = make_ctx_with_tags(vec!["pets"], vec!["pets", "orders"]);
-        let ctx = LintCtx::new(&spec, &indexes, &span_db, "");
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+tags:
+  - name: pets
+paths:
+  /orders:
+    get:
+      operationId: listOrders
+      tags:
+        - orders
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()])).unwrap();
 
-        let mut findings = Vec::new();
-        tags_declared(&ctx, &mut findings);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].rule, RuleId::TagsDeclared);
-        assert!(findings[0].message.contains("orders"));
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(validation.diagnostics[0].rule, RuleId::TagsDeclared);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Tag 'orders' is used but not declared in top-level tags"
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()]))
+                .unwrap();
+        assert_eq!(validation.diagnostics.len(), 1);
+        assert_eq!(
+            validation.diagnostics[0].message,
+            "Tag 'orders' is used but not declared in top-level tags"
+        );
+    }
+
+    #[test]
+    fn test_multiple_undeclared_tags() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+tags:
+  - name: pets
+paths:
+  /orders:
+    get:
+      operationId: listOrders
+      tags:
+        - orders
+        - shipping
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()])).unwrap();
+
+        // Should report both undeclared tags
+        assert_eq!(validation.diagnostics.len(), 2);
+        assert!(
+            validation
+                .diagnostics
+                .iter()
+                .all(|d| d.rule == RuleId::TagsDeclared)
+        );
+
+        // Should also fail with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()]))
+                .unwrap();
+        assert_eq!(validation.diagnostics.len(), 2);
+    }
+
+    #[test]
+    fn test_no_tags_used() {
+        let yaml = r#"
+openapi: 3.1.0
+info:
+  title: Test API
+  version: 1.0.0
+tags:
+  - name: pets
+  - name: users
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Success
+"#;
+        let validation =
+            lint_with_ruleset(yaml, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()])).unwrap();
+
+        // Operations without tags is okay
+        assert!(validation.diagnostics.is_empty());
+
+        // Should also pass with JSON input
+        let json = yaml_to_json(yaml);
+        let validation =
+            lint_with_ruleset(&json, RuleSet::from_slice(&[RuleId::TagsDeclared.as_str()]))
+                .unwrap();
+        assert!(validation.diagnostics.is_empty());
     }
 }
