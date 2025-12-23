@@ -82,6 +82,247 @@ impl IntoResponse for {{ op.name.pascal }}Error {
 
 {% endfor %}
 
+// Multipart request structs
+{% for op_wrap in operations -%}
+{% set op = op_wrap.operation -%}
+{% match op_wrap.request_content_type -%}
+{% when RequestContentType::Multipart -%}
+{% if let Some(body) = op.http.body -%}
+{% if let Some(variant) = body.variants.first() -%}
+
+// {{ op.name.pascal }} multipart request
+#[derive(Debug)]
+pub struct {{ op.name.pascal }}Request {
+    {%- for encoding in variant.encoding %}
+    pub {{ encoding.field.snake|escape_rust_keyword }}: {% match encoding.ty.target -%}
+    {%- when ir::gen_ir::StableId::Primitive with (p) -%}
+    {%- match p -%}
+    {%- when ir::gen_ir::Primitive::Bytes -%}
+    crate::multipart::Spooled
+    {%- when _ -%}
+    {{ encoding.ty.target|render_type }}
+    {%- endmatch -%}
+    {%- when _ -%}
+    {{ encoding.ty.target|render_type }}
+    {%- endmatch %},
+    {%- endfor %}
+}
+
+#[derive(Debug)]
+pub struct {{ op.name.pascal }}Rejection {
+    message: String,
+    status: StatusCode,
+}
+
+impl {{ op.name.pascal }}Rejection {
+    fn bad_request(message: impl Into<String>) -> Self {
+        Self {
+            message: message.into(),
+            status: StatusCode::BAD_REQUEST,
+        }
+    }
+
+    fn payload_too_large(message: impl Into<String>) -> Self {
+        Self {
+            message: message.into(),
+            status: StatusCode::PAYLOAD_TOO_LARGE,
+        }
+    }
+
+    fn internal_error(message: impl Into<String>) -> Self {
+        Self {
+            message: message.into(),
+            status: StatusCode::INTERNAL_SERVER_ERROR,
+        }
+    }
+}
+
+impl IntoResponse for {{ op.name.pascal }}Rejection {
+    fn into_response(self) -> Response {
+        (self.status, self.message).into_response()
+    }
+}
+
+impl<S> axum::extract::FromRequest<S> for {{ op.name.pascal }}Request
+where
+    S: Send + Sync,
+{
+    type Rejection = {{ op.name.pascal }}Rejection;
+
+    fn from_request(
+        req: axum::http::Request<axum::body::Body>,
+        state: &S,
+    ) -> impl std::future::Future<Output = Result<Self, Self::Rejection>> + Send {
+        async move {
+            // Delegate to axum's Multipart extractor
+            let multipart = axum::extract::Multipart::from_request(req, state)
+                .await
+                .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("multipart error: {}", e)))?;
+
+            Self::decode_multipart(multipart).await
+        }
+    }
+}
+
+impl {{ op.name.pascal }}Request {
+    async fn decode_multipart(mut multipart: axum::extract::Multipart) -> Result<Self, {{ op.name.pascal }}Rejection> {
+        {%- for encoding in variant.encoding %}
+        let mut {{ encoding.field.snake|escape_rust_keyword }}: Option<_> = None;
+        {%- endfor %}
+
+        while let Some(field) = multipart.next_field()
+            .await
+            .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("multipart field error: {}", e)))?
+        {
+            let name = field.name().map(str::to_owned).unwrap_or_default();
+
+            match name.as_str() {
+                {%- for encoding in variant.encoding %}
+                "{{ encoding.field.canonical }}" => {
+                    if {{ encoding.field.snake|escape_rust_keyword }}.is_some() {
+                        return Err({{ op.name.pascal }}Rejection::bad_request(format!("duplicate field: {}", "{{ encoding.field.canonical }}")));
+                    }
+                    {% match encoding.ty.target -%}
+                    {%- when ir::gen_ir::StableId::Primitive with (p) -%}
+                    {%- match p -%}
+                    {%- when ir::gen_ir::Primitive::Bytes -%}
+                    let spooled = crate::multipart::spool_multipart_field(
+                        field,
+                        crate::multipart::DEFAULT_SPILL_THRESHOLD,
+                        None,
+                    )
+                    .await
+                    .map_err(|e| match e {
+                        crate::multipart::UploadParseError::FieldTooLarge { field_name, limit_bytes, observed_bytes } => {
+                            {{ op.name.pascal }}Rejection::payload_too_large(
+                                format!("field '{}' too large: {} > {} bytes", field_name, observed_bytes, limit_bytes)
+                            )
+                        }
+                        crate::multipart::UploadParseError::Io(e) => {
+                            {{ op.name.pascal }}Rejection::internal_error(format!("io error: {}", e))
+                        }
+                        e => {{ op.name.pascal }}Rejection::bad_request(format!("upload error: {}", e)),
+                    })?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(spooled);
+                    {%- when ir::gen_ir::Primitive::String -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(text);
+                    {%- when ir::gen_ir::Primitive::Bool -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<bool>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid boolean in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::I32 -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<i32>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid i32 in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::I64 -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<i64>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid i64 in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::F32 -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<f32>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid f32 in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::F64 -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<f64>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid f64 in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::Date -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<jiff::civil::Date>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid date in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::DateTime -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<jiff::Timestamp>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid datetime in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::Uuid -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<uuid::Uuid>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid UUID in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::Decimal -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = text.parse::<rust_decimal::Decimal>()
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid decimal in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- when ir::gen_ir::Primitive::Any -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = serde_json::from_str::<serde_json::Value>(&text)
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid JSON in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- endmatch -%}
+                    {%- when ir::gen_ir::StableId::Named with (_) -%}
+                    let text = field
+                        .text()
+                        .await
+                        .map_err(|_| {{ op.name.pascal }}Rejection::bad_request(format!("invalid utf-8 in field: {}", name)))?;
+                    let parsed = serde_json::from_str(&text)
+                        .map_err(|e| {{ op.name.pascal }}Rejection::bad_request(format!("invalid JSON in field '{}': {}", name, e)))?;
+                    {{ encoding.field.snake|escape_rust_keyword }} = Some(parsed);
+                    {%- endmatch -%}
+                }
+                {%- endfor %}
+                other => {
+                    return Err({{ op.name.pascal }}Rejection::bad_request(format!("unexpected field: {}", other)));
+                }
+            }
+        }
+
+        Ok(Self {
+            {%- for encoding in variant.encoding %}
+            {{ encoding.field.snake|escape_rust_keyword }}: {{ encoding.field.snake|escape_rust_keyword }}
+                .ok_or_else(|| {{ op.name.pascal }}Rejection::bad_request(format!("missing field: {}", "{{ encoding.field.canonical }}")))?,
+            {%- endfor %}
+        })
+    }
+}
+
+{% endif -%}
+{% endif -%}
+{% when _ -%}
+{% endmatch -%}
+{% endfor %}
+
 /// {{ trait_name }} service trait
 ///
 /// # Example
@@ -178,11 +419,19 @@ where
         {% if op.http.query .len() > 0 -%}
         query: {{ op.name.pascal }}Query,
         {% endif -%}
+        {% match op_wrap.request_content_type -%}
+        {% when RequestContentType::Multipart -%}
+        body: {{ op.name.pascal }}Request,
+        {% when RequestContentType::OctetStream -%}
+        body: bytes::Bytes,
+        {% when RequestContentType::Json -%}
         {% if let Some(body) = op.http.body -%}
         {% if let Some(variant) = body.variants.first() -%}
-        body: crate::types::{{ variant.ty.target }},
+        body: {{ variant.ty.target|render_type }},
         {% endif -%}
         {% endif -%}
+        {% when RequestContentType::None -%}
+        {% endmatch -%}
     ) -> impl std::future::Future<Output = {{ op.name.pascal }}Result> + Send;
 
     {% endfor -%}
@@ -195,9 +444,15 @@ where
             String{% if !loop.last %}, {% endif -%}
         {% endfor %})>{% endif -%}
         {% if op.http.query .len() > 0 %}, axum::extract::Query(query): axum::extract::Query<{{ op.name.pascal }}Query>{% endif -%}
+        {% match op_wrap.request_content_type -%}
+        {% when RequestContentType::Multipart -%}, body: {{ op.name.pascal }}Request
+        {%- when RequestContentType::OctetStream -%}, body: bytes::Bytes
+        {%- when RequestContentType::Json -%}
         {% if let Some(body) = op.http.body -%}
-        {% if let Some(variant) = body.variants.first() %}, Json(body): Json<crate::types::{{ variant.ty.target }}>{% endif -%}
+        {% if let Some(variant) = body.variants.first() %}, Json(body): Json<{{ variant.ty.target|render_type }}>{% endif -%}
         {% endif -%}
+        {% when RequestContentType::None -%}
+        {% endmatch %}
         | async move {
             {% if op.http.path_params .len() == 1 -%}
             let {{ op.http.path_params[0].name.snake|escape_rust_keyword }} = path_params;
@@ -215,11 +470,11 @@ where
                 {% if op.http.query .len() > 0 -%}
                 query,
                 {% endif -%}
-                {% if let Some(body_type) = op.http.body -%}
-                {% if body_type.variants .len() > 0 -%}
+                {% match op_wrap.request_content_type -%}
+                {% when RequestContentType::None -%}
+                {% when _ -%}
                 body,
-                {% endif -%}
-                {% endif -%}
+                {% endmatch -%}
             ).await {
                 Ok({% if let Some(success) = op.success %}{% if success.ty.is_some() %}result{% else %}_{% endif %}{% else %}_{% endif %}) => {
                     {% if let Some(success) = op.success -%}
@@ -230,7 +485,12 @@ where
                     let status = StatusCode::OK;
                     {% endmatch -%}
                     {% if success.ty.is_some() -%}
+                    {% match op_wrap.response_content_type -%}
+                    {% when ResponseContentType::Binary -%}
+                    (status, result).into_response()
+                    {% when _ -%}
                     (status, Json(result)).into_response()
+                    {% endmatch -%}
                     {% else -%}
                     status.into_response()
                     {% endif -%}

@@ -1756,6 +1756,45 @@ fn convert_parameter(
     }
 }
 
+/// Extract multipart encoding information from schema
+fn extract_multipart_encoding(
+    ctx: &mut BuildContext,
+    schema_ref: &oas3::spec::ObjectOrReference<oas3::spec::ObjectSchema>,
+    encoding_map: &std::collections::BTreeMap<String, oas3::spec::Encoding>,
+) -> Vec<PartEncoding> {
+    let mut encodings = Vec::new();
+
+    // Get the schema (resolve reference if needed)
+    let schema = match schema_ref {
+        oas3::spec::ObjectOrReference::Object(s) => s,
+        oas3::spec::ObjectOrReference::Ref { .. } => {
+            // For referenced schemas, we can't extract encoding info here
+            // The template will need to handle this case
+            return encodings;
+        }
+    };
+
+    // Extract field names and types from schema properties
+    for (field_name, prop_schema) in &schema.properties {
+        // Get content type from encoding map if available
+        let content_type = encoding_map
+            .get(field_name)
+            .and_then(|enc| enc.content_type.clone());
+
+        // Convert the property schema to a TypeRef
+        let ty = convert_schema_ref_to_type_ref(ctx, prop_schema);
+
+        encodings.push(PartEncoding {
+            field: CanonicalName::from_string(field_name),
+            content_type,
+            headers: Vec::new(), // TODO: extract headers from encoding if needed
+            ty,
+        });
+    }
+
+    encodings
+}
+
 /// Convert request body
 fn convert_request_body(
     ctx: &mut BuildContext,
@@ -1804,11 +1843,18 @@ fn convert_request_body(
                 }
             };
 
+            // Extract encoding for multipart requests
+            let encoding = if content_type.starts_with("multipart/") {
+                extract_multipart_encoding(ctx, schema_ref, &media_type.encoding)
+            } else {
+                Vec::new()
+            };
+
             variants.push(BodyVariant {
                 content_type: content_type.clone(),
                 ty,
                 docs: Docs::default(),
-                encoding: Vec::new(), // TODO: handle encoding
+                encoding,
             });
         }
     }

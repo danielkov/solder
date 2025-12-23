@@ -374,9 +374,10 @@ pub struct BodyVariant {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct PartEncoding {
-    pub field: String,
+    pub field: CanonicalName,
     pub content_type: Option<String>,
     pub headers: Vec<HeaderParam>,
+    pub ty: TypeRef, // Type of this part/field
 }
 
 #[derive(Debug, Clone, Serialize)]

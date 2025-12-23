@@ -29,6 +29,20 @@ impl RustAxumGenerator {
     fn generate_types(&self, ir: &GenIr, _config: &Config, vfs: &mut VirtualFS) -> Result<()> {
         let mut content = String::from("//! API types\n\nuse serde::{Deserialize, Serialize};\n\n");
 
+        // Collect type IDs used in multipart request bodies (these will be generated in service modules)
+        let mut multipart_request_types = BTreeSet::new();
+        for service in &ir.services {
+            for operation in &service.operations {
+                if let Some(body) = &operation.http.body {
+                    for variant in &body.variants {
+                        if variant.content_type.starts_with("multipart/") {
+                            multipart_request_types.insert(variant.ty.target.clone());
+                        }
+                    }
+                }
+            }
+        }
+
         // Group types by their tags for feature flag generation
         let mut type_features: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
         for type_decl in ir.types.values() {
@@ -46,6 +60,12 @@ impl RustAxumGenerator {
 
         // Generate each type with its feature flags
         for type_decl in ir.types.values() {
+            // Skip types that are used as multipart request bodies
+            let type_id = ir::gen_ir::StableId::new(&type_decl.name.pascal);
+            if multipart_request_types.contains(&type_id) {
+                continue;
+            }
+
             let features = &type_features[&type_decl.name.pascal];
 
             // Add feature flag if type has tags
@@ -404,8 +424,22 @@ impl RustAxumGenerator {
         content.push_str("pub mod types;\n");
         content.push_str("pub mod services;\n");
         content.push_str("pub mod shared;\n");
+        content.push_str("pub mod multipart;\n");
 
         vfs.add_file("src/lib.rs", content);
+        Ok(())
+    }
+
+    /// Generate multipart utilities module
+    fn generate_multipart_module(&self, vfs: &mut VirtualFS) -> Result<()> {
+        #[derive(Template)]
+        #[template(path = "multipart.rs.jinja", escape = "none")]
+        struct MultipartModule;
+
+        let content = MultipartModule
+            .render()
+            .map_err(|e| Error::TemplateError(Box::new(e)))?;
+        vfs.add_file("src/multipart.rs", content);
         Ok(())
     }
 }
@@ -418,6 +452,7 @@ impl Generator for RustAxumGenerator {
         self.generate_services(ir, config, &mut vfs)?;
         self.generate_cargo_toml(ir, &mut vfs)?;
         self.generate_shared_module(&mut vfs)?;
+        self.generate_multipart_module(&mut vfs)?;
         self.generate_lib_rs(&mut vfs)?;
 
         Ok(vfs)

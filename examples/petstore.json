@@ -35,6 +35,10 @@
     {
       "name": "orders",
       "description": "Order management"
+    },
+    {
+      "name": "files",
+      "description": "File upload operations"
     }
   ],
   "paths": {
@@ -377,6 +381,154 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/files": {
+      "post": {
+        "tags": ["files"],
+        "summary": "Upload a file",
+        "description": "Upload a single file with optional description",
+        "operationId": "uploadFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional description of the file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully"
+          }
+        }
+      }
+    },
+    "/files/batch": {
+      "post": {
+        "tags": ["files"],
+        "summary": "Upload multiple files",
+        "description": "Upload multiple files in a single request",
+        "operationId": "uploadMultipleFiles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["files"],
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "Array of files to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Files uploaded successfully"
+          }
+        }
+      }
+    },
+    "/files/with-metadata": {
+      "post": {
+        "tags": ["files"],
+        "summary": "Upload a file with metadata",
+        "description": "Upload a file along with structured metadata",
+        "operationId": "uploadFileWithMetadata",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file", "metadata"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "ownerId": {
+                        "type": "string",
+                        "description": "ID of the owner"
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Tags to associate with the file"
+                      }
+                    }
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional description of the file"
+                  },
+                  "ownerId": {
+                    "type": "integer",
+                    "description": "ID of the owner"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded with metadata successfully"
+          }
+        }
+      }
+    },
+    "/files/raw": {
+      "put": {
+        "tags": ["files"],
+        "summary": "Upload raw file bytes",
+        "description": "Upload a file as raw binary data in the request body",
+        "operationId": "uploadRawFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "File uploaded successfully"
           }
         }
       }

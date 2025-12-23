@@ -133,6 +133,23 @@ mod filters {
 struct OperationTemplate<'a> {
     operation: &'a Operation,
     method_fn: &'static str,
+    request_content_type: RequestContentType,
+    response_content_type: ResponseContentType,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RequestContentType {
+    Json,
+    Multipart,
+    OctetStream,
+    None,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ResponseContentType {
+    Json,
+    Binary,
+    None,
 }
 
 impl<'a> OperationTemplate<'a> {
@@ -147,9 +164,44 @@ impl<'a> OperationTemplate<'a> {
             HttpMethod::Options => "options",
             HttpMethod::Trace => "trace",
         };
+
+        // Detect request content type
+        let request_content_type = if let Some(body) = &operation.http.body {
+            if let Some(variant) = body.variants.first() {
+                if variant.content_type.starts_with("multipart/") {
+                    RequestContentType::Multipart
+                } else if variant.content_type == "application/octet-stream" {
+                    RequestContentType::OctetStream
+                } else {
+                    RequestContentType::Json
+                }
+            } else {
+                RequestContentType::None
+            }
+        } else {
+            RequestContentType::None
+        };
+
+        // Detect response content type
+        let response_content_type = if let Some(success) = &operation.success {
+            if let Some(ct) = &success.content_type {
+                if ct.starts_with("application/json") || ct.starts_with("text/") {
+                    ResponseContentType::Json
+                } else {
+                    ResponseContentType::Binary
+                }
+            } else {
+                ResponseContentType::None
+            }
+        } else {
+            ResponseContentType::None
+        };
+
         Self {
             operation,
             method_fn,
+            request_content_type,
+            response_content_type,
         }
     }
 }
