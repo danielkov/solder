@@ -1,0 +1,31 @@
+// Generated API error classes
+
+/**
+ * Base class for all API errors.
+ */
+export abstract class ApiError extends globalThis.Error {
+  abstract readonly status: number;
+
+  constructor(message: string) {
+    super(message);
+    this.name = this.constructor.name;
+    if ('captureStackTrace' in globalThis.Error) {
+      (globalThis.Error as { captureStackTrace?: (target: object, ctor: Function) => void }).captureStackTrace?.(this, this.constructor);
+    }
+  }
+}
+
+/**
+ * Thrown when the API returns an unexpected error status code,
+ * or when JSON parsing fails for an expected error.
+ */
+export class UnexpectedError extends ApiError {
+  readonly status: number;
+  readonly body: string;
+
+  constructor(status: number, body: string) {
+    super(`Unexpected error ${status}: ${body}`);
+    this.status = status;
+    this.body = body;
+  }
+}

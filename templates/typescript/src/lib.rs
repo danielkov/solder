@@ -36,6 +36,22 @@ impl TypeScriptGenerator {
 
         vfs.add_file(types_dir.join("index.ts"), types_content);
 
+        // Generate error classes
+        self.generate_errors(ir, vfs)?;
+
+        Ok(())
+    }
+
+    /// Generate base error classes for API error handling.
+    fn generate_errors(&self, _ir: &GenIr, vfs: &mut VirtualFS) -> Result<()> {
+        let types_dir = PathBuf::from("src").join("types");
+
+        let data = ErrorsTemplate;
+        let content = data
+            .render()
+            .map_err(|e| Error::TemplateError(Box::new(e)))?;
+        vfs.add_file(types_dir.join("errors.ts"), content);
+
         Ok(())
     }
 
@@ -441,6 +457,39 @@ impl TypeScriptGenerator {
             })
             .collect();
 
+        // Extract error variants for this specific operation
+        let error_variants: Vec<ErrorVariantData> = match &op.errors {
+            ir::gen_ir::ErrorUse::Inline(error_decl) => {
+                error_decl
+                    .variants
+                    .iter()
+                    .filter_map(|v| {
+                        // Only handle concrete status codes, not ranges
+                        let status_code = match &v.status {
+                            ir::gen_ir::StatusSpec::Code(code) => *code,
+                            _ => return None,
+                        };
+
+                        let (has_body, body_type) = if let Some(ty) = &v.ty {
+                            self.collect_type_imports(ty, ir, type_imports);
+                            (true, self.render_type_ref(ty, ir))
+                        } else {
+                            (false, "void".to_string())
+                        };
+
+                        Some(ErrorVariantData {
+                            class_name: format!("{}{}Error", op.name.pascal, v.name.pascal),
+                            status_code,
+                            has_body,
+                            body_type,
+                        })
+                    })
+                    .collect()
+            }
+            ir::gen_ir::ErrorUse::Shared(_) | ir::gen_ir::ErrorUse::None => Vec::new(),
+        };
+        let has_errors = !error_variants.is_empty();
+
         Ok(OperationData {
             method_name: op.name.camel.clone(),
             docs: op.docs.clone(),
@@ -455,6 +504,8 @@ impl TypeScriptGenerator {
             http_method: http_method.to_string(),
             path_template: op.http.path_template.clone(),
             auth_schemes,
+            error_variants,
+            has_errors,
         })
     }
 
@@ -672,6 +723,10 @@ struct TypeAliasTemplate<'a> {
 }
 
 #[derive(Template)]
+#[template(path = "errors.ts.jinja", escape = "none")]
+struct ErrorsTemplate;
+
+#[derive(Template)]
 #[template(path = ".gitignore.jinja", escape = "none")]
 struct GitignoreTemplate;
 
@@ -699,6 +754,15 @@ struct OperationData {
     http_method: String,
     path_template: String,
     auth_schemes: Vec<AuthSchemeUse>,
+    error_variants: Vec<ErrorVariantData>,
+    has_errors: bool,
+}
+
+struct ErrorVariantData {
+    class_name: String,     // e.g., "ListPetsNotFoundError"
+    status_code: u16,       // e.g., 404
+    has_body: bool,         // whether error has a typed body
+    body_type: String,      // e.g., "Error" or "void"
 }
 
 struct AuthSchemeUse {

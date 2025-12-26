@@ -1,6 +1,7 @@
 // Generated SDK entry point
 
 export * from './types';
+export * from './types/errors';
 export * from './services/client';
 {% for service in services %}export { {{ service.name }}Service } from './services/{{ service.file }}';
 {% endfor %}

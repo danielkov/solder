@@ -1,7 +1,26 @@
-{% if !type_imports.is_empty() %}import { {% for type_import in type_imports %}{{ type_import }}{% if !loop.last %}, {% endif %}{% endfor %} } from '../types';
+{% if !type_imports.is_empty() %}import type { {% for type_import in type_imports %}{{ type_import }}{% if !loop.last %}, {% endif %}{% endfor %} } from '../types';
+{% endif %}import { ApiError, UnexpectedError } from '../types/errors';
+{% if !auth_schemes.is_empty() %}import { SecurityConfig } from './client';{% endif %}
 
-{% endif %}{% if !auth_schemes.is_empty() %}import { SecurityConfig } from './client';{% endif %}
+// Operation-specific error classes
+{% for operation in operations %}{% for error in operation.error_variants %}
+/**
+ * Error thrown when {{ operation.method_name }} returns status {{ error.status_code }}.
+ */
+export class {{ error.class_name }} extends ApiError {
+  readonly status = {{ error.status_code }};
+{% if error.has_body %}  readonly body: {{ error.body_type }};
 
+  constructor(body: {{ error.body_type }}) {
+    super(`{{ error.class_name }}`);
+    this.body = body;
+  }
+{% else %}
+  constructor() {
+    super(`{{ error.class_name }}`);
+  }
+{% endif %}}
+{% endfor %}{% endfor %}
 {% if let Some(summary) = docs.summary %}/**
  * {{ summary }}
 {% if let Some(description) = docs.description %} *
@@ -16,7 +35,8 @@
    * {{ description }}
 {% endif %}{% if !operation.params.is_empty() %}   *
 {% for param in operation.params %}   * @param {{ param.name }} {% if let Some(doc) = param.docs %}{{ doc }}{% endif %}
-{% endfor %}{% endif %}   */
+{% endfor %}{% endif %}{% if operation.has_errors %}   * @throws {{ "{" }}{% for error in operation.error_variants %}{{ error.class_name }}{% if !loop.last %} | {% endif %}{% endfor %} | UnexpectedError{{ "}" }}
+{% endif %}   */
   {% endif %}async {{ operation.method_name }}({% if operation.has_params %}params: {
 {% for param in operation.params %}    {{ param.name }}{% if param.optional %}?{% endif %}: {{ param.type_str }};
 {% endfor %}  }{% endif %}): Promise<{{ operation.return_type }}> {
@@ -47,8 +67,22 @@
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+{% if operation.has_errors %}      switch (response.status) {
+{% for error in operation.error_variants %}        case {{ error.status_code }}: {
+{% if error.has_body %}          try {
+            const body = await response.json() as {{ error.body_type }};
+            throw new {{ error.class_name }}(body);
+          } catch (e) {
+            if (e instanceof ApiError) throw e;
+            throw new UnexpectedError(response.status, await response.text());
+          }
+{% else %}          throw new {{ error.class_name }}();
+{% endif %}        }
+{% endfor %}        default:
+          throw new UnexpectedError(response.status, await response.text());
+      }
+{% else %}      throw new UnexpectedError(response.status, await response.text());
+{% endif %}    }
 
     {% if operation.has_return %}return response.json();{% else %}return;{% endif %}
   }
