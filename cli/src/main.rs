@@ -3,6 +3,7 @@
 use anyhow::{Context, Result};
 use clap::{Parser as ClapParser, Subcommand};
 use parser::{parse, read};
+use serde_json::Value;
 use std::path::PathBuf;
 
 #[derive(ClapParser, Debug)]
@@ -10,39 +11,42 @@ use std::path::PathBuf;
 #[command(author, version, about = "Generate SDKs and server interfaces from OpenAPI specifications", long_about = None)]
 struct Cli {
     #[command(subcommand)]
-    command: Option<Commands>,
-
-    /// Path to the OpenAPI specification file (JSON or YAML)
-    #[arg(value_name = "SPEC", global = true)]
-    spec: Option<PathBuf>,
-
-    /// Template to use for code generation (e.g., "typescript", "python", "rust")
-    #[arg(short, long, value_name = "TEMPLATE", global = true)]
-    template: Option<String>,
-
-    /// Output directory for generated code
-    #[arg(short, long, value_name = "DIR", global = true)]
-    output: Option<PathBuf>,
-
-    /// Service organization style
-    #[arg(long, value_enum, default_value = "per-service", global = true)]
-    service_style: ServiceStyleArg,
-
-    /// Don't include documentation comments
-    #[arg(long, global = true)]
-    no_docs: bool,
-
-    /// Resolve external references before generating
-    #[arg(short = 'r', long, global = true)]
-    resolve: bool,
-
-    /// Verbose output
-    #[arg(short, long, global = true)]
-    verbose: bool,
+    command: Commands,
 }
 
 #[derive(Subcommand, Debug)]
 enum Commands {
+    /// Generate SDK or server code from an OpenAPI specification
+    Generate {
+        /// Path to the OpenAPI specification file (JSON or YAML)
+        #[arg(value_name = "SPEC")]
+        spec: PathBuf,
+
+        /// Template to use for code generation (e.g., "typescript", "rust-axum")
+        #[arg(short, long, value_name = "TEMPLATE")]
+        template: String,
+
+        /// Output directory for generated code
+        #[arg(short, long, value_name = "DIR")]
+        output: Option<PathBuf>,
+
+        /// Service organization style
+        #[arg(long, value_enum, default_value = "per-service")]
+        service_style: ServiceStyleArg,
+
+        /// Don't include documentation comments
+        #[arg(long)]
+        no_docs: bool,
+
+        /// Resolve external references before generating
+        #[arg(short = 'r', long)]
+        resolve: bool,
+
+        /// Verbose output
+        #[arg(short, long)]
+        verbose: bool,
+    },
+
     /// Resolve external $ref references and output a single combined spec
     Resolve {
         /// Path to the OpenAPI specification file (JSON or YAML)
@@ -76,6 +80,21 @@ enum Commands {
         #[arg(long, value_name = "SEVERITY")]
         severity: Option<String>,
     },
+
+    /// Deep merge multiple JSON or YAML files
+    Merge {
+        /// Files or directories to merge (first file determines output format)
+        #[arg(value_name = "FILES", required = true, num_args = 1..)]
+        files: Vec<PathBuf>,
+
+        /// Output file (defaults to stdout)
+        #[arg(short, long, value_name = "FILE")]
+        output: Option<PathBuf>,
+
+        /// Verbose output
+        #[arg(short, long)]
+        verbose: bool,
+    },
 }
 
 #[derive(Debug, Clone, Copy, clap::ValueEnum)]
@@ -99,31 +118,39 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Resolve { spec, output, verbose }) => {
-            handle_resolve(spec, output, verbose)
-        }
-        Some(Commands::Lint { spec, rulesets, rules, severity }) => {
-            handle_lint(spec, rulesets, rules, severity)
-        }
-        None => {
-            // Default command: generate
-            let spec = cli.spec.ok_or_else(|| {
-                anyhow::anyhow!("SPEC argument is required. Use --help for more information.")
-            })?;
-            let template = cli.template.ok_or_else(|| {
-                anyhow::anyhow!("--template/-t is required for code generation. Use --help for more information.")
-            })?;
-
-            handle_generate(
-                spec,
-                template,
-                cli.output,
-                cli.service_style,
-                cli.no_docs,
-                cli.resolve,
-                cli.verbose,
-            )
-        }
+        Commands::Generate {
+            spec,
+            template,
+            output,
+            service_style,
+            no_docs,
+            resolve,
+            verbose,
+        } => handle_generate(
+            spec,
+            template,
+            output,
+            service_style,
+            no_docs,
+            resolve,
+            verbose,
+        ),
+        Commands::Resolve {
+            spec,
+            output,
+            verbose,
+        } => handle_resolve(spec, output, verbose),
+        Commands::Lint {
+            spec,
+            rulesets,
+            rules,
+            severity,
+        } => handle_lint(spec, rulesets, rules, severity),
+        Commands::Merge {
+            files,
+            output,
+            verbose,
+        } => handle_merge(files, output, verbose),
     }
 }
 
@@ -300,15 +327,26 @@ fn handle_lint(
     };
 
     // Run the linter
-    let result = lint::lint_with_ruleset(&spec_content, rule_set)
-        .context("Failed to lint specification")?;
+    let result =
+        lint::lint_with_ruleset(&spec_content, rule_set).context("Failed to lint specification")?;
 
     // Print diagnostics in rustc-style format
     let spec_display = spec.display().to_string();
-    print_diagnostics(&result, &spec_display, &spec_content, severity_filter.as_ref());
+    print_diagnostics(
+        &result,
+        &spec_display,
+        &spec_content,
+        severity_filter.as_ref(),
+    );
 
     // Exit with error code if there are errors (only if we're showing errors)
-    if result.has_errors() && (severity_filter.is_none() || severity_filter.as_ref().unwrap().contains(&lint::Severity::Error)) {
+    if result.has_errors()
+        && (severity_filter.is_none()
+            || severity_filter
+                .as_ref()
+                .unwrap()
+                .contains(&lint::Severity::Error))
+    {
         std::process::exit(1);
     }
 
@@ -325,7 +363,10 @@ fn parse_severity_filter(severity_str: &str) -> Result<Vec<lint::Severity>> {
             "info" => severities.push(lint::Severity::Info),
             "hint" => severities.push(lint::Severity::Hint),
             other => {
-                anyhow::bail!("Unknown severity level: '{}'. Available levels: error, warning, info, hint", other);
+                anyhow::bail!(
+                    "Unknown severity level: '{}'. Available levels: error, warning, info, hint",
+                    other
+                );
             }
         }
     }
@@ -396,7 +437,10 @@ fn build_ruleset_from_names(ruleset_str: &str) -> Result<lint::RuleSet> {
                 }
             }
             other => {
-                anyhow::bail!("Unknown ruleset: '{}'. Available rulesets: all, recommended, strict, security, style", other);
+                anyhow::bail!(
+                    "Unknown ruleset: '{}'. Available rulesets: all, recommended, strict, security, style",
+                    other
+                );
             }
         }
     }
@@ -411,7 +455,9 @@ fn print_diagnostics(
     severity_filter: Option<&Vec<lint::Severity>>,
 ) {
     // Filter diagnostics by severity if specified
-    let filtered_diagnostics: Vec<_> = result.diagnostics.iter()
+    let filtered_diagnostics: Vec<_> = result
+        .diagnostics
+        .iter()
         .filter(|d| {
             if let Some(filter) = severity_filter {
                 filter.contains(&d.severity)
@@ -427,10 +473,12 @@ fn print_diagnostics(
     }
 
     let lines: Vec<&str> = spec_content.lines().collect();
-    let error_count = filtered_diagnostics.iter()
+    let error_count = filtered_diagnostics
+        .iter()
         .filter(|d| matches!(d.severity, lint::Severity::Error))
         .count();
-    let warning_count = filtered_diagnostics.iter()
+    let warning_count = filtered_diagnostics
+        .iter()
         .filter(|d| matches!(d.severity, lint::Severity::Warning))
         .count();
 
@@ -455,9 +503,7 @@ fn print_diagnostics(
         let col_num = diag.range.start.col + 1;
         println!(
             "  \x1b[1;36m-->\x1b[0m {}:{}:{}",
-            spec_path,
-            line_num,
-            col_num
+            spec_path, line_num, col_num
         );
 
         // Print the source line with context
@@ -492,10 +538,7 @@ fn print_diagnostics(
 
             println!(
                 "{} \x1b[1;36m|\x1b[0m {}{}{}\x1b[0m",
-                gutter_padding,
-                spaces,
-                caret_color,
-                carets
+                gutter_padding, spaces, caret_color, carets
             );
             println!("{} \x1b[1;36m|\x1b[0m", gutter_padding);
         }
@@ -506,13 +549,177 @@ fn print_diagnostics(
     // Print summary
     let mut summary_parts = Vec::new();
     if error_count > 0 {
-        summary_parts.push(format!("\x1b[1;31m{} error{}\x1b[0m", error_count, if error_count == 1 { "" } else { "s" }));
+        summary_parts.push(format!(
+            "\x1b[1;31m{} error{}\x1b[0m",
+            error_count,
+            if error_count == 1 { "" } else { "s" }
+        ));
     }
     if warning_count > 0 {
-        summary_parts.push(format!("\x1b[1;33m{} warning{}\x1b[0m", warning_count, if warning_count == 1 { "" } else { "s" }));
+        summary_parts.push(format!(
+            "\x1b[1;33m{} warning{}\x1b[0m",
+            warning_count,
+            if warning_count == 1 { "" } else { "s" }
+        ));
     }
 
     if !summary_parts.is_empty() {
         println!("{}", summary_parts.join(", "));
+    }
+}
+
+fn handle_merge(files: Vec<PathBuf>, output: Option<PathBuf>, verbose: bool) -> Result<()> {
+    if files.is_empty() {
+        anyhow::bail!("At least one file is required");
+    }
+
+    // Collect all files (expand directories)
+    let all_files = collect_files(&files)?;
+
+    if all_files.is_empty() {
+        anyhow::bail!("No JSON or YAML files found");
+    }
+
+    if verbose {
+        eprintln!("🔍 Found {} files to merge", all_files.len());
+        for file in &all_files {
+            eprintln!("  📄 {}", file.display());
+        }
+    }
+
+    // Determine output format from first file
+    let first_file = &all_files[0];
+    let output_json = is_json_file(first_file);
+
+    if verbose {
+        eprintln!(
+            "📝 Output format: {} (based on {})",
+            if output_json { "JSON" } else { "YAML" },
+            first_file.display()
+        );
+    }
+
+    // Parse and merge all files
+    let mut result: Option<Value> = None;
+
+    for file in &all_files {
+        if verbose {
+            eprintln!("🔗 Merging: {}", file.display());
+        }
+
+        let content = std::fs::read_to_string(file)
+            .with_context(|| format!("Failed to read file: {}", file.display()))?;
+
+        let value: Value = if is_json_file(file) {
+            serde_json::from_str(&content)
+                .with_context(|| format!("Failed to parse JSON: {}", file.display()))?
+        } else {
+            // Use strict_booleans to avoid YAML 1.1 quirks where y/n/yes/no/on/off
+            // are interpreted as booleans instead of strings
+            let options = serde_saphyr::Options {
+                strict_booleans: true,
+                ..Default::default()
+            };
+            serde_saphyr::from_str_with_options(&content, options)
+                .with_context(|| format!("Failed to parse YAML: {}", file.display()))?
+        };
+
+        result = Some(match result {
+            None => value,
+            Some(left) => deep_merge(left, value),
+        });
+    }
+
+    let merged = result.unwrap();
+
+    // Serialize output
+    let output_content = if output_json {
+        serde_json::to_string_pretty(&merged).context("Failed to serialize JSON")?
+    } else {
+        serde_saphyr::to_string(&merged).context("Failed to serialize YAML")?
+    };
+
+    // Write output
+    if let Some(output_path) = output {
+        if verbose {
+            eprintln!("💾 Writing merged output to: {}", output_path.display());
+        }
+        std::fs::write(&output_path, &output_content)
+            .with_context(|| format!("Failed to write to {}", output_path.display()))?;
+        println!(
+            "✅ Merged {} files into {}",
+            all_files.len(),
+            output_path.display()
+        );
+    } else {
+        println!("{}", output_content);
+    }
+
+    Ok(())
+}
+
+/// Collect all JSON/YAML files from paths (expanding directories)
+fn collect_files(paths: &[PathBuf]) -> Result<Vec<PathBuf>> {
+    let mut files = Vec::new();
+
+    for path in paths {
+        if path.is_dir() {
+            // Collect and sort directory entries for deterministic ordering
+            let mut dir_files: Vec<PathBuf> = std::fs::read_dir(path)
+                .with_context(|| format!("Failed to read directory: {}", path.display()))?
+                .filter_map(|entry| entry.ok())
+                .map(|entry| entry.path())
+                .filter(|p| p.is_file() && is_json_or_yaml_file(p))
+                .collect();
+            dir_files.sort();
+            files.extend(dir_files);
+        } else if path.is_file() {
+            files.push(path.clone());
+        } else {
+            anyhow::bail!("Path does not exist: {}", path.display());
+        }
+    }
+
+    Ok(files)
+}
+
+fn is_json_file(path: &std::path::Path) -> bool {
+    path.extension()
+        .is_some_and(|ext| ext.eq_ignore_ascii_case("json"))
+}
+
+fn is_json_or_yaml_file(path: &std::path::Path) -> bool {
+    path.extension().is_some_and(|ext| {
+        ext.eq_ignore_ascii_case("json")
+            || ext.eq_ignore_ascii_case("yaml")
+            || ext.eq_ignore_ascii_case("yml")
+    })
+}
+
+/// Deep merge two JSON values.
+/// - Primitives: left wins
+/// - Arrays: concatenate [...left, ...right]
+/// - Objects: recursively merge
+fn deep_merge(left: Value, right: Value) -> Value {
+    match (left, right) {
+        // Both are objects: merge recursively
+        (Value::Object(mut left_map), Value::Object(right_map)) => {
+            for (key, right_val) in right_map {
+                left_map
+                    .entry(&key)
+                    .and_modify(|left_val| {
+                        *left_val = deep_merge(left_val.take(), right_val.clone());
+                    })
+                    .or_insert(right_val);
+            }
+            Value::Object(left_map)
+        }
+        // Both are arrays: concatenate
+        (Value::Array(mut left_arr), Value::Array(right_arr)) => {
+            left_arr.extend(right_arr);
+            Value::Array(left_arr)
+        }
+        // Primitives or mismatched types: left wins
+        (left, _) => left,
     }
 }

@@ -10,11 +10,13 @@ pub fn read(path: impl Into<PathBuf>) -> Result<String, error::ParserError> {
 }
 
 pub fn parse(input: &str) -> Result<oas3::Spec, error::ParserError> {
-    let document: oas3::Spec = match serde_json::from_str(input) {
-        Ok(document) => document,
-        // fallback to yaml if json parsing fails
-        Err(_) => serde_saphyr::from_str(input)?,
+    // Use strict_booleans to avoid YAML 1.1 quirks where y/n/yes/no/on/off
+    // are interpreted as booleans instead of strings
+    let options = serde_saphyr::Options {
+        strict_booleans: true,
+        ..Default::default()
     };
+    let document: oas3::Spec = serde_saphyr::from_str_with_options(input, options)?;
     Ok(document)
 }
 

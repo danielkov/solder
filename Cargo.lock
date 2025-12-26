@@ -291,6 +291,7 @@ dependencies = [
  "lint",
  "oas",
  "parser",
+ "serde-saphyr",
  "serde_json",
 ]
 
