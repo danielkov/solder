@@ -97,7 +97,7 @@ all: check build
 
 # Test CLI with petstore example
 test-cli:
-	cargo run --bin oas-gen -- examples/petstore.json -t typescript -v
+	test-all
 
 # Test specific crate
 test-parser:
