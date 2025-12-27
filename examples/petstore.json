@@ -39,6 +39,10 @@
     {
       "name": "files",
       "description": "File upload operations"
+    },
+    {
+      "name": "faq",
+      "description": "FAQ management - tests acronym handling"
     }
   ],
   "paths": {
@@ -532,6 +536,179 @@
           }
         }
       }
+    },
+    "/faq": {
+      "get": {
+        "tags": ["faq"],
+        "summary": "List FAQ items",
+        "description": "Returns a list of frequently asked questions - tests acronym handling",
+        "operationId": "listFAQItems",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by category",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/FAQCategory"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of FAQ items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FAQList"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/faq/{id}": {
+      "get": {
+        "tags": ["faq"],
+        "summary": "Get FAQ item by ID",
+        "operationId": "getFAQItem",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "FAQ item details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FAQItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "FAQ item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{petId}/photo": {
+      "get": {
+        "tags": ["pets"],
+        "summary": "Get pet photo",
+        "description": "Returns the pet's photo as binary data - tests single binary response handling",
+        "operationId": "getPetPhoto",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pet photo",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pet or photo not found"
+          }
+        }
+      }
+    },
+    "/pets/{petId}/documents": {
+      "get": {
+        "tags": ["pets"],
+        "summary": "Get pet documents",
+        "description": "Returns pet documents in various formats - tests multiple binary content types",
+        "operationId": "getPetDocuments",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Document format",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["pdf", "png", "jpeg"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pet documents",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pet not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -889,6 +1066,72 @@
             "description": "Additional error details",
             "additionalProperties": true,
             "nullable": true
+          }
+        }
+      },
+      "FAQItem": {
+        "type": "object",
+        "description": "Frequently asked question item - tests acronym handling (FAQItem -> FaqItem)",
+        "required": ["id", "question", "answer", "category"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "question": {
+            "type": "string",
+            "description": "The question text"
+          },
+          "answer": {
+            "type": "string",
+            "description": "The answer text"
+          },
+          "category": {
+            "$ref": "#/components/schemas/FAQCategory"
+          },
+          "relatedURLs": {
+            "type": "array",
+            "description": "Related URLs - tests URL acronym handling",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      },
+      "FAQCategory": {
+        "type": "string",
+        "description": "FAQ category - tests acronym in enum name",
+        "enum": ["general", "orders", "shipping", "returns", "pets"]
+      },
+      "FAQList": {
+        "type": "object",
+        "description": "List of FAQ items",
+        "required": ["items", "total"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FAQItem"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of FAQ items"
+          }
+        }
+      },
+      "HTTPError": {
+        "type": "object",
+        "description": "HTTP error response - tests HTTP acronym handling",
+        "required": ["statusCode", "message"],
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "description": "HTTP status code"
+          },
+          "message": {
+            "type": "string"
           }
         }
       }

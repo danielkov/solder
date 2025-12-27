@@ -17,13 +17,19 @@ fn escape_keyword(name: &str) -> String {
 }
 
 mod filters {
-    use ir::gen_ir::StableId;
+    use ir::gen_ir::{CanonicalName, StableId};
 
     pub fn escape_rust_keyword(name: &str, _: &dyn askama::Values) -> askama::Result<String> {
         Ok(super::escape_keyword(name))
     }
 
+    /// Convert a string to PascalCase using CanonicalName
+    pub fn to_pascal_case(name: &str, _: &dyn askama::Values) -> askama::Result<String> {
+        Ok(CanonicalName::from_string(name).pascal)
+    }
+
     /// Render a type reference to its Rust type
+    /// Uses CanonicalName to ensure consistent pascal case naming
     pub fn render_type(type_id: &StableId, _: &dyn askama::Values) -> askama::Result<String> {
         match type_id {
             StableId::Primitive(p) => {
@@ -44,7 +50,11 @@ mod filters {
                 };
                 Ok(rust_type.to_string())
             }
-            StableId::Named(name) => Ok(format!("crate::types::{}", name)),
+            StableId::Named(name) => {
+                // Use CanonicalName to get proper pascal case (handles acronyms like FAQItem -> FaqItem)
+                let pascal = CanonicalName::from_string(name).pascal;
+                Ok(format!("crate::types::{}", pascal))
+            }
         }
     }
 

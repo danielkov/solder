@@ -37,7 +37,7 @@ pub enum {{ op.name.pascal }}Response {
     {% for ct in op_wrap.binary_content_types -%}
     {% let variant_name = ct.replace("/", "_").replace("-", "_").replace("+", "_").replace(".", "_") -%}
     /// Response with Content-Type: {{ ct }}
-    {{ variant_name|escape_rust_keyword }}(bytes::Bytes),
+    {{ variant_name|to_pascal_case }}(bytes::Bytes),
     {% endfor -%}
     /// Custom content type response
     Custom { content_type: String, body: bytes::Bytes },
@@ -48,7 +48,7 @@ impl IntoResponse for {{ op.name.pascal }}Response {
         match self {
             {% for ct in op_wrap.binary_content_types -%}
             {% let variant_name = ct.replace("/", "_").replace("-", "_").replace("+", "_").replace(".", "_") -%}
-            {{ op.name.pascal }}Response::{{ variant_name|escape_rust_keyword }}(body) => {
+            {{ op.name.pascal }}Response::{{ variant_name|to_pascal_case }}(body) => {
                 ([(header::CONTENT_TYPE, "{{ ct }}")], body).into_response()
             }
             {% endfor -%}

@@ -354,7 +354,10 @@ impl RustAxumGenerator {
                 ir::gen_ir::Primitive::Decimal => "rust_decimal::Decimal".to_string(),
                 ir::gen_ir::Primitive::Any => "serde_json::Value".to_string(),
             },
-            ir::gen_ir::StableId::Named(name) => name.clone(),
+            ir::gen_ir::StableId::Named(name) => {
+                // Use CanonicalName to ensure consistent pascal case (handles acronyms like FAQItem -> FaqItem)
+                CanonicalName::from_string(name).pascal
+            }
         }
     }
 

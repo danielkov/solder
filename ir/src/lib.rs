@@ -1910,9 +1910,13 @@ fn convert_responses(
         {
             // Resolve the response
             if let Ok(response) = response_ref.resolve(ctx.spec) {
-                // Get first content type
-                if let Some((content_type, media_type)) = response.content.iter().next() {
+                // Collect ALL content types for produces
+                for content_type in response.content.keys() {
                     produces.push(content_type.clone());
+                }
+
+                // Get first content type for the main payload
+                if let Some((content_type, media_type)) = response.content.iter().next() {
 
                     if let Some(schema_ref) = &media_type.schema {
                         // Check if this is an inline schema that should be hoisted
