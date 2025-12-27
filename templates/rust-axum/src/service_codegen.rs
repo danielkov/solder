@@ -169,9 +169,7 @@ impl<'a> OperationTemplate<'a> {
     /// Only application/json and application/*+json are considered JSON
     /// text/* types like text/csv are NOT JSON
     fn is_json_content_type(ct: &str) -> bool {
-        ct == "application/json"
-            || ct.starts_with("application/json;")
-            || ct.ends_with("+json")
+        ct == "application/json" || ct.starts_with("application/json;") || ct.ends_with("+json")
     }
 
     fn new(operation: &'a Operation) -> Self {
