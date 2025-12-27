@@ -96,8 +96,7 @@ check: fmt lint test
 all: check build
 
 # Test CLI with petstore example
-test-cli:
-	test-all
+test-cli: run-all
 
 # Test specific crate
 test-parser:
