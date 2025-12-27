@@ -1789,14 +1789,10 @@ fn extract_multipart_encoding(
 ) -> Vec<PartEncoding> {
     let mut encodings = Vec::new();
 
-    // Get the schema (resolve reference if needed)
-    let schema = match schema_ref {
-        oas3::spec::ObjectOrReference::Object(s) => s,
-        oas3::spec::ObjectOrReference::Ref { .. } => {
-            // For referenced schemas, we can't extract encoding info here
-            // The template will need to handle this case
-            return encodings;
-        }
+    // Resolve the schema (handles both inline and referenced schemas)
+    let schema = match schema_ref.resolve(ctx.spec) {
+        Ok(s) => s,
+        Err(_) => return encodings,
     };
 
     // Extract field names and types from schema properties
@@ -1916,62 +1912,61 @@ fn convert_responses(
                 }
 
                 // Get first content type for the main payload
-                if let Some((content_type, media_type)) = response.content.iter().next() {
-
-                    if let Some(schema_ref) = &media_type.schema {
-                        // Check if this is an inline schema that should be hoisted
-                        let ty = match schema_ref {
-                            oas3::spec::ObjectOrReference::Ref { .. } => {
-                                // Reference - use normal conversion
+                if let Some((content_type, media_type)) = response.content.iter().next()
+                    && let Some(schema_ref) = &media_type.schema
+                {
+                    // Check if this is an inline schema that should be hoisted
+                    let ty = match schema_ref {
+                        oas3::spec::ObjectOrReference::Ref { .. } => {
+                            // Reference - use normal conversion
+                            convert_schema_ref_to_type_ref(ctx, schema_ref)
+                        }
+                        oas3::spec::ObjectOrReference::Object(inline_schema) => {
+                            // Inline schema - check if we should hoist it
+                            if should_hoist_schema(inline_schema) {
+                                // Hoist inline schema
+                                let type_name = generate_inline_type_name(
+                                    ctx,
+                                    ctx.current_operation_id.as_deref(),
+                                    "Response",
+                                    None,
+                                );
+                                let type_id = hoist_inline_schema_with_parent(
+                                    ctx,
+                                    type_name.clone(),
+                                    inline_schema,
+                                    Some(&type_name),
+                                );
+                                TypeRef {
+                                    target: type_id,
+                                    optional: false,
+                                    nullable: inline_schema.is_nullable().unwrap_or(false),
+                                    by_ref: false,
+                                    modifiers: Vec::new(),
+                                }
+                            } else {
+                                // Simple inline schema - use normal conversion
                                 convert_schema_ref_to_type_ref(ctx, schema_ref)
                             }
-                            oas3::spec::ObjectOrReference::Object(inline_schema) => {
-                                // Inline schema - check if we should hoist it
-                                if should_hoist_schema(inline_schema) {
-                                    // Hoist inline schema
-                                    let type_name = generate_inline_type_name(
-                                        ctx,
-                                        ctx.current_operation_id.as_deref(),
-                                        "Response",
-                                        None,
-                                    );
-                                    let type_id = hoist_inline_schema_with_parent(
-                                        ctx,
-                                        type_name.clone(),
-                                        inline_schema,
-                                        Some(&type_name),
-                                    );
-                                    TypeRef {
-                                        target: type_id,
-                                        optional: false,
-                                        nullable: inline_schema.is_nullable().unwrap_or(false),
-                                        by_ref: false,
-                                        modifiers: Vec::new(),
-                                    }
-                                } else {
-                                    // Simple inline schema - use normal conversion
-                                    convert_schema_ref_to_type_ref(ctx, schema_ref)
-                                }
-                            }
-                        };
+                        }
+                    };
 
-                        let payload = Payload {
-                            status: StatusSpec::Code(code),
-                            content_type: Some(content_type.clone()),
-                            ty: Some(ty),
-                            headers: Vec::new(), // TODO: convert response headers
-                            docs: Docs {
-                                summary: response.description.clone(),
-                                description: None,
-                                deprecated: false,
-                                since: None,
-                                examples: Vec::new(),
-                                external_urls: Vec::new(),
-                            },
-                        };
+                    let payload = Payload {
+                        status: StatusSpec::Code(code),
+                        content_type: Some(content_type.clone()),
+                        ty: Some(ty),
+                        headers: Vec::new(), // TODO: convert response headers
+                        docs: Docs {
+                            summary: response.description.clone(),
+                            description: None,
+                            deprecated: false,
+                            since: None,
+                            examples: Vec::new(),
+                            external_urls: Vec::new(),
+                        },
+                    };
 
-                        return (Some(payload), produces);
-                    }
+                    return (Some(payload), produces);
                 }
 
                 // Response with no content

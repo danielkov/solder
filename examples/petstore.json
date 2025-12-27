@@ -730,6 +730,29 @@
           }
         }
       }
+    },
+    "/files/import": {
+      "post": {
+        "tags": ["files"],
+        "summary": "Import a file with referenced schema",
+        "description": "Import a file using a referenced multipart schema (tests multipart with $ref)",
+        "operationId": "importFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/FileImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File imported successfully"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1153,6 +1176,26 @@
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "FileImportRequest": {
+        "type": "object",
+        "description": "Request body for file import - tests multipart with $ref",
+        "required": ["file", "format"],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "The file to import"
+          },
+          "format": {
+            "type": "string",
+            "description": "The format of the file (e.g., csv, json, xml)"
+          },
+          "validate": {
+            "type": "boolean",
+            "description": "Whether to validate the file before importing"
           }
         }
       }

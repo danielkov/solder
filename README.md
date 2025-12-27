@@ -37,16 +37,16 @@ cargo build --release
 
 ```bash
 # Generate TypeScript SDK from the example
-./target/release/oas-gen examples/petstore.json -t typescript
+./target/release/oas-gen generate examples/petstore.json -t typescript
 
 # Specify custom output directory
-./target/release/oas-gen examples/petstore.json -t typescript -o ./my-sdk
+./target/release/oas-gen generate examples/petstore.json -t typescript -o ./my-sdk
 
 # Single client style
-./target/release/oas-gen examples/petstore.json -t typescript --service-style single-client
+./target/release/oas-gen generate examples/petstore.json -t typescript --service-style single-client
 
 # Verbose output
-./target/release/oas-gen examples/petstore.json -t typescript -v
+./target/release/oas-gen generate examples/petstore.json -t typescript -v
 ```
 
 ### CLI Options
@@ -158,7 +158,7 @@ cargo doc --open
 
 ```bash
 # Run without building release
-cargo run --bin oas-gen -- examples/petstore.json -t typescript -v
+cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v
 ```
 
 ## Example: Pet Store API

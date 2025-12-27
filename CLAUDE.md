@@ -32,7 +32,7 @@ make run-stripe       # Generate from stripe example
 make run-openrouter   # Generate from openrouter example
 
 # Or run the CLI (development)
-cargo run --bin oas-gen -- examples/petstore.json -t typescript -v
+cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v
 
 # Build release binary
 cargo build --release
@@ -336,4 +336,5 @@ eprintln!("Generating type: {:?}", type_decl.name);
 # Run specific test with output
 cargo test test_name -- --nocapture
 ```
+
 - no TODOs use cargo expand to debug macro output
