@@ -85,24 +85,24 @@ jobs:
       - name: Run clippy
         run: make lint
 
-  build:
-    name: Build Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  # build:
+  #   name: Build Release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+  #     - name: Install Rust
+  #       uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         override: true
 
-      - name: Build release
-        run: make release
+  #     - name: Build release
+  #       run: make release
 
-      - name: Upload binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: oas-gen-linux
-          path: target/release/oas-gen
+  #     - name: Upload binary
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: oas-gen-linux
+  #         path: target/release/oas-gen

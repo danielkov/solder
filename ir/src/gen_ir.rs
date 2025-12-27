@@ -587,33 +587,70 @@ impl CanonicalName {
 }
 
 /// Convert string to snake_case
+///
+/// Handles acronyms/uppercase sequences properly:
+/// - "FAQItems" → "faq_items"
+/// - "HTTPClient" → "http_client"
+/// - "XMLParser" → "xml_parser"
+/// - "listPets" → "list_pets"
 fn to_snake_case(s: &str) -> String {
     let mut result = String::new();
-    let mut prev_is_upper = false;
-    let mut prev_is_separator = false;
+    let chars: Vec<char> = s.chars().collect();
 
-    for (i, ch) in s.chars().enumerate() {
+    for (i, &ch) in chars.iter().enumerate() {
         if ch.is_uppercase() {
-            if i > 0 && !prev_is_upper && !prev_is_separator {
-                result.push('_');
+            // Check if we need to insert an underscore before this uppercase letter
+            // Cases where we add underscore:
+            // 1. After a lowercase letter: "listPets" → "list_Pets"
+            // 2. After an uppercase sequence when followed by lowercase: "HTTPClient" → "HTTP_Client"
+            //    (We detect this by checking if current is uppercase, previous is uppercase,
+            //    and next is lowercase)
+            if i > 0 {
+                let prev = chars[i - 1];
+                let next = chars.get(i + 1);
+
+                // Case 1: previous is lowercase or digit
+                if prev.is_lowercase()
+                    || prev.is_ascii_digit()
+                    // Case 2: previous is uppercase, and this char is uppercase followed by lowercase
+                    // This handles "HTTPClient" -> we want underscore before 'C' (last of HTTP run)
+                    || (prev.is_uppercase() && next.is_some_and(|c| c.is_lowercase()))
+                {
+                    result.push('_');
+                }
             }
             result.push(ch.to_lowercase().next().unwrap());
-            prev_is_upper = true;
-            prev_is_separator = false;
         } else if ch.is_alphanumeric() {
             result.push(ch);
-            prev_is_upper = false;
-            prev_is_separator = false;
         } else {
-            if !result.is_empty() && !prev_is_separator {
+            // Non-alphanumeric separator - convert to underscore
+            if !result.is_empty() && !result.ends_with('_') {
                 result.push('_');
-                prev_is_separator = true;
             }
-            prev_is_upper = false;
         }
     }
 
-    result
+    // Clean up: remove trailing underscores and collapse multiple underscores
+    let mut cleaned = String::new();
+    let mut prev_was_underscore = false;
+    for ch in result.chars() {
+        if ch == '_' {
+            if !prev_was_underscore && !cleaned.is_empty() {
+                cleaned.push('_');
+            }
+            prev_was_underscore = true;
+        } else {
+            cleaned.push(ch);
+            prev_was_underscore = false;
+        }
+    }
+
+    // Remove trailing underscore
+    if cleaned.ends_with('_') {
+        cleaned.pop();
+    }
+
+    cleaned
 }
 
 /// Convert string to PascalCase

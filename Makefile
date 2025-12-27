@@ -28,33 +28,33 @@ test:
 	cargo test --verbose
 
 # Run CLI with example
-run:
-	cargo run --bin oas-gen -- examples/petstore.json -t typescript -v -o test-generated/typescript
+run-petstore:
+	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v -o test-generated/typescript
 
 # Run CLI with unkey example
 run-unkey:
-	cargo run --bin oas-gen -- examples/unkey.yml -t typescript -v -o test-generated/unkey-typescript
+	cargo run --bin oas-gen -- generate examples/unkey.yml -t typescript -v -o test-generated/unkey-typescript
 
 # Run CLI with stripe example
 run-stripe:
-	cargo run --bin oas-gen -- examples/stripe.json -t typescript -v -o test-generated/stripe-typescript
+	cargo run --bin oas-gen -- generate examples/stripe.json -t typescript -v -o test-generated/stripe-typescript
 
 run-openrouter:
-	cargo run --bin oas-gen -- examples/openrouter.yml -t typescript -v -o test-generated/openrouter-typescript
+	cargo run --bin oas-gen -- generate examples/openrouter.yml -t typescript -v -o test-generated/openrouter-typescript
 
 run-axum-petstore:
-	cargo run --bin oas-gen -- examples/petstore.json -t rust-axum -v -o test-generated/petstore-axum
+	cargo run --bin oas-gen -- generate examples/petstore.json -t rust-axum -v -o test-generated/petstore-axum
 
 run-axum-openrouter:
-	cargo run --bin oas-gen -- examples/openrouter.yml -t rust-axum -v -o test-generated/openrouter-axum
+	cargo run --bin oas-gen -- generate examples/openrouter.yml -t rust-axum -v -o test-generated/openrouter-axum
 
 run-axum-multi-file:
-	cargo run --bin oas-gen -- examples/multi-file/spec.yaml -r -t rust-axum -v -o test-generated/multi-file-axum
+	cargo run --bin oas-gen -- generate examples/multi-file/spec.yaml -r -t rust-axum -v -o test-generated/multi-file-axum
 
 run-multi-file:
-	cargo run --bin oas-gen -- examples/multi-file/spec.yaml -r -t typescript -v -o test-generated/multi-file-typescript
+	cargo run --bin oas-gen -- generate examples/multi-file/spec.yaml -r -t typescript -v -o test-generated/multi-file-typescript
 
-run-all: run run-unkey run-stripe run-openrouter
+run-all: run-petstore run-unkey run-stripe run-openrouter run-axum-petstore run-axum-openrouter run-axum-multi-file run-multi-file
 
 # Clean build artifacts
 clean:

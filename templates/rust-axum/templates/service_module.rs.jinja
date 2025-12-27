@@ -1,6 +1,6 @@
 //! {{ trait_name }} service module
 use axum::{
-    http::StatusCode,
+    http::{header, StatusCode},
     response::{IntoResponse, Response},
     routing::{
         {%- for method in methods %}{{ method }}{% if !loop.last %}, {% endif %}{% endfor -%}
@@ -28,6 +28,63 @@ pub struct AuthApiKey(pub String);
 {% set op = op_wrap.operation -%}
 
 // {{ op.name.pascal }} types
+{% match op_wrap.response_content_type -%}
+{% when ResponseContentType::MultipleBinary -%}
+/// Binary response with multiple supported content types.
+/// Use the appropriate variant to set the Content-Type header.
+#[derive(Debug)]
+pub enum {{ op.name.pascal }}Response {
+    {% for ct in op_wrap.binary_content_types -%}
+    {% let variant_name = ct.replace("/", "_").replace("-", "_").replace("+", "_").replace(".", "_") -%}
+    /// Response with Content-Type: {{ ct }}
+    {{ variant_name|escape_rust_keyword }}(bytes::Bytes),
+    {% endfor -%}
+    /// Custom content type response
+    Custom { content_type: String, body: bytes::Bytes },
+}
+
+impl IntoResponse for {{ op.name.pascal }}Response {
+    fn into_response(self) -> Response {
+        match self {
+            {% for ct in op_wrap.binary_content_types -%}
+            {% let variant_name = ct.replace("/", "_").replace("-", "_").replace("+", "_").replace(".", "_") -%}
+            {{ op.name.pascal }}Response::{{ variant_name|escape_rust_keyword }}(body) => {
+                ([(header::CONTENT_TYPE, "{{ ct }}")], body).into_response()
+            }
+            {% endfor -%}
+            {{ op.name.pascal }}Response::Custom { content_type, body } => {
+                ([(header::CONTENT_TYPE, content_type)], body).into_response()
+            }
+        }
+    }
+}
+
+pub type {{ op.name.pascal }}Result = Result<{{ op.name.pascal }}Response, {{ op.name.pascal }}Error>;
+{% when ResponseContentType::Binary -%}
+{% if let Some(success) = op.success -%}
+{% if let Some(ty) = success.ty -%}
+/// Binary response wrapper that sets the Content-Type header.
+#[derive(Debug)]
+pub struct {{ op.name.pascal }}Response(pub {{ ty.target|render_type }});
+
+impl IntoResponse for {{ op.name.pascal }}Response {
+    fn into_response(self) -> Response {
+        {% if let Some(ct) = success.content_type -%}
+        ([(header::CONTENT_TYPE, "{{ ct }}")], self.0).into_response()
+        {% else -%}
+        ([(header::CONTENT_TYPE, "application/octet-stream")], self.0).into_response()
+        {% endif -%}
+    }
+}
+
+pub type {{ op.name.pascal }}Result = Result<{{ op.name.pascal }}Response, {{ op.name.pascal }}Error>;
+{% else -%}
+pub type {{ op.name.pascal }}Result = Result<(), {{ op.name.pascal }}Error>;
+{% endif -%}
+{% else -%}
+pub type {{ op.name.pascal }}Result = Result<(), {{ op.name.pascal }}Error>;
+{% endif -%}
+{% when _ -%}
 {% if let Some(success) = op.success -%}
 {% if let Some(ty) = success.ty -%}
 pub type {{ op.name.pascal }}Result = Result<{{ ty.target|render_type }}, {{ op.name.pascal }}Error>;
@@ -37,6 +94,7 @@ pub type {{ op.name.pascal }}Result = Result<(), {{ op.name.pascal }}Error>;
 {% else -%}
 pub type {{ op.name.pascal }}Result = Result<(), {{ op.name.pascal }}Error>;
 {% endif -%}
+{% endmatch -%}
 
 #[derive(Debug)]
 pub enum {{ op.name.pascal }}Error {
@@ -487,6 +545,10 @@ where
                     {% if success.ty.is_some() -%}
                     {% match op_wrap.response_content_type -%}
                     {% when ResponseContentType::Binary -%}
+                    // Binary response - use the wrapper's IntoResponse which sets Content-Type
+                    (status, result).into_response()
+                    {% when ResponseContentType::MultipleBinary -%}
+                    // Multiple binary content types - result implements IntoResponse with proper headers
                     (status, result).into_response()
                     {% when _ -%}
                     (status, Json(result)).into_response()

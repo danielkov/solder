@@ -132,6 +132,8 @@ struct OperationTemplate<'a> {
     method_fn: &'static str,
     request_content_type: RequestContentType,
     response_content_type: ResponseContentType,
+    /// For binary responses with multiple content types, this contains all supported types
+    binary_content_types: Vec<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -145,7 +147,10 @@ pub enum RequestContentType {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ResponseContentType {
     Json,
+    /// Single binary content type (e.g., "application/octet-stream")
     Binary,
+    /// Multiple binary content types - caller must specify which to return
+    MultipleBinary,
     None,
 }
 
@@ -179,12 +184,27 @@ impl<'a> OperationTemplate<'a> {
             RequestContentType::None
         };
 
-        // Detect response content type
+        // Detect response content type and collect binary content types
+        let mut binary_content_types = Vec::new();
+
+        // First check if we have multiple produces (from http.produces)
+        for ct in &operation.http.produces {
+            if !ct.starts_with("application/json") && !ct.starts_with("text/") {
+                binary_content_types.push(ct.clone());
+            }
+        }
+
         let response_content_type = if let Some(success) = &operation.success {
             if let Some(ct) = &success.content_type {
                 if ct.starts_with("application/json") || ct.starts_with("text/") {
                     ResponseContentType::Json
+                } else if binary_content_types.len() > 1 {
+                    ResponseContentType::MultipleBinary
                 } else {
+                    // Single binary type - add to list if not already there
+                    if binary_content_types.is_empty() {
+                        binary_content_types.push(ct.clone());
+                    }
                     ResponseContentType::Binary
                 }
             } else {
@@ -199,6 +219,7 @@ impl<'a> OperationTemplate<'a> {
             method_fn,
             request_content_type,
             response_content_type,
+            binary_content_types,
         }
     }
 }

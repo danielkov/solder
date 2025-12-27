@@ -15,6 +15,7 @@ struct BuildContext<'a> {
     used_type_names: HashSet<String>, // Track used names for collision detection
     spec: &'a oas3::spec::Spec,
     current_operation_id: Option<String>, // Track current operation for naming
+    current_operation_tag: Option<String>, // Track current operation's primary tag for naming fallback
 }
 
 impl<'a> BuildContext<'a> {
@@ -27,6 +28,7 @@ impl<'a> BuildContext<'a> {
             used_type_names: HashSet::new(),
             spec,
             current_operation_id: None,
+            current_operation_tag: None,
         }
     }
 
@@ -80,6 +82,10 @@ fn to_pascal_case(s: &str) -> String {
 }
 
 /// Generate a unique name for an inline schema
+///
+/// When there's a name collision, tries to prefix with the operation's tag first
+/// (e.g., "DogsListResponse" instead of "ListResponse2") before falling back
+/// to numeric suffixes.
 fn generate_inline_type_name(
     ctx: &BuildContext,
     operation_id: Option<&str>,
@@ -97,7 +103,20 @@ fn generate_inline_type_name(
         (None, None, _) => format!("InlineType{}", context),
     };
 
-    // Handle name collisions by appending counter
+    // If base name is unique, use it
+    if !ctx.used_type_names.contains(&base_name) {
+        return base_name;
+    }
+
+    // Try prefixing with tag name first (e.g., "DogsListResponse" instead of "ListResponse2")
+    if let Some(tag) = &ctx.current_operation_tag {
+        let tag_prefixed = format!("{}{}", to_pascal_case(tag), base_name);
+        if !ctx.used_type_names.contains(&tag_prefixed) {
+            return tag_prefixed;
+        }
+    }
+
+    // Fall back to numeric suffix
     let mut candidate = base_name.clone();
     let mut suffix = 2;
     while ctx.used_type_names.contains(&candidate) {
@@ -1505,14 +1524,20 @@ fn convert_path_item(
 
     for (method_name, operation_opt) in methods {
         if let Some(operation) = operation_opt {
-            let op = convert_operation(ctx, path, method_name, operation, global_security);
-
-            // Group by first tag or "default"
+            // Extract tag first so it can be used for collision resolution in naming
             let tag = operation
                 .tags
                 .first()
                 .cloned()
                 .unwrap_or_else(|| "default".to_string());
+
+            // Set current tag in context for schema naming fallback
+            ctx.current_operation_tag = Some(tag.clone());
+
+            let op = convert_operation(ctx, path, method_name, operation, global_security);
+
+            // Clear tag after operation is converted
+            ctx.current_operation_tag = None;
 
             services_map.entry(tag).or_default().push(op);
         }
@@ -2420,10 +2445,22 @@ mod tests {
     #[test]
     fn test_canonical_name_edge_cases() {
         // Test edge cases in name conversion
+        // The algorithm properly handles acronyms by detecting uppercase sequences
+        // followed by lowercase letters (e.g., "HTTPClient" → "http_client")
         let test_cases = vec![
-            ("HTTPClient", "httpclient", "Httpclient", "httpclient"),
+            // Acronyms followed by words
+            ("HTTPClient", "http_client", "HttpClient", "httpClient"),
             ("API", "api", "Api", "api"),
-            ("XMLParser", "xmlparser", "Xmlparser", "xmlparser"),
+            ("XMLParser", "xml_parser", "XmlParser", "xmlParser"),
+            ("FAQItems", "faq_items", "FaqItems", "faqItems"),
+            ("POSCart", "pos_cart", "PosCart", "posCart"),
+            (
+                "ListMVPStatus",
+                "list_mvp_status",
+                "ListMvpStatus",
+                "listMvpStatus",
+            ),
+            // Standard cases
             ("user_id", "user_id", "UserId", "userId"),
             (
                 "kebab-case-name",
@@ -2439,6 +2476,9 @@ mod tests {
             ),
             ("UPPER_SNAKE", "upper_snake", "UpperSnake", "upperSnake"),
             ("123number", "123number", "123number", "123number"),
+            // All caps
+            ("URL", "url", "Url", "url"),
+            ("HTML", "html", "Html", "html"),
         ];
 
         for (input, expected_snake, expected_pascal, expected_camel) in test_cases {
@@ -3210,7 +3250,7 @@ mod tests {
                         output.push_str(&format!("{:?}\n\n", c));
                     }
                     AliasTarget::Reference(r) => {
-                        output.push_str(&format!("{}\n\n", r.target.to_string()));
+                        output.push_str(&format!("{}\n\n", r.target));
                     }
                 },
                 TypeKind::Union { style, variants } => {
@@ -4206,6 +4246,115 @@ type Extended = {
         assert_ne!(
             app_type.id, app_union.id,
             "Application schema and ApplicationUnion should have different StableIds"
+        );
+    }
+
+    #[test]
+    fn test_operation_id_collision_uses_tag_prefix() {
+        // Test that when multiple operations have the same operationId,
+        // the inline types get prefixed with the tag name instead of numeric suffix
+        let json = r##"{
+            "openapi": "3.0.0",
+            "info": {
+                "title": "Test API",
+                "version": "1.0.0"
+            },
+            "paths": {
+                "/dogs": {
+                    "get": {
+                        "operationId": "list",
+                        "tags": ["dogs"],
+                        "responses": {
+                            "200": {
+                                "description": "List of dogs",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "name": { "type": "string" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/cats": {
+                    "get": {
+                        "operationId": "list",
+                        "tags": ["cats"],
+                        "responses": {
+                            "200": {
+                                "description": "List of cats",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "breed": { "type": "string" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }"##;
+
+        let doc = parse(json).unwrap();
+        let gen_ir = GenIr::from(doc);
+
+        // Find the response types - one should be ListResponse, the other should be
+        // prefixed with the tag (DogsListResponse or CatsListResponse) instead of ListResponse2
+        let response_types: Vec<_> = gen_ir
+            .types
+            .values()
+            .filter(|t| {
+                t.name.pascal.contains("ListResponse") || t.name.pascal.contains("ListItem")
+            })
+            .map(|t| t.name.pascal.clone())
+            .collect();
+
+        // Should have types with tag prefixes instead of numeric suffixes
+        // We expect either DogsListResponse/CatsListResponse or similar tag-prefixed names
+        let has_tag_prefixed = response_types
+            .iter()
+            .any(|name| name.starts_with("Dogs") || name.starts_with("Cats"));
+
+        // We should NOT have numeric suffixes like ListResponse2
+        let has_numeric_suffix = response_types
+            .iter()
+            .any(|name| name.ends_with("2") || name.ends_with("3"));
+
+        assert!(
+            has_tag_prefixed || response_types.len() <= 2,
+            "Expected tag-prefixed names for colliding operationIds, got: {:?}",
+            response_types
+        );
+        assert!(
+            !has_numeric_suffix,
+            "Should not have numeric suffixes when tags are available, got: {:?}",
+            response_types
         );
     }
 }
