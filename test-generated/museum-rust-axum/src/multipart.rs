@@ -64,7 +64,9 @@ impl Spooled {
         match self.storage {
             SpoolStorage::InMemory(b) => Ok(b),
             SpoolStorage::TempFile(t) => {
-                let data = tokio::fs::read(&t.path).await.map_err(UploadParseError::Io)?;
+                let data = tokio::fs::read(&t.path)
+                    .await
+                    .map_err(UploadParseError::Io)?;
                 Ok(Bytes::from(data))
             }
         }
@@ -98,8 +100,16 @@ impl std::fmt::Display for UploadParseError {
         match self {
             UploadParseError::Multipart(e) => write!(f, "multipart error: {}", e),
             UploadParseError::Io(e) => write!(f, "io error: {}", e),
-            UploadParseError::FieldTooLarge { field_name, limit_bytes, observed_bytes } => {
-                write!(f, "field '{}' too large: {} > {} bytes", field_name, observed_bytes, limit_bytes)
+            UploadParseError::FieldTooLarge {
+                field_name,
+                limit_bytes,
+                observed_bytes,
+            } => {
+                write!(
+                    f,
+                    "field '{}' too large: {} > {} bytes",
+                    field_name, observed_bytes, limit_bytes
+                )
             }
             UploadParseError::NamelessField => write!(f, "multipart field missing name"),
         }
@@ -115,7 +125,10 @@ pub async fn spool_multipart_field(
     spill_threshold: usize,
     field_limit_bytes: Option<usize>,
 ) -> Result<Spooled, UploadParseError> {
-    let field_name = field.name().map(str::to_owned).ok_or(UploadParseError::NamelessField)?;
+    let field_name = field
+        .name()
+        .map(str::to_owned)
+        .ok_or(UploadParseError::NamelessField)?;
 
     let mut total: usize = 0;
 
@@ -159,12 +172,18 @@ pub async fn spool_multipart_field(
 
                     // Write buffered bytes first.
                     if !buf.is_empty() {
-                        tokio_file.write_all(&buf).await.map_err(UploadParseError::Io)?;
+                        tokio_file
+                            .write_all(&buf)
+                            .await
+                            .map_err(UploadParseError::Io)?;
                         buf.clear();
                     }
 
                     // Write the current chunk.
-                    tokio_file.write_all(&chunk).await.map_err(UploadParseError::Io)?;
+                    tokio_file
+                        .write_all(&chunk)
+                        .await
+                        .map_err(UploadParseError::Io)?;
 
                     spilled = Some((tmp, tokio_file, path));
                 }

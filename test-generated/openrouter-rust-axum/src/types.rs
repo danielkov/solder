@@ -40,14 +40,22 @@ pub struct AssistantMessage {
     pub tool_calls: Option<Vec<ChatMessageToolCall>>,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BadGatewayResponse {
     pub error: BadGatewayResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BadGatewayResponseErrorData {
     pub code: i32,
@@ -55,14 +63,30 @@ pub struct BadGatewayResponseErrorData {
     pub metadata: Option<MetadataProperty>,
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "models", feature = "o_auth"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "models",
+    feature = "o_auth"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BadRequestResponse {
     pub error: BadRequestResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "models", feature = "o_auth"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "models",
+    feature = "o_auth"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BadRequestResponseErrorData {
     pub code: i32,
@@ -78,7 +102,12 @@ pub enum BestOfUnion {
     Variant2(serde_json::Value),
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "endpoints", feature = "models"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "endpoints",
+    feature = "models"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum BigNumberUnion {
@@ -333,10 +362,12 @@ pub enum CompletionTokensDetailsUnion {
 #[cfg(feature = "chat")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CompletionTokensDetailsUnionObject {
-    pub accepted_prediction_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
+    pub accepted_prediction_tokens:
+        Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
     pub audio_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
     pub reasoning_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
-    pub rejected_prediction_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
+    pub rejected_prediction_tokens:
+        Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
 }
 
 #[cfg(feature = "chat")]
@@ -625,14 +656,22 @@ pub struct DeleteKeysResponse {
     pub deleted: bool,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EdgeNetworkTimeoutResponse {
     pub error: EdgeNetworkTimeoutResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EdgeNetworkTimeoutResponseErrorData {
     pub code: i32,
@@ -1121,14 +1160,38 @@ pub struct InputTokensDetailsProperty {
     pub cached_tokens: f32,
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "endpoints", feature = "generations", feature = "models", feature = "o_auth", feature = "parameters", feature = "providers"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "endpoints",
+    feature = "generations",
+    feature = "models",
+    feature = "o_auth",
+    feature = "parameters",
+    feature = "providers"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InternalServerResponse {
     pub error: InternalServerResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "endpoints", feature = "generations", feature = "models", feature = "o_auth", feature = "parameters", feature = "providers"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "endpoints",
+    feature = "generations",
+    feature = "models",
+    feature = "o_auth",
+    feature = "parameters",
+    feature = "providers"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InternalServerResponseErrorData {
     pub code: i32,
@@ -1218,9 +1281,7 @@ pub enum LogitBiasUnion {
 
 #[cfg(any(feature = "chat", feature = "completions"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct LogitBiasUnionObject {
-
-}
+pub struct LogitBiasUnionObject {}
 
 #[cfg(any(feature = "chat", feature = "completions"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1291,11 +1352,23 @@ pub enum Message {
     ToolResponseMessage(ToolResponseMessage),
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "chat", feature = "completions", feature = "credits", feature = "embeddings", feature = "endpoints", feature = "generations", feature = "models", feature = "o_auth", feature = "parameters", feature = "providers"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "chat",
+    feature = "completions",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "endpoints",
+    feature = "generations",
+    feature = "models",
+    feature = "o_auth",
+    feature = "parameters",
+    feature = "providers"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MetadataProperty {
-
-}
+pub struct MetadataProperty {}
 
 #[cfg(feature = "completions")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1391,14 +1464,28 @@ pub struct NamedToolChoice {
     pub r#type: String,
 }
 
-#[cfg(any(feature = "api_keys", feature = "beta_responses", feature = "embeddings", feature = "endpoints", feature = "generations", feature = "parameters"))]
+#[cfg(any(
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "endpoints",
+    feature = "generations",
+    feature = "parameters"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NotFoundResponse {
     pub error: NotFoundResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "api_keys", feature = "beta_responses", feature = "embeddings", feature = "endpoints", feature = "generations", feature = "parameters"))]
+#[cfg(any(
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "endpoints",
+    feature = "generations",
+    feature = "parameters"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NotFoundResponseErrorData {
     pub code: i32,
@@ -1664,9 +1751,7 @@ pub struct OpenResponsesRequest {
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OpenResponsesRequestMetadata {
-
-}
+pub struct OpenResponsesRequestMetadata {}
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1854,14 +1939,22 @@ pub struct PayloadTooLargeResponseErrorData {
     pub metadata: Option<MetadataProperty>,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentRequiredResponse {
     pub error: PaymentRequiredResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentRequiredResponseErrorData {
     pub code: i32,
@@ -1958,7 +2051,11 @@ pub enum PromptUnion {
     Variant4(Vec<Vec<f32>>),
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "endpoints"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "endpoints"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ProviderName {
     Ai21,
@@ -2025,14 +2122,22 @@ pub enum ProviderName {
     FakeProvider,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProviderOverloadedResponse {
     pub error: ProviderOverloadedResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "beta_responses", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "beta_responses",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProviderOverloadedResponseErrorData {
     pub code: i32,
@@ -2116,9 +2221,7 @@ pub enum Quantization {
 
 #[cfg(feature = "endpoints")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct QuantizationUnion {
-
-}
+pub struct QuantizationUnion {}
 
 #[cfg(feature = "chat")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2416,9 +2519,7 @@ pub enum SeedUnion {
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ServiceTierUnion {
-
-}
+pub struct ServiceTierUnion {}
 
 #[cfg(any(feature = "beta_responses", feature = "embeddings"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2513,14 +2614,26 @@ pub enum TemperatureUnion {
     Variant2(serde_json::Value),
 }
 
-#[cfg(any(feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TooManyRequestsResponse {
     pub error: TooManyRequestsResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "generations"))]
+#[cfg(any(
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "generations"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TooManyRequestsResponseErrorData {
     pub code: i32,
@@ -2626,9 +2739,7 @@ pub struct TopProviderInfo {
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TruncationUnion {
-
-}
+pub struct TruncationUnion {}
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2641,14 +2752,34 @@ pub struct UrlCitation {
     pub url: String,
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "generations", feature = "models", feature = "o_auth", feature = "parameters"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "generations",
+    feature = "models",
+    feature = "o_auth",
+    feature = "parameters"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnauthorizedResponse {
     pub error: UnauthorizedResponseErrorData,
     pub user_id: Option<String>,
 }
 
-#[cfg(any(feature = "analytics", feature = "api_keys", feature = "beta_responses", feature = "credits", feature = "embeddings", feature = "generations", feature = "models", feature = "o_auth", feature = "parameters"))]
+#[cfg(any(
+    feature = "analytics",
+    feature = "api_keys",
+    feature = "beta_responses",
+    feature = "credits",
+    feature = "embeddings",
+    feature = "generations",
+    feature = "models",
+    feature = "o_auth",
+    feature = "parameters"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UnauthorizedResponseErrorData {
     pub code: i32,
@@ -2721,9 +2852,7 @@ pub struct UserMessage {
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct VariablesProperty {
-
-}
+pub struct VariablesProperty {}
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2752,4 +2881,3 @@ pub enum Schema0 {
     ChatCompletionFinishReason(ChatCompletionFinishReason),
     Variant2(serde_json::Value),
 }
-

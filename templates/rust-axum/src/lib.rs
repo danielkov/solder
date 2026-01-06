@@ -402,18 +402,44 @@ impl RustAxumGenerator {
         Ok(())
     }
 
-    /// Escape Rust keywords with r# prefix
+    /// Escape Rust keywords with r# prefix.
+    /// Note: `self` and `Self` cannot be raw identifiers and are handled separately
+    /// by `escape_self_keyword` which uses underscore prefixing.
     fn escape_rust_keyword(name: &str) -> String {
         match name {
             "as" | "break" | "const" | "continue" | "crate" | "else" | "enum" | "extern"
             | "false" | "fn" | "for" | "if" | "impl" | "in" | "let" | "loop" | "match" | "mod"
-            | "move" | "mut" | "pub" | "ref" | "return" | "self" | "Self" | "static" | "struct"
-            | "super" | "trait" | "true" | "type" | "unsafe" | "use" | "where" | "while"
-            | "async" | "await" | "dyn" | "abstract" | "become" | "box" | "do" | "final"
-            | "macro" | "override" | "priv" | "typeof" | "unsized" | "virtual" | "yield"
-            | "try" => format!("r#{}", name),
+            | "move" | "mut" | "pub" | "ref" | "return" | "static" | "struct" | "super"
+            | "trait" | "true" | "type" | "unsafe" | "use" | "where" | "while" | "async"
+            | "await" | "dyn" | "abstract" | "become" | "box" | "do" | "final" | "macro"
+            | "override" | "priv" | "typeof" | "unsized" | "virtual" | "yield" | "try" => {
+                format!("r#{}", name)
+            }
             _ => name.to_string(),
         }
+    }
+
+    /// Check if a name is `self` or `Self` (cannot be raw identifiers in Rust)
+    fn is_self_keyword(name: &str) -> bool {
+        name == "self" || name == "Self"
+    }
+
+    /// Escape `self`/`Self` by prepending underscores until no conflict exists.
+    /// Returns Err if all 12 underscore variants are taken.
+    fn escape_self_keyword(
+        name: &str,
+        existing_names: &std::collections::BTreeSet<String>,
+    ) -> std::result::Result<String, String> {
+        for underscore_count in 1..=12 {
+            let escaped = format!("{}{}", "_".repeat(underscore_count), name);
+            if !existing_names.contains(&escaped) {
+                return Ok(escaped);
+            }
+        }
+        Err(format!(
+            "Cannot escape '{}': all underscore variants up to 12 are already in use",
+            name
+        ))
     }
 
     /// Check if a name is a valid Rust identifier
@@ -476,22 +502,39 @@ impl RustAxumGenerator {
 
         match &type_decl.kind {
             TypeKind::Struct { fields, .. } => {
-                let fields_str: Vec<String> = fields
-                    .iter()
-                    .map(|f| {
-                        let (field_name, needs_rename) =
-                            Self::make_valid_field_name(&f.name.canonical, &f.name.snake);
-                        let type_str = self.render_type_ref(&f.ty, ir);
-                        if needs_rename {
-                            format!(
-                                "    #[serde(rename = \"{}\")]\n    pub {}: {},",
-                                f.name.canonical, field_name, type_str
-                            )
-                        } else {
-                            format!("    pub {}: {},", field_name, type_str)
-                        }
-                    })
-                    .collect();
+                // Collect all snake_case field names for conflict detection.
+                // We track both original names AND generated names to handle conflicts
+                // between self/Self/_self/etc.
+                let mut used_names: BTreeSet<String> =
+                    fields.iter().map(|f| f.name.snake.clone()).collect();
+
+                let mut fields_str: Vec<String> = Vec::new();
+                for f in fields {
+                    let (field_name, needs_rename) = if Self::is_self_keyword(&f.name.snake) {
+                        // Handle self/Self specially - cannot use r# prefix
+                        let escaped = Self::escape_self_keyword(&f.name.snake, &used_names)
+                            .map_err(|e| {
+                                Error::GenerationError(format!(
+                                    "Failed to generate field name for '{}' in struct '{}': {}",
+                                    f.name.canonical, type_decl.name.pascal, e
+                                ))
+                            })?;
+                        // Track the generated name so subsequent self/Self fields don't conflict
+                        used_names.insert(escaped.clone());
+                        (escaped, true)
+                    } else {
+                        Self::make_valid_field_name(&f.name.canonical, &f.name.snake)
+                    };
+                    let type_str = self.render_type_ref(&f.ty, ir);
+                    if needs_rename {
+                        fields_str.push(format!(
+                            "    #[serde(rename = \"{}\")]\n    pub {}: {},",
+                            f.name.canonical, field_name, type_str
+                        ));
+                    } else {
+                        fields_str.push(format!("    pub {}: {},", field_name, type_str));
+                    }
+                }
 
                 Ok(format!(
                     "#[derive(Debug, Clone, Serialize, Deserialize)]\npub struct {} {{\n{}\n}}",
@@ -549,11 +592,29 @@ impl RustAxumGenerator {
         variants: &[ir::gen_ir::Variant],
         ir: &GenIr,
     ) -> Result<String> {
+        // Collect variant names for self/Self conflict detection.
+        // Track both original names AND generated names.
+        let mut used_names: BTreeSet<String> =
+            variants.iter().map(|v| v.name.snake.clone()).collect();
+
         let mut fields = Vec::new();
 
         for variant in variants {
             let variant_type = self.render_type_ref(&variant.ty, ir);
-            let field_name = Self::escape_rust_keyword(&variant.name.snake);
+            let field_name = if Self::is_self_keyword(&variant.name.snake) {
+                let escaped =
+                    Self::escape_self_keyword(&variant.name.snake, &used_names).map_err(|e| {
+                        Error::GenerationError(format!(
+                            "Failed to generate field name for '{}' in allOf type '{}': {}",
+                            variant.name.canonical, type_decl.name.pascal, e
+                        ))
+                    })?;
+                // Track the generated name so subsequent self/Self variants don't conflict
+                used_names.insert(escaped.clone());
+                escaped
+            } else {
+                Self::escape_rust_keyword(&variant.name.snake)
+            };
             fields.push(format!(
                 "    #[serde(flatten)]\n    pub {}: {},",
                 field_name, variant_type

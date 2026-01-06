@@ -30,14 +30,18 @@ pub struct AccountsProperty {
 #[serde(untagged)]
 pub enum AcssDebitUnion {
     PaymentIntentPaymentMethodOptionsAcssDebit(PaymentIntentPaymentMethodOptionsAcssDebit),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AcssDebitUnion2 {
     SetupIntentPaymentMethodOptionsAcssDebit(SetupIntentPaymentMethodOptionsAcssDebit),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -51,42 +55,54 @@ pub enum AdditionalDocumentationOrRef {
 #[serde(untagged)]
 pub enum AffirmUnion {
     PaymentMethodOptionsAffirm(PaymentMethodOptionsAffirm),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AfterpayClearpayUnion {
     PaymentMethodOptionsAfterpayClearpay(PaymentMethodOptionsAfterpayClearpay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AlipayUnion {
     PaymentMethodOptionsAlipay(PaymentMethodOptionsAlipay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AlmaUnion {
     PaymentMethodOptionsAlma(PaymentMethodOptionsAlma),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AmazonPayUnion {
     PaymentMethodOptionsAmazonPay(PaymentMethodOptionsAmazonPay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AmazonPayUnion2 {
     SetupIntentPaymentMethodOptionsAmazonPay(SetupIntentPaymentMethodOptionsAmazonPay),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -122,7 +138,9 @@ pub enum ApplicationUnion {
 #[serde(untagged)]
 pub enum AuBecsDebitUnion {
     PaymentIntentPaymentMethodOptionsAuBecsDebit(PaymentIntentPaymentMethodOptionsAuBecsDebit),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -133,9 +151,7 @@ pub enum AuthorizationOrRef {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AvailableProperty {
-
-}
+pub struct AvailableProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -148,14 +164,18 @@ pub enum BackOrRef {
 #[serde(untagged)]
 pub enum BacsDebitUnion {
     PaymentIntentPaymentMethodOptionsBacsDebit(PaymentIntentPaymentMethodOptionsBacsDebit),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum BacsDebitUnion2 {
     SetupIntentPaymentMethodOptionsBacsDebit(SetupIntentPaymentMethodOptionsBacsDebit),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -169,28 +189,36 @@ pub enum BalanceTransactionOrRef {
 #[serde(untagged)]
 pub enum BancontactUnion {
     PaymentMethodOptionsBancontact(PaymentMethodOptionsBancontact),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum BillieUnion {
     PaymentMethodOptionsBillie(PaymentMethodOptionsBillie),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum BlikUnion {
     PaymentIntentPaymentMethodOptionsBlik(PaymentIntentPaymentMethodOptionsBlik),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum BoletoUnion {
     PaymentMethodOptionsBoleto(PaymentMethodOptionsBoleto),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -218,14 +246,18 @@ pub enum CardOrRef {
 #[serde(untagged)]
 pub enum CardPresentUnion {
     PaymentMethodOptionsCardPresent(PaymentMethodOptionsCardPresent),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CardPresentUnion2 {
     SetupIntentPaymentMethodOptionsCardPresent(SetupIntentPaymentMethodOptionsCardPresent),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -239,14 +271,18 @@ pub enum CardStatementOrRef {
 #[serde(untagged)]
 pub enum CardUnion {
     PaymentIntentPaymentMethodOptionsCard(PaymentIntentPaymentMethodOptionsCard),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CardUnion2 {
     SetupIntentPaymentMethodOptionsCard(SetupIntentPaymentMethodOptionsCard),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -257,9 +293,7 @@ pub enum CardholderOrRef {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CashProperty {
-
-}
+pub struct CashProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -272,7 +306,9 @@ pub enum CashReceiptOrRef {
 #[serde(untagged)]
 pub enum CashappUnion {
     PaymentMethodOptionsCashapp(PaymentMethodOptionsCashapp),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -335,23 +371,19 @@ pub enum CreditNoteOrRef {
 #[serde(untagged)]
 pub enum CryptoUnion {
     PaymentMethodOptionsCrypto(PaymentMethodOptionsCrypto),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CurrencyOptionsProperty {
-
-}
+pub struct CurrencyOptionsProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CurrentPricesPerMetricTonProperty {
-
-}
+pub struct CurrentPricesPerMetricTonProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CurrentProperty {
-
-}
+pub struct CurrentProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -364,7 +396,9 @@ pub enum CustomerBalanceTransactionOrRef {
 #[serde(untagged)]
 pub enum CustomerBalanceUnion {
     PaymentMethodOptionsCustomerBalance(PaymentMethodOptionsCustomerBalance),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -646,7 +680,8 @@ pub enum DefaultPostPaymentIntentsRequestUsBankAccount {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DefaultPostPaymentIntentsRequestUsBankAccountObject {
-    pub financial_connections: Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectFinancialConnections>,
+    pub financial_connections:
+        Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectFinancialConnections>,
     pub mandate_options: Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectMandateOptions>,
     pub networks: Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectNetworks>,
     pub preferred_settlement_speed: Option<String>,
@@ -773,7 +808,8 @@ pub struct DeleteSubscriptionItemsItemRequest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DeleteSubscriptionsSubscriptionExposedIdRequest {
-    pub cancellation_details: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancellationDetails>,
+    pub cancellation_details:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancellationDetails>,
     pub expand: Option<Vec<String>>,
     pub invoice_now: Option<bool>,
     pub prorate: Option<bool>,
@@ -866,7 +902,9 @@ pub struct EntriesProperty {
 #[serde(untagged)]
 pub enum EpsUnion {
     PaymentIntentPaymentMethodOptionsEps(PaymentIntentPaymentMethodOptionsEps),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -909,7 +947,9 @@ pub enum FileOrRef {
 #[serde(untagged)]
 pub enum FpxUnion {
     PaymentMethodOptionsFpx(PaymentMethodOptionsFpx),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -941,9 +981,7 @@ pub enum GeneratedSepaDebitOrRef {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GetAccountRequest {
-
-}
+pub struct GetAccountRequest {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GetAccountsAccountCapabilitiesResponse {
@@ -2098,14 +2136,18 @@ pub struct GetWebhookEndpointsResponse {
 #[serde(untagged)]
 pub enum GiropayUnion {
     PaymentMethodOptionsGiropay(PaymentMethodOptionsGiropay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GrabpayUnion {
     PaymentMethodOptionsGrabpay(PaymentMethodOptionsGrabpay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2119,25 +2161,25 @@ pub enum IconOrRef {
 #[serde(untagged)]
 pub enum IdealUnion {
     PaymentMethodOptionsIdeal(PaymentMethodOptionsIdeal),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InboundPendingProperty {
-
-}
+pub struct InboundPendingProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum InteracPresentUnion {
     PaymentMethodOptionsInteracPresent(PaymentMethodOptionsInteracPresent),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InvoiceCreditBalanceProperty {
-
-}
+pub struct InvoiceCreditBalanceProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -2165,36 +2207,48 @@ pub struct ItemsProperty {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum KakaoPayUnion {
-    PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptions(PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptions),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptions(
+        PaymentFlowsPrivatePaymentMethodsKakaoPayPaymentMethodOptions,
+    ),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum KlarnaUnion {
     PaymentMethodOptionsKlarna(PaymentMethodOptionsKlarna),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum KlarnaUnion2 {
     SetupIntentPaymentMethodOptionsKlarna(SetupIntentPaymentMethodOptionsKlarna),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum KonbiniUnion {
     PaymentMethodOptionsKonbini(PaymentMethodOptionsKonbini),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum KrCardUnion {
     PaymentMethodOptionsKrCard(PaymentMethodOptionsKrCard),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2284,14 +2338,18 @@ pub struct LinesProperty2 {
 #[serde(untagged)]
 pub enum LinkUnion {
     PaymentIntentPaymentMethodOptionsLink(PaymentIntentPaymentMethodOptionsLink),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum LinkUnion2 {
     SetupIntentPaymentMethodOptionsLink(SetupIntentPaymentMethodOptionsLink),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2342,13 +2400,13 @@ pub enum MandateOrRef {
 #[serde(untagged)]
 pub enum MbWayUnion {
     PaymentMethodOptionsMbWay(PaymentMethodOptionsMbWay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MetadataProperty {
-
-}
+pub struct MetadataProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -2358,36 +2416,44 @@ pub enum MeterOrRef {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MinimumBalanceByCurrencyProperty {
-
-}
+pub struct MinimumBalanceByCurrencyProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum MobilepayUnion {
     PaymentIntentPaymentMethodOptionsMobilepay(PaymentIntentPaymentMethodOptionsMobilepay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum MultibancoUnion {
     PaymentMethodOptionsMultibanco(PaymentMethodOptionsMultibanco),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NaverPayUnion {
-    PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptions(PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptions),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptions(
+        PaymentFlowsPrivatePaymentMethodsNaverPayPaymentMethodOptions,
+    ),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum NzBankAccountUnion {
     PaymentIntentPaymentMethodOptionsNzBankAccount(PaymentIntentPaymentMethodOptionsNzBankAccount),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2412,9 +2478,7 @@ pub enum OriginatingTransactionOrRef {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OutboundPendingProperty {
-
-}
+pub struct OutboundPendingProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OwnersProperty {
@@ -2435,34 +2499,42 @@ pub enum OwnershipOrRef {
 #[serde(untagged)]
 pub enum OxxoUnion {
     PaymentMethodOptionsOxxo(PaymentMethodOptionsOxxo),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum P24Union {
     PaymentMethodOptionsP24(PaymentMethodOptionsP24),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PayByBankUnion {
     PaymentMethodOptionsPayByBank(PaymentMethodOptionsPayByBank),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PaycoUnion {
-    PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptions(PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptions),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptions(
+        PaymentFlowsPrivatePaymentMethodsPaycoPaymentMethodOptions,
+    ),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PayloadProperty {
-
-}
+pub struct PayloadProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -2504,21 +2576,27 @@ pub struct PaymentsProperty {
 #[serde(untagged)]
 pub enum PaynowUnion {
     PaymentMethodOptionsPaynow(PaymentMethodOptionsPaynow),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PaypalUnion {
     PaymentMethodOptionsPaypal(PaymentMethodOptionsPaypal),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PaypalUnion2 {
     SetupIntentPaymentMethodOptionsPaypal(SetupIntentPaymentMethodOptionsPaypal),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2546,7 +2624,9 @@ pub enum PhysicalBundleOrRef {
 #[serde(untagged)]
 pub enum PixUnion {
     PaymentMethodOptionsPix(PaymentMethodOptionsPix),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2594,7 +2674,8 @@ pub struct PostAccountSessionsRequestComponents {
     pub disputes_list: Option<PostAccountSessionsRequestDisputesList>,
     pub documents: Option<PostAccountSessionsRequestDocuments>,
     pub financial_account: Option<PostAccountSessionsRequestFinancialAccount>,
-    pub financial_account_transactions: Option<PostAccountSessionsRequestFinancialAccountTransactions>,
+    pub financial_account_transactions:
+        Option<PostAccountSessionsRequestFinancialAccountTransactions>,
     pub instant_payouts_promotion: Option<PostAccountSessionsRequestInstantPayoutsPromotion>,
     pub issuing_card: Option<PostAccountSessionsRequestIssuingCard>,
     pub issuing_cards_list: Option<PostAccountSessionsRequestIssuingCardsList>,
@@ -2743,7 +2824,8 @@ pub struct PostAccountsAccountBankAccountsIdRequest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostAccountsAccountBankAccountsIdRequestDocuments {
-    pub bank_account_ownership_verification: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub bank_account_ownership_verification:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2756,9 +2838,7 @@ pub struct PostAccountsAccountBankAccountsRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostAccountsAccountBankAccountsRequestMetadata {
-
-}
+pub struct PostAccountsAccountBankAccountsRequestMetadata {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostAccountsAccountCapabilitiesCapabilityRequest {
@@ -2773,7 +2853,8 @@ pub struct PostAccountsAccountLoginLinksRequest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostAccountsAccountPeopleRequest {
-    pub additional_tos_acceptances: Option<PostAccountsAccountPeopleRequestAdditionalTosAcceptances>,
+    pub additional_tos_acceptances:
+        Option<PostAccountsAccountPeopleRequestAdditionalTosAcceptances>,
     pub address: Option<PostAccountsAccountPeopleRequestAddress>,
     pub address_kana: Option<PostAccountsAccountPeopleRequestAddressKana>,
     pub address_kanji: Option<PostAccountsAccountPeopleRequestAddressKanji>,
@@ -3147,7 +3228,8 @@ pub struct PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostAccountsRequestBankAccountObjectDocuments {
-    pub bank_account_ownership_verification: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub bank_account_ownership_verification:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -3328,13 +3410,20 @@ pub struct PostAccountsRequestDocument {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostAccountsRequestDocuments {
-    pub bank_account_ownership_verification: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
-    pub company_license: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
-    pub company_memorandum_of_association: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
-    pub company_ministerial_decree: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
-    pub company_registration_verification: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
-    pub company_tax_id_verification: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
-    pub proof_of_address: Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub bank_account_ownership_verification:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub company_license:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub company_memorandum_of_association:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub company_ministerial_decree:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub company_registration_verification:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub company_tax_id_verification:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
+    pub proof_of_address:
+        Option<PostAccountsRequestBankAccountObjectBankAccountOwnershipVerification>,
     pub proof_of_registration: Option<PostAccountsRequestProofOfRegistration>,
     pub proof_of_ultimate_beneficial_ownership: Option<PostAccountsRequestProofOfRegistration>,
 }
@@ -3401,9 +3490,7 @@ pub enum PostAccountsRequestMetadata {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostAccountsRequestMetadataObject {
-
-}
+pub struct PostAccountsRequestMetadataObject {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostAccountsRequestMonthlyEstimatedRevenue {
@@ -3620,9 +3707,7 @@ pub enum PostBalanceSettingsRequestMinimumBalanceByCurrency {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostBalanceSettingsRequestMinimumBalanceByCurrencyObject {
-
-}
+pub struct PostBalanceSettingsRequestMinimumBalanceByCurrencyObject {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBalanceSettingsRequestPayments {
@@ -3688,9 +3773,7 @@ pub enum PostBillingCreditGrantsIdRequestExpiresAt {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostBillingCreditGrantsIdRequestMetadata {
-
-}
+pub struct PostBillingCreditGrantsIdRequestMetadata {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingCreditGrantsRequest {
@@ -3719,9 +3802,7 @@ pub struct PostBillingCreditGrantsRequestApplicabilityConfig {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostBillingCreditGrantsRequestMetadata {
-
-}
+pub struct PostBillingCreditGrantsRequestMetadata {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingCreditGrantsRequestMonetary {
@@ -3753,9 +3834,7 @@ pub struct PostBillingMeterEventsRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostBillingMeterEventsRequestPayload {
-
-}
+pub struct PostBillingMeterEventsRequestPayload {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingMetersIdRequest {
@@ -3794,7 +3873,8 @@ pub struct PostBillingMetersRequestValueSettings {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingPortalConfigurationsConfigurationRequest {
     pub active: Option<bool>,
-    pub business_profile: Option<PostBillingPortalConfigurationsConfigurationRequestBusinessProfile>,
+    pub business_profile:
+        Option<PostBillingPortalConfigurationsConfigurationRequestBusinessProfile>,
     pub default_return_url: Option<PostBillingPortalConfigurationsRequestDefaultReturnUrl>,
     pub expand: Option<Vec<String>>,
     pub features: Option<PostBillingPortalConfigurationsConfigurationRequestFeatures>,
@@ -3834,8 +3914,10 @@ pub struct PostBillingPortalConfigurationsConfigurationRequestFeatures {
     pub customer_update: Option<PostBillingPortalConfigurationsConfigurationRequestCustomerUpdate>,
     pub invoice_history: Option<PostBillingPortalConfigurationsRequestInvoiceHistory>,
     pub payment_method_update: Option<PostBillingPortalConfigurationsRequestPaymentMethodUpdate>,
-    pub subscription_cancel: Option<PostBillingPortalConfigurationsConfigurationRequestSubscriptionCancel>,
-    pub subscription_update: Option<PostBillingPortalConfigurationsConfigurationRequestSubscriptionUpdate>,
+    pub subscription_cancel:
+        Option<PostBillingPortalConfigurationsConfigurationRequestSubscriptionCancel>,
+    pub subscription_update:
+        Option<PostBillingPortalConfigurationsConfigurationRequestSubscriptionUpdate>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -3850,7 +3932,8 @@ pub struct PostBillingPortalConfigurationsConfigurationRequestScheduleAtPeriodEn
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingPortalConfigurationsConfigurationRequestSubscriptionCancel {
-    pub cancellation_reason: Option<PostBillingPortalConfigurationsConfigurationRequestCancellationReason>,
+    pub cancellation_reason:
+        Option<PostBillingPortalConfigurationsConfigurationRequestCancellationReason>,
     pub enabled: Option<bool>,
     pub mode: Option<String>,
     pub proration_behavior: Option<String>,
@@ -3858,11 +3941,13 @@ pub struct PostBillingPortalConfigurationsConfigurationRequestSubscriptionCancel
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingPortalConfigurationsConfigurationRequestSubscriptionUpdate {
-    pub default_allowed_updates: Option<PostBillingPortalConfigurationsRequestDefaultAllowedUpdates>,
+    pub default_allowed_updates:
+        Option<PostBillingPortalConfigurationsRequestDefaultAllowedUpdates>,
     pub enabled: Option<bool>,
     pub products: Option<PostBillingPortalConfigurationsRequestProducts>,
     pub proration_behavior: Option<String>,
-    pub schedule_at_period_end: Option<PostBillingPortalConfigurationsConfigurationRequestScheduleAtPeriodEnd>,
+    pub schedule_at_period_end:
+        Option<PostBillingPortalConfigurationsConfigurationRequestScheduleAtPeriodEnd>,
     pub trial_update_behavior: Option<String>,
 }
 
@@ -3978,7 +4063,8 @@ pub enum PostBillingPortalConfigurationsRequestProducts {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingPortalConfigurationsRequestProductsObject {
-    pub adjustable_quantity: Option<PostBillingPortalConfigurationsRequestProductsObjectAdjustableQuantity>,
+    pub adjustable_quantity:
+        Option<PostBillingPortalConfigurationsRequestProductsObjectAdjustableQuantity>,
     pub prices: Vec<String>,
     pub product: String,
 }
@@ -4005,7 +4091,8 @@ pub struct PostBillingPortalConfigurationsRequestSubscriptionCancel {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostBillingPortalConfigurationsRequestSubscriptionUpdate {
-    pub default_allowed_updates: Option<PostBillingPortalConfigurationsRequestDefaultAllowedUpdates>,
+    pub default_allowed_updates:
+        Option<PostBillingPortalConfigurationsRequestDefaultAllowedUpdates>,
     pub enabled: bool,
     pub products: Option<PostBillingPortalConfigurationsRequestProducts>,
     pub proration_behavior: Option<String>,
@@ -4048,7 +4135,8 @@ pub struct PostBillingPortalSessionsRequestFlowData {
     pub after_completion: Option<PostBillingPortalSessionsRequestAfterCompletion>,
     pub subscription_cancel: Option<PostBillingPortalSessionsRequestSubscriptionCancel>,
     pub subscription_update: Option<PostBillingPortalSessionsRequestSubscriptionUpdate>,
-    pub subscription_update_confirm: Option<PostBillingPortalSessionsRequestSubscriptionUpdateConfirm>,
+    pub subscription_update_confirm:
+        Option<PostBillingPortalSessionsRequestSubscriptionUpdateConfirm>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -4130,8 +4218,10 @@ pub enum PostChargesChargeDisputeRequestEnhancedEvidence {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostChargesChargeDisputeRequestEnhancedEvidenceObject {
-    pub visa_compelling_evidence_3: Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectVisaCompellingEvidence3>,
-    pub visa_compliance: Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectVisaCompliance>,
+    pub visa_compelling_evidence_3:
+        Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectVisaCompellingEvidence3>,
+    pub visa_compliance:
+        Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectVisaCompliance>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -4143,7 +4233,8 @@ pub struct PostChargesChargeDisputeRequestEnhancedEvidenceObjectDisputedTransact
     pub customer_purchase_ip: Option<PostAccountsRequestPaymentsPricing>,
     pub merchandise_or_services: Option<String>,
     pub product_description: Option<PostAccountsRequestPaymentsPricing>,
-    pub shipping_address: Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectShippingAddress>,
+    pub shipping_address:
+        Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectShippingAddress>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -4155,7 +4246,8 @@ pub struct PostChargesChargeDisputeRequestEnhancedEvidenceObjectPriorUndisputedT
     pub customer_email_address: Option<PostAccountsRequestPaymentsPricing>,
     pub customer_purchase_ip: Option<PostAccountsRequestPaymentsPricing>,
     pub product_description: Option<PostAccountsRequestPaymentsPricing>,
-    pub shipping_address: Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectShippingAddress>,
+    pub shipping_address:
+        Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectShippingAddress>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -4170,8 +4262,11 @@ pub struct PostChargesChargeDisputeRequestEnhancedEvidenceObjectShippingAddress 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostChargesChargeDisputeRequestEnhancedEvidenceObjectVisaCompellingEvidence3 {
-    pub disputed_transaction: Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectDisputedTransaction>,
-    pub prior_undisputed_transactions: Option<Vec<PostChargesChargeDisputeRequestEnhancedEvidenceObjectPriorUndisputedTransactionsItem>>,
+    pub disputed_transaction:
+        Option<PostChargesChargeDisputeRequestEnhancedEvidenceObjectDisputedTransaction>,
+    pub prior_undisputed_transactions: Option<
+        Vec<PostChargesChargeDisputeRequestEnhancedEvidenceObjectPriorUndisputedTransactionsItem>,
+    >,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -4552,7 +4647,8 @@ pub struct PostCheckoutSessionsRequestCashapp {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCheckoutSessionsRequestConsentCollection {
-    pub payment_method_reuse_agreement: Option<PostCheckoutSessionsRequestPaymentMethodReuseAgreement>,
+    pub payment_method_reuse_agreement:
+        Option<PostCheckoutSessionsRequestPaymentMethodReuseAgreement>,
     pub promotions: Option<String>,
     pub terms_of_service: Option<String>,
 }
@@ -4988,9 +5084,7 @@ pub struct PostCheckoutSessionsRequestShippingOptionsItem {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostCheckoutSessionsRequestShippingOptionsItemCurrencyOptions {
-
-}
+pub struct PostCheckoutSessionsRequestShippingOptionsItemCurrencyOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCheckoutSessionsRequestShippingOptionsItemDeliveryEstimate {
@@ -5184,9 +5278,7 @@ pub struct PostCouponsCouponRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostCouponsCouponRequestCurrencyOptions {
-
-}
+pub struct PostCouponsCouponRequestCurrencyOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCouponsRequest {
@@ -5211,9 +5303,7 @@ pub struct PostCouponsRequestAppliesTo {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostCouponsRequestCurrencyOptions {
-
-}
+pub struct PostCouponsRequestCurrencyOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCreditNotesIdRequest {
@@ -5511,8 +5601,10 @@ pub struct PostCustomersCustomerRequestTax {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequest {
-    pub add_invoice_items: Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
-    pub application_fee_percent: Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
+    pub add_invoice_items:
+        Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
+    pub application_fee_percent:
+        Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
     pub automatic_tax: Option<PostCustomersCustomerSubscriptionsRequestAutomaticTax>,
     pub backdate_start_date: Option<i32>,
     pub billing_cycle_anchor: Option<i32>,
@@ -5533,7 +5625,8 @@ pub struct PostCustomersCustomerSubscriptionsRequest {
     pub off_session: Option<bool>,
     pub payment_behavior: Option<String>,
     pub payment_settings: Option<PostCustomersCustomerSubscriptionsRequestPaymentSettings>,
-    pub pending_invoice_item_interval: Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
+    pub pending_invoice_item_interval:
+        Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
     pub proration_behavior: Option<String>,
     pub transfer_data: Option<PostCustomersCustomerSubscriptionsRequestTransferData>,
     pub trial_end: Option<PostCustomersCustomerSubscriptionsRequestTrialEnd>,
@@ -5551,7 +5644,8 @@ pub enum PostCustomersCustomerSubscriptionsRequestAcssDebit {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestAcssDebitObject {
-    pub mandate_options: Option<PostCustomersCustomerSubscriptionsRequestAcssDebitObjectMandateOptions>,
+    pub mandate_options:
+        Option<PostCustomersCustomerSubscriptionsRequestAcssDebitObjectMandateOptions>,
     pub verification_method: Option<String>,
 }
 
@@ -5562,7 +5656,8 @@ pub struct PostCustomersCustomerSubscriptionsRequestAcssDebitObjectMandateOption
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem {
-    pub discounts: Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem>>,
+    pub discounts:
+        Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem>>,
     pub metadata: Option<PostAccountsRequestMetadataObject>,
     pub period: Option<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemPeriod>,
     pub price: Option<String>,
@@ -5676,19 +5771,23 @@ pub struct PostCustomersCustomerSubscriptionsRequestCardObjectMandateOptions {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostCustomersCustomerSubscriptionsRequestCustomerBalance {
-    InvoicePaymentMethodOptionsParam(PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject),
+    InvoicePaymentMethodOptionsParam(
+        PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject,
+    ),
     Variant2(String),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject {
-    pub bank_transfer: Option<PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectBankTransfer>,
+    pub bank_transfer:
+        Option<PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectBankTransfer>,
     pub funding_type: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectBankTransfer {
-    pub eu_bank_transfer: Option<PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectEuBankTransfer>,
+    pub eu_bank_transfer:
+        Option<PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectEuBankTransfer>,
     #[serde(rename = "type")]
     pub r#type: Option<String>,
 }
@@ -5720,7 +5819,8 @@ pub struct PostCustomersCustomerSubscriptionsRequestInvoiceSettings {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestItemsItem {
-    pub billing_thresholds: Option<PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds>,
+    pub billing_thresholds:
+        Option<PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds>,
     pub discounts: Option<PostCustomersCustomerSubscriptionsRequestItemsItemDiscounts>,
     pub metadata: Option<PostAccountsRequestMetadataObject>,
     pub price: Option<String>,
@@ -5732,7 +5832,9 @@ pub struct PostCustomersCustomerSubscriptionsRequestItemsItem {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds {
-    ItemBillingThresholdsParam(PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholdsObject),
+    ItemBillingThresholdsParam(
+        PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholdsObject,
+    ),
     Variant2(String),
 }
 
@@ -5785,7 +5887,8 @@ pub enum PostCustomersCustomerSubscriptionsRequestPaymentMethodTypes {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestPaymentSettings {
-    pub payment_method_options: Option<PostCustomersCustomerSubscriptionsRequestPaymentMethodOptions>,
+    pub payment_method_options:
+        Option<PostCustomersCustomerSubscriptionsRequestPaymentMethodOptions>,
     pub payment_method_types: Option<PostCustomersCustomerSubscriptionsRequestPaymentMethodTypes>,
     pub save_default_payment_method: Option<String>,
 }
@@ -5793,7 +5896,9 @@ pub struct PostCustomersCustomerSubscriptionsRequestPaymentSettings {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval {
-    PendingInvoiceItemIntervalParams(PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObject),
+    PendingInvoiceItemIntervalParams(
+        PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObject,
+    ),
     Variant2(String),
 }
 
@@ -5830,7 +5935,8 @@ pub enum PostCustomersCustomerSubscriptionsRequestUsBankAccount {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsRequestUsBankAccountObject {
-    pub financial_connections: Option<PostCustomersCustomerSubscriptionsRequestUsBankAccountObjectFinancialConnections>,
+    pub financial_connections:
+        Option<PostCustomersCustomerSubscriptionsRequestUsBankAccountObjectFinancialConnections>,
     pub verification_method: Option<String>,
 }
 
@@ -5848,32 +5954,41 @@ pub struct PostCustomersCustomerSubscriptionsRequestUsBankAccountObjectFinancial
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequest {
-    pub add_invoice_items: Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
-    pub application_fee_percent: Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
-    pub automatic_tax: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestAutomaticTax>,
+    pub add_invoice_items:
+        Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
+    pub application_fee_percent:
+        Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
+    pub automatic_tax:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestAutomaticTax>,
     pub billing_cycle_anchor: Option<String>,
     pub billing_thresholds: Option<PostCustomersCustomerSubscriptionsRequestBillingThresholds>,
     pub cancel_at: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancelAt>,
     pub cancel_at_period_end: Option<bool>,
-    pub cancellation_details: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancellationDetails>,
+    pub cancellation_details:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancellationDetails>,
     pub collection_method: Option<String>,
     pub days_until_due: Option<i32>,
     pub default_payment_method: Option<String>,
-    pub default_source: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultSource>,
-    pub default_tax_rates: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultTaxRates>,
+    pub default_source:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultSource>,
+    pub default_tax_rates:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultTaxRates>,
     pub discounts: Option<PostCustomersCustomerSubscriptionsRequestDiscounts>,
     pub expand: Option<Vec<String>>,
     pub invoice_settings: Option<PostCustomersCustomerSubscriptionsRequestInvoiceSettings>,
     pub items: Option<Vec<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestItemsItem>>,
     pub metadata: Option<DefaultPostAccountsRequestMetadata>,
     pub off_session: Option<bool>,
-    pub pause_collection: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollection>,
+    pub pause_collection:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollection>,
     pub payment_behavior: Option<String>,
     pub payment_settings: Option<PostCustomersCustomerSubscriptionsRequestPaymentSettings>,
-    pub pending_invoice_item_interval: Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
+    pub pending_invoice_item_interval:
+        Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
     pub proration_behavior: Option<String>,
     pub proration_date: Option<i32>,
-    pub transfer_data: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData>,
+    pub transfer_data:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData>,
     pub trial_end: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTrialEnd>,
     pub trial_from_plan: Option<bool>,
     pub trial_settings: Option<PostCustomersCustomerSubscriptionsRequestTrialSettings>,
@@ -5915,7 +6030,8 @@ pub enum PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultTa
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestItemsItem {
-    pub billing_thresholds: Option<PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds>,
+    pub billing_thresholds:
+        Option<PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds>,
     pub clear_usage: Option<bool>,
     pub deleted: Option<bool>,
     pub discounts: Option<PostCustomersCustomerSubscriptionsRequestItemsItemDiscounts>,
@@ -5930,7 +6046,9 @@ pub struct PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestItemsIt
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollection {
-    PauseCollectionParam(PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollectionObject),
+    PauseCollectionParam(
+        PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollectionObject,
+    ),
     Variant2(String),
 }
 
@@ -6101,9 +6219,7 @@ pub struct PostEntitlementsFeaturesRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostEntitlementsFeaturesRequestMetadata {
-
-}
+pub struct PostEntitlementsFeaturesRequestMetadata {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostEphemeralKeysRequest {
@@ -6459,7 +6575,8 @@ pub enum PostInvoicesCreatePreviewRequestOnBehalfOf {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostInvoicesCreatePreviewRequestPhasesItem {
-    pub add_invoice_items: Option<Vec<PostInvoicesCreatePreviewRequestPhasesItemAddInvoiceItemsItem>>,
+    pub add_invoice_items:
+        Option<Vec<PostInvoicesCreatePreviewRequestPhasesItemAddInvoiceItemsItem>>,
     pub application_fee_percent: Option<f32>,
     pub automatic_tax: Option<PostInvoicesCreatePreviewRequestPhasesItemAutomaticTax>,
     pub billing_cycle_anchor: Option<String>,
@@ -6484,7 +6601,8 @@ pub struct PostInvoicesCreatePreviewRequestPhasesItem {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostInvoicesCreatePreviewRequestPhasesItemAddInvoiceItemsItem {
-    pub discounts: Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem>>,
+    pub discounts:
+        Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem>>,
     pub metadata: Option<PostAccountsRequestMetadataObject>,
     pub period: Option<PostInvoicesCreatePreviewRequestPhasesItemAddInvoiceItemsItemPeriod>,
     pub price: Option<String>,
@@ -6548,7 +6666,8 @@ pub struct PostInvoicesCreatePreviewRequestPhasesItemInvoiceSettings {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostInvoicesCreatePreviewRequestPhasesItemItemsItem {
-    pub billing_thresholds: Option<PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds>,
+    pub billing_thresholds:
+        Option<PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholds>,
     pub discounts: Option<PostCustomersCustomerSubscriptionsRequestItemsItemDiscounts>,
     pub metadata: Option<PostAccountsRequestMetadataObject>,
     pub price: Option<String>,
@@ -7291,7 +7410,8 @@ pub enum PostIssuingDisputesRequestCanceled {
 pub struct PostIssuingDisputesRequestCanceledObject {
     pub additional_documentation: Option<PostAccountsRequestSupportUrl>,
     pub canceled_at: Option<PostIssuingDisputesRequestCanceledObjectCanceledAt>,
-    pub cancellation_policy_provided: Option<PostIssuingDisputesRequestCanceledObjectCancellationPolicyProvided>,
+    pub cancellation_policy_provided:
+        Option<PostIssuingDisputesRequestCanceledObjectCancellationPolicyProvided>,
     pub cancellation_reason: Option<PostIssuingDisputesRequestCanceledObjectCancellationReason>,
     pub expected_at: Option<PostIssuingDisputesRequestCanceledObjectCanceledAt>,
     pub explanation: Option<PostIssuingDisputesRequestCanceledObjectCancellationReason>,
@@ -7450,7 +7570,8 @@ pub struct PostIssuingDisputesRequestTreasury {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostIssuingPersonalizationDesignsPersonalizationDesignRequest {
     pub card_logo: Option<PostIssuingPersonalizationDesignsPersonalizationDesignRequestCardLogo>,
-    pub carrier_text: Option<PostIssuingPersonalizationDesignsPersonalizationDesignRequestCarrierText>,
+    pub carrier_text:
+        Option<PostIssuingPersonalizationDesignsPersonalizationDesignRequestCarrierText>,
     pub expand: Option<Vec<String>>,
     pub lookup_key: Option<PostIssuingPersonalizationDesignsPersonalizationDesignRequestLookupKey>,
     pub metadata: Option<PostAccountsAccountBankAccountsRequestMetadata>,
@@ -7470,7 +7591,9 @@ pub enum PostIssuingPersonalizationDesignsPersonalizationDesignRequestCardLogo {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostIssuingPersonalizationDesignsPersonalizationDesignRequestCarrierText {
-    CarrierTextParam(PostIssuingPersonalizationDesignsPersonalizationDesignRequestCarrierTextObject),
+    CarrierTextParam(
+        PostIssuingPersonalizationDesignsPersonalizationDesignRequestCarrierTextObject,
+    ),
     Variant2(String),
 }
 
@@ -7601,7 +7724,8 @@ pub struct PostPaymentIntentsIntentConfirmRequest {
     pub client_secret: Option<String>,
     pub confirmation_token: Option<String>,
     pub error_on_requires_action: Option<bool>,
-    pub excluded_payment_method_types: Option<PostPaymentIntentsIntentRequestExcludedPaymentMethodTypes>,
+    pub excluded_payment_method_types:
+        Option<PostPaymentIntentsIntentRequestExcludedPaymentMethodTypes>,
     pub expand: Option<Vec<String>>,
     pub hooks: Option<PostPaymentIntentsRequestHooks>,
     pub mandate: Option<String>,
@@ -7630,7 +7754,8 @@ pub enum PostPaymentIntentsIntentConfirmRequestMandateData {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPaymentIntentsIntentConfirmRequestMandateDataObject {
-    pub customer_acceptance: PostPaymentIntentsIntentConfirmRequestMandateDataObjectCustomerAcceptance,
+    pub customer_acceptance:
+        PostPaymentIntentsIntentConfirmRequestMandateDataObjectCustomerAcceptance,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -7662,7 +7787,8 @@ pub struct PostPaymentIntentsIntentIncrementAuthorizationRequest {
     pub expand: Option<Vec<String>>,
     pub hooks: Option<PostPaymentIntentsRequestHooks>,
     pub metadata: Option<PostAccountsAccountBankAccountsRequestMetadata>,
-    pub payment_details: Option<PostPaymentIntentsIntentIncrementAuthorizationRequestPaymentDetails>,
+    pub payment_details:
+        Option<PostPaymentIntentsIntentIncrementAuthorizationRequestPaymentDetails>,
     pub statement_descriptor: Option<String>,
     pub transfer_data: Option<PostPaymentIntentsIntentIncrementAuthorizationRequestTransferData>,
 }
@@ -7687,7 +7813,8 @@ pub struct PostPaymentIntentsIntentRequest {
     pub currency: Option<String>,
     pub customer: Option<String>,
     pub description: Option<String>,
-    pub excluded_payment_method_types: Option<PostPaymentIntentsIntentRequestExcludedPaymentMethodTypes>,
+    pub excluded_payment_method_types:
+        Option<PostPaymentIntentsIntentRequestExcludedPaymentMethodTypes>,
     pub expand: Option<Vec<String>>,
     pub hooks: Option<PostPaymentIntentsRequestHooks>,
     pub metadata: Option<DefaultPostAccountsRequestMetadata>,
@@ -8055,8 +8182,10 @@ pub struct PostPaymentIntentsRequestCardObject {
     pub request_three_d_secure: Option<String>,
     pub require_cvc_recollection: Option<bool>,
     pub setup_future_usage: Option<String>,
-    pub statement_descriptor_suffix_kana: Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
-    pub statement_descriptor_suffix_kanji: Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKanji>,
+    pub statement_descriptor_suffix_kana:
+        Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
+    pub statement_descriptor_suffix_kanji:
+        Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKanji>,
     pub three_d_secure: Option<PostPaymentIntentsRequestCardObjectThreeDSecure>,
 }
 
@@ -8221,7 +8350,8 @@ pub struct PostPaymentIntentsRequestKonbiniObject {
     pub confirmation_number: Option<PostPaymentIntentsRequestKonbiniObjectConfirmationNumber>,
     pub expires_after_days: Option<PostBalanceSettingsRequestDelayDaysOverride>,
     pub expires_at: Option<PostIssuingDisputesRequestCanceledObjectCanceledAt>,
-    pub product_description: Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
+    pub product_description:
+        Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
     pub setup_future_usage: Option<String>,
 }
 
@@ -8242,7 +8372,8 @@ pub enum PostPaymentIntentsRequestLineItems {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPaymentIntentsRequestLineItemsObject {
     pub discount_amount: Option<i32>,
-    pub payment_method_options: Option<PostPaymentIntentsRequestLineItemsObjectPaymentMethodOptions>,
+    pub payment_method_options:
+        Option<PostPaymentIntentsRequestLineItemsObjectPaymentMethodOptions>,
     pub product_code: Option<String>,
     pub product_name: String,
     pub quantity: i32,
@@ -8629,7 +8760,8 @@ pub struct PostPaymentLinksPaymentLinkRequest {
     pub payment_method_types: Option<PostPaymentLinksPaymentLinkRequestPaymentMethodTypes>,
     pub phone_number_collection: Option<PostPaymentLinksRequestPhoneNumberCollection>,
     pub restrictions: Option<PostPaymentLinksPaymentLinkRequestRestrictions>,
-    pub shipping_address_collection: Option<PostPaymentLinksPaymentLinkRequestShippingAddressCollection>,
+    pub shipping_address_collection:
+        Option<PostPaymentLinksPaymentLinkRequestShippingAddressCollection>,
     pub submit_type: Option<String>,
     pub subscription_data: Option<PostPaymentLinksPaymentLinkRequestSubscriptionData>,
     pub tax_id_collection: Option<PostCheckoutSessionsRequestTaxIdCollection>,
@@ -8686,8 +8818,10 @@ pub struct PostPaymentLinksPaymentLinkRequestNameCollectionObject {
 pub struct PostPaymentLinksPaymentLinkRequestPaymentIntentData {
     pub description: Option<PostPaymentLinksPaymentLinkRequestDescription>,
     pub metadata: Option<PostAccountsRequestMetadata>,
-    pub statement_descriptor: Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
-    pub statement_descriptor_suffix: Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
+    pub statement_descriptor:
+        Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
+    pub statement_descriptor_suffix:
+        Option<PostPaymentIntentsRequestCardObjectStatementDescriptorSuffixKana>,
     pub transfer_group: Option<PostAccountsRequestPaymentsPricing>,
 }
 
@@ -8713,7 +8847,9 @@ pub struct PostPaymentLinksPaymentLinkRequestRestrictionsObject {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostPaymentLinksPaymentLinkRequestShippingAddressCollection {
-    ShippingAddressCollectionParams(PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObject),
+    ShippingAddressCollectionParams(
+        PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObject,
+    ),
     Variant2(String),
 }
 
@@ -8792,7 +8928,8 @@ pub struct PostPaymentLinksRequestCompletedSessions {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPaymentLinksRequestConsentCollection {
-    pub payment_method_reuse_agreement: Option<PostCheckoutSessionsRequestPaymentMethodReuseAgreement>,
+    pub payment_method_reuse_agreement:
+        Option<PostCheckoutSessionsRequestPaymentMethodReuseAgreement>,
     pub promotions: Option<String>,
     pub terms_of_service: Option<String>,
 }
@@ -8844,9 +8981,7 @@ pub struct PostPaymentLinksRequestLineItemsItemPriceData {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostPaymentLinksRequestMetadata {
-
-}
+pub struct PostPaymentLinksRequestMetadata {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPaymentLinksRequestNameCollection {
@@ -9563,10 +9698,12 @@ pub struct PostPaymentRecordsIdReportPaymentAttemptGuaranteedRequest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPaymentRecordsIdReportPaymentAttemptInformationalRequest {
     pub customer_details: Option<PostPaymentRecordsReportPaymentRequestCustomerDetails>,
-    pub description: Option<PostPaymentRecordsIdReportPaymentAttemptInformationalRequestDescription>,
+    pub description:
+        Option<PostPaymentRecordsIdReportPaymentAttemptInformationalRequestDescription>,
     pub expand: Option<Vec<String>>,
     pub metadata: Option<DefaultPostAccountsRequestMetadata>,
-    pub shipping_details: Option<PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetails>,
+    pub shipping_details:
+        Option<PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetails>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -9579,7 +9716,9 @@ pub enum PostPaymentRecordsIdReportPaymentAttemptInformationalRequestDescription
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetails {
-    ShippingDetails(PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObject),
+    ShippingDetails(
+        PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObject,
+    ),
     Variant2(String),
 }
 
@@ -9832,9 +9971,7 @@ pub enum PostPricesPriceRequestCurrencyOptions {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostPricesPriceRequestCurrencyOptionsObject {
-
-}
+pub struct PostPricesPriceRequestCurrencyOptionsObject {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPricesRequest {
@@ -9860,9 +9997,7 @@ pub struct PostPricesRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostPricesRequestCurrencyOptions {
-
-}
+pub struct PostPricesRequestCurrencyOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPricesRequestCustomUnitAmount {
@@ -10044,9 +10179,7 @@ pub struct PostPromotionCodesRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostPromotionCodesRequestCurrencyOptions {
-
-}
+pub struct PostPromotionCodesRequestCurrencyOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostPromotionCodesRequestPromotion {
@@ -10361,7 +10494,8 @@ pub struct PostSetupIntentsIntentRequest {
     pub attach_to_self: Option<bool>,
     pub customer: Option<String>,
     pub description: Option<String>,
-    pub excluded_payment_method_types: Option<PostSetupIntentsIntentRequestExcludedPaymentMethodTypes>,
+    pub excluded_payment_method_types:
+        Option<PostSetupIntentsIntentRequestExcludedPaymentMethodTypes>,
     pub expand: Option<Vec<String>>,
     pub flow_directions: Option<Vec<String>>,
     pub metadata: Option<DefaultPostAccountsRequestMetadata>,
@@ -10559,7 +10693,8 @@ pub struct PostSetupIntentsRequestThreeDSecure {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostSetupIntentsRequestUsBankAccount {
-    pub financial_connections: Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectFinancialConnections>,
+    pub financial_connections:
+        Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectFinancialConnections>,
     pub mandate_options: Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectMandateOptions>,
     pub networks: Option<DefaultPostPaymentIntentsRequestUsBankAccountObjectNetworks>,
     pub verification_method: Option<String>,
@@ -10601,9 +10736,7 @@ pub struct PostShippingRatesShippingRateTokenRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostShippingRatesShippingRateTokenRequestCurrencyOptions {
-
-}
+pub struct PostShippingRatesShippingRateTokenRequestCurrencyOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostShippingRatesShippingRateTokenRequestFixedAmount {
@@ -10782,7 +10915,9 @@ pub struct PostSubscriptionItemsRequest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PostSubscriptionItemsRequestBillingThresholds {
-    ItemBillingThresholdsParam(PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholdsObject),
+    ItemBillingThresholdsParam(
+        PostCustomersCustomerSubscriptionsRequestItemsItemBillingThresholdsObject,
+    ),
     Variant2(String),
 }
 
@@ -10853,7 +10988,8 @@ pub struct PostSubscriptionSchedulesRequestInvoiceSettings {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostSubscriptionSchedulesRequestPhasesItem {
-    pub add_invoice_items: Option<Vec<PostInvoicesCreatePreviewRequestPhasesItemAddInvoiceItemsItem>>,
+    pub add_invoice_items:
+        Option<Vec<PostInvoicesCreatePreviewRequestPhasesItemAddInvoiceItemsItem>>,
     pub application_fee_percent: Option<f32>,
     pub automatic_tax: Option<PostInvoicesCreatePreviewRequestPhasesItemAutomaticTax>,
     pub billing_cycle_anchor: Option<String>,
@@ -10915,8 +11051,10 @@ pub struct PostSubscriptionSchedulesScheduleRequest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostSubscriptionsRequest {
-    pub add_invoice_items: Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
-    pub application_fee_percent: Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
+    pub add_invoice_items:
+        Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
+    pub application_fee_percent:
+        Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
     pub automatic_tax: Option<PostCustomersCustomerSubscriptionsRequestAutomaticTax>,
     pub backdate_start_date: Option<i32>,
     pub billing_cycle_anchor: Option<i32>,
@@ -10942,7 +11080,8 @@ pub struct PostSubscriptionsRequest {
     pub on_behalf_of: Option<PostSubscriptionsRequestOnBehalfOf>,
     pub payment_behavior: Option<String>,
     pub payment_settings: Option<PostCustomersCustomerSubscriptionsRequestPaymentSettings>,
-    pub pending_invoice_item_interval: Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
+    pub pending_invoice_item_interval:
+        Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
     pub proration_behavior: Option<String>,
     pub transfer_data: Option<PostCustomersCustomerSubscriptionsRequestTransferData>,
     pub trial_end: Option<PostCustomersCustomerSubscriptionsRequestTrialEnd>,
@@ -10969,19 +11108,25 @@ pub enum PostSubscriptionsRequestOnBehalfOf {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostSubscriptionsSubscriptionExposedIdRequest {
-    pub add_invoice_items: Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
-    pub application_fee_percent: Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
-    pub automatic_tax: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestAutomaticTax>,
+    pub add_invoice_items:
+        Option<Vec<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItem>>,
+    pub application_fee_percent:
+        Option<PostCustomersCustomerSubscriptionsRequestApplicationFeePercent>,
+    pub automatic_tax:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestAutomaticTax>,
     pub billing_cycle_anchor: Option<String>,
     pub billing_thresholds: Option<PostCustomersCustomerSubscriptionsRequestBillingThresholds>,
     pub cancel_at: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancelAt>,
     pub cancel_at_period_end: Option<bool>,
-    pub cancellation_details: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancellationDetails>,
+    pub cancellation_details:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestCancellationDetails>,
     pub collection_method: Option<String>,
     pub days_until_due: Option<i32>,
     pub default_payment_method: Option<String>,
-    pub default_source: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultSource>,
-    pub default_tax_rates: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultTaxRates>,
+    pub default_source:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultSource>,
+    pub default_tax_rates:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestDefaultTaxRates>,
     pub description: Option<PostSubscriptionsSubscriptionExposedIdRequestDescription>,
     pub discounts: Option<PostCustomersCustomerSubscriptionsRequestDiscounts>,
     pub expand: Option<Vec<String>>,
@@ -10990,13 +11135,16 @@ pub struct PostSubscriptionsSubscriptionExposedIdRequest {
     pub metadata: Option<DefaultPostAccountsRequestMetadata>,
     pub off_session: Option<bool>,
     pub on_behalf_of: Option<PostSubscriptionsRequestOnBehalfOf>,
-    pub pause_collection: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollection>,
+    pub pause_collection:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestPauseCollection>,
     pub payment_behavior: Option<String>,
     pub payment_settings: Option<PostCustomersCustomerSubscriptionsRequestPaymentSettings>,
-    pub pending_invoice_item_interval: Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
+    pub pending_invoice_item_interval:
+        Option<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>,
     pub proration_behavior: Option<String>,
     pub proration_date: Option<i32>,
-    pub transfer_data: Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData>,
+    pub transfer_data:
+        Option<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData>,
     pub trial_end: Option<PostSubscriptionsSubscriptionExposedIdRequestTrialEnd>,
     pub trial_from_plan: Option<bool>,
     pub trial_settings: Option<PostCustomersCustomerSubscriptionsRequestTrialSettings>,
@@ -11753,7 +11901,8 @@ pub struct PostTerminalOnboardingLinksRequestAppleTermsAndConditions {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTerminalOnboardingLinksRequestLinkOptions {
-    pub apple_terms_and_conditions: Option<PostTerminalOnboardingLinksRequestAppleTermsAndConditions>,
+    pub apple_terms_and_conditions:
+        Option<PostTerminalOnboardingLinksRequestAppleTermsAndConditions>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -11869,7 +12018,8 @@ pub struct PostTerminalReadersReaderRefundPaymentRequest {
     pub metadata: Option<PostAccountsAccountBankAccountsRequestMetadata>,
     pub payment_intent: Option<String>,
     pub refund_application_fee: Option<bool>,
-    pub refund_payment_config: Option<PostTerminalReadersReaderRefundPaymentRequestRefundPaymentConfig>,
+    pub refund_payment_config:
+        Option<PostTerminalReadersReaderRefundPaymentRequestRefundPaymentConfig>,
     pub reverse_transfer: Option<bool>,
 }
 
@@ -11929,7 +12079,8 @@ pub struct PostTestHelpersConfirmationTokensRequest {
     pub expand: Option<Vec<String>>,
     pub payment_method: Option<String>,
     pub payment_method_data: Option<PostTestHelpersConfirmationTokensRequestPaymentMethodData>,
-    pub payment_method_options: Option<PostTestHelpersConfirmationTokensRequestPaymentMethodOptions>,
+    pub payment_method_options:
+        Option<PostTestHelpersConfirmationTokensRequestPaymentMethodOptions>,
     pub return_url: Option<String>,
     pub setup_future_usage: Option<String>,
     pub shipping: Option<PostTestHelpersConfirmationTokensRequestShipping>,
@@ -12029,12 +12180,14 @@ pub struct PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequest {
     pub capture_amount: Option<i32>,
     pub close_authorization: Option<bool>,
     pub expand: Option<Vec<String>>,
-    pub purchase_details: Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurchaseDetails>,
+    pub purchase_details:
+        Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurchaseDetails>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestFleet {
-    pub cardholder_prompt_data: Option<PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData>,
+    pub cardholder_prompt_data:
+        Option<PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData>,
     pub purchase_type: Option<String>,
     pub reported_breakdown: Option<PostTestHelpersIssuingAuthorizationsRequestReportedBreakdown>,
     pub service_type: Option<String>,
@@ -12045,7 +12198,8 @@ pub struct PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestFlight
     pub departure_at: Option<i32>,
     pub passenger_name: Option<String>,
     pub refundable: Option<bool>,
-    pub segments: Option<Vec<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestSegmentsItem>>,
+    pub segments:
+        Option<Vec<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestSegmentsItem>>,
     pub travel_agency: Option<String>,
 }
 
@@ -12071,7 +12225,8 @@ pub struct PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurcha
     pub flight: Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestFlight>,
     pub fuel: Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestFuel>,
     pub lodging: Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestLodging>,
-    pub receipt: Option<Vec<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestReceiptItem>>,
+    pub receipt:
+        Option<Vec<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestReceiptItem>>,
     pub reference: Option<String>,
 }
 
@@ -12103,7 +12258,8 @@ pub struct PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmountReques
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmountRequestFleet {
-    pub cardholder_prompt_data: Option<PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData>,
+    pub cardholder_prompt_data:
+        Option<PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData>,
     pub purchase_type: Option<String>,
     pub reported_breakdown: Option<PostTestHelpersIssuingAuthorizationsRequestReportedBreakdown>,
     pub service_type: Option<String>,
@@ -12180,7 +12336,8 @@ pub struct PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTestHelpersIssuingAuthorizationsRequestFleet {
-    pub cardholder_prompt_data: Option<PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData>,
+    pub cardholder_prompt_data:
+        Option<PostTestHelpersIssuingAuthorizationsRequestCardholderPromptData>,
     pub purchase_type: Option<String>,
     pub reported_breakdown: Option<PostTestHelpersIssuingAuthorizationsRequestReportedBreakdown>,
     pub service_type: Option<String>,
@@ -12237,7 +12394,8 @@ pub struct PostTestHelpersIssuingAuthorizationsRequestReportedBreakdown {
 pub struct PostTestHelpersIssuingAuthorizationsRequestRiskAssessment {
     pub card_testing_risk: Option<PostTestHelpersIssuingAuthorizationsRequestCardTestingRisk>,
     pub fraud_risk: Option<PostTestHelpersIssuingAuthorizationsRequestFraudRisk>,
-    pub merchant_dispute_risk: Option<PostTestHelpersIssuingAuthorizationsRequestMerchantDisputeRisk>,
+    pub merchant_dispute_risk:
+        Option<PostTestHelpersIssuingAuthorizationsRequestMerchantDisputeRisk>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12255,7 +12413,8 @@ pub struct PostTestHelpersIssuingAuthorizationsRequestThreeDSecure {
 pub struct PostTestHelpersIssuingAuthorizationsRequestVerificationData {
     pub address_line1_check: Option<String>,
     pub address_postal_code_check: Option<String>,
-    pub authentication_exemption: Option<PostTestHelpersIssuingAuthorizationsRequestAuthenticationExemption>,
+    pub authentication_exemption:
+        Option<PostTestHelpersIssuingAuthorizationsRequestAuthenticationExemption>,
     pub cvc_check: Option<String>,
     pub expiry_check: Option<String>,
     pub three_d_secure: Option<PostTestHelpersIssuingAuthorizationsRequestThreeDSecure>,
@@ -12268,7 +12427,8 @@ pub struct PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignReje
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignRejectRequestRejectionReasons {
+pub struct PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignRejectRequestRejectionReasons
+{
     pub card_logo: Option<Vec<String>>,
     pub carrier_text: Option<Vec<String>>,
 }
@@ -12294,7 +12454,8 @@ pub struct PostTestHelpersIssuingTransactionsCreateForceCaptureRequest {
     pub currency: Option<String>,
     pub expand: Option<Vec<String>>,
     pub merchant_data: Option<PostTestHelpersIssuingAuthorizationsRequestMerchantData>,
-    pub purchase_details: Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurchaseDetails>,
+    pub purchase_details:
+        Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurchaseDetails>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12304,7 +12465,8 @@ pub struct PostTestHelpersIssuingTransactionsCreateUnlinkedRefundRequest {
     pub currency: Option<String>,
     pub expand: Option<Vec<String>>,
     pub merchant_data: Option<PostTestHelpersIssuingAuthorizationsRequestMerchantData>,
-    pub purchase_details: Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurchaseDetails>,
+    pub purchase_details:
+        Option<PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequestPurchaseDetails>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12317,9 +12479,11 @@ pub struct PostTestHelpersIssuingTransactionsTransactionRefundRequest {
 pub struct PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequest {
     pub amount_tip: Option<i32>,
     pub card: Option<PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequestCard>,
-    pub card_present: Option<PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequestCardPresent>,
+    pub card_present:
+        Option<PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequestCardPresent>,
     pub expand: Option<Vec<String>>,
-    pub interac_present: Option<PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequestInteracPresent>,
+    pub interac_present:
+        Option<PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequestInteracPresent>,
     #[serde(rename = "type")]
     pub r#type: Option<String>,
 }
@@ -12401,7 +12565,8 @@ pub struct PostTestHelpersTreasuryOutboundPaymentsIdRequestUsDomesticWire {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTestHelpersTreasuryOutboundPaymentsIdReturnRequest {
     pub expand: Option<Vec<String>>,
-    pub returned_details: Option<PostTestHelpersTreasuryOutboundPaymentsIdReturnRequestReturnedDetails>,
+    pub returned_details:
+        Option<PostTestHelpersTreasuryOutboundPaymentsIdReturnRequestReturnedDetails>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12412,7 +12577,9 @@ pub struct PostTestHelpersTreasuryOutboundPaymentsIdReturnRequestReturnedDetails
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturnRequest {
     pub expand: Option<Vec<String>>,
-    pub returned_details: Option<PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturnRequestReturnedDetails>,
+    pub returned_details: Option<
+        PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturnRequestReturnedDetails,
+    >,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12427,7 +12594,8 @@ pub struct PostTestHelpersTreasuryReceivedCreditsRequest {
     pub description: Option<String>,
     pub expand: Option<Vec<String>>,
     pub financial_account: String,
-    pub initiating_payment_method_details: Option<PostTestHelpersTreasuryReceivedCreditsRequestInitiatingPaymentMethodDetails>,
+    pub initiating_payment_method_details:
+        Option<PostTestHelpersTreasuryReceivedCreditsRequestInitiatingPaymentMethodDetails>,
     pub network: String,
 }
 
@@ -12452,7 +12620,8 @@ pub struct PostTestHelpersTreasuryReceivedDebitsRequest {
     pub description: Option<String>,
     pub expand: Option<Vec<String>>,
     pub financial_account: String,
-    pub initiating_payment_method_details: Option<PostTestHelpersTreasuryReceivedCreditsRequestInitiatingPaymentMethodDetails>,
+    pub initiating_payment_method_details:
+        Option<PostTestHelpersTreasuryReceivedCreditsRequestInitiatingPaymentMethodDetails>,
     pub network: String,
 }
 
@@ -12702,19 +12871,27 @@ pub struct PostTreasuryDebitReversalsRequest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTreasuryFinancialAccountsFinancialAccountCloseRequest {
     pub expand: Option<Vec<String>>,
-    pub forwarding_settings: Option<PostTreasuryFinancialAccountsFinancialAccountRequestForwardingSettings>,
+    pub forwarding_settings:
+        Option<PostTreasuryFinancialAccountsFinancialAccountRequestForwardingSettings>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PostTreasuryFinancialAccountsFinancialAccountFeaturesRequest {
-    pub card_issuing: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestCardIssuing>,
-    pub deposit_insurance: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestDepositInsurance>,
+    pub card_issuing:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestCardIssuing>,
+    pub deposit_insurance:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestDepositInsurance>,
     pub expand: Option<Vec<String>>,
-    pub financial_addresses: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestFinancialAddresses>,
-    pub inbound_transfers: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestInboundTransfers>,
-    pub intra_stripe_flows: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestIntraStripeFlows>,
-    pub outbound_payments: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestOutboundPayments>,
-    pub outbound_transfers: Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestOutboundTransfers>,
+    pub financial_addresses:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestFinancialAddresses>,
+    pub inbound_transfers:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestInboundTransfers>,
+    pub intra_stripe_flows:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestIntraStripeFlows>,
+    pub outbound_payments:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestOutboundPayments>,
+    pub outbound_transfers:
+        Option<PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestOutboundTransfers>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -12758,7 +12935,8 @@ pub struct PostTreasuryFinancialAccountsFinancialAccountFeaturesRequestOutboundT
 pub struct PostTreasuryFinancialAccountsFinancialAccountRequest {
     pub expand: Option<Vec<String>>,
     pub features: Option<PostTreasuryFinancialAccountsFinancialAccountRequestFeatures>,
-    pub forwarding_settings: Option<PostTreasuryFinancialAccountsFinancialAccountRequestForwardingSettings>,
+    pub forwarding_settings:
+        Option<PostTreasuryFinancialAccountsFinancialAccountRequestForwardingSettings>,
     pub metadata: Option<PostAccountsAccountBankAccountsRequestMetadata>,
     pub nickname: Option<PostTreasuryFinancialAccountsRequestNickname>,
     pub platform_restrictions: Option<PostTreasuryFinancialAccountsRequestPlatformRestrictions>,
@@ -12873,8 +13051,10 @@ pub struct PostTreasuryOutboundPaymentsRequest {
     pub customer: Option<String>,
     pub description: Option<String>,
     pub destination_payment_method: Option<String>,
-    pub destination_payment_method_data: Option<PostTreasuryOutboundPaymentsRequestDestinationPaymentMethodData>,
-    pub destination_payment_method_options: Option<PostTreasuryOutboundPaymentsRequestDestinationPaymentMethodOptions>,
+    pub destination_payment_method_data:
+        Option<PostTreasuryOutboundPaymentsRequestDestinationPaymentMethodData>,
+    pub destination_payment_method_options:
+        Option<PostTreasuryOutboundPaymentsRequestDestinationPaymentMethodOptions>,
     pub end_user_details: Option<PostTreasuryOutboundPaymentsRequestEndUserDetails>,
     pub expand: Option<Vec<String>>,
     pub financial_account: String,
@@ -12929,8 +13109,10 @@ pub struct PostTreasuryOutboundTransfersRequest {
     pub currency: String,
     pub description: Option<String>,
     pub destination_payment_method: Option<String>,
-    pub destination_payment_method_data: Option<PostTreasuryOutboundTransfersRequestDestinationPaymentMethodData>,
-    pub destination_payment_method_options: Option<PostTreasuryOutboundTransfersRequestDestinationPaymentMethodOptions>,
+    pub destination_payment_method_data:
+        Option<PostTreasuryOutboundTransfersRequestDestinationPaymentMethodData>,
+    pub destination_payment_method_options:
+        Option<PostTreasuryOutboundTransfersRequestDestinationPaymentMethodOptions>,
     pub expand: Option<Vec<String>>,
     pub financial_account: String,
     pub metadata: Option<PostAccountsAccountBankAccountsRequestMetadata>,
@@ -13011,7 +13193,9 @@ pub enum PromotionCodeOrRef {
 #[serde(untagged)]
 pub enum PromptpayUnion {
     PaymentMethodOptionsPromptpay(PaymentMethodOptionsPromptpay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13022,9 +13206,7 @@ pub enum QuoteOrRef {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct RatesProperty {
-
-}
+pub struct RatesProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -13103,7 +13285,9 @@ pub enum ReviewOrRef {
 #[serde(untagged)]
 pub enum RevolutPayUnion {
     PaymentMethodOptionsRevolutPay(PaymentMethodOptionsRevolutPay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13116,15 +13300,21 @@ pub enum RuleOrRef {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SamsungPayUnion {
-    PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptions(PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptions),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptions(
+        PaymentFlowsPrivatePaymentMethodsSamsungPayPaymentMethodOptions,
+    ),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SatispayUnion {
     PaymentMethodOptionsSatispay(PaymentMethodOptionsSatispay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13138,14 +13328,18 @@ pub enum ScheduleOrRef {
 #[serde(untagged)]
 pub enum SepaDebitUnion {
     PaymentIntentPaymentMethodOptionsSepaDebit(PaymentIntentPaymentMethodOptionsSepaDebit),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SepaDebitUnion2 {
     SetupIntentPaymentMethodOptionsSepaDebit(SetupIntentPaymentMethodOptionsSepaDebit),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13194,7 +13388,9 @@ pub enum SingleUseMandateOrRef {
 #[serde(untagged)]
 pub enum SofortUnion {
     PaymentMethodOptionsSofort(PaymentMethodOptionsSofort),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13293,15 +13489,15 @@ pub struct SubscriptionsProperty {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SupportedBankAccountCurrenciesProperty {
-
-}
+pub struct SupportedBankAccountCurrenciesProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SwishUnion {
     PaymentIntentPaymentMethodOptionsSwish(PaymentIntentPaymentMethodOptionsSwish),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13365,7 +13561,9 @@ pub enum TransferReversalOrRef {
 #[serde(untagged)]
 pub enum TwintUnion {
     PaymentMethodOptionsTwint(PaymentMethodOptionsTwint),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13379,33 +13577,39 @@ pub enum UncategorizedFileOrRef {
 #[serde(untagged)]
 pub enum UsBankAccountUnion {
     PaymentIntentPaymentMethodOptionsUsBankAccount(PaymentIntentPaymentMethodOptionsUsBankAccount),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum UsBankAccountUnion2 {
     SetupIntentPaymentMethodOptionsUsBankAccount(SetupIntentPaymentMethodOptionsUsBankAccount),
-    SetupIntentTypeSpecificPaymentMethodOptionsClient(SetupIntentTypeSpecificPaymentMethodOptionsClient),
+    SetupIntentTypeSpecificPaymentMethodOptionsClient(
+        SetupIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UsedProperty {
-
-}
+pub struct UsedProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum WechatPayUnion {
     PaymentMethodOptionsWechatPay(PaymentMethodOptionsWechatPay),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ZipUnion {
     PaymentMethodOptionsZip(PaymentMethodOptionsZip),
-    PaymentIntentTypeSpecificPaymentMethodOptionsClient(PaymentIntentTypeSpecificPaymentMethodOptionsClient),
+    PaymentIntentTypeSpecificPaymentMethodOptionsClient(
+        PaymentIntentTypeSpecificPaymentMethodOptionsClient,
+    ),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -14144,7 +14348,8 @@ pub struct BillingMeterEventSummary {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingBillResourceInvoiceItemParentsInvoiceItemParent {
-    pub subscription_details: Option<BillingBillResourceInvoiceItemParentsInvoiceItemSubscriptionParent>,
+    pub subscription_details:
+        Option<BillingBillResourceInvoiceItemParentsInvoiceItemSubscriptionParent>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -14176,8 +14381,10 @@ pub struct BillingBillResourceInvoicingLinesParentsInvoiceLineItemInvoiceItemPar
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingBillResourceInvoicingLinesParentsInvoiceLineItemParent {
-    pub invoice_item_details: Option<BillingBillResourceInvoicingLinesParentsInvoiceLineItemInvoiceItemParent>,
-    pub subscription_item_details: Option<BillingBillResourceInvoicingLinesParentsInvoiceLineItemSubscriptionItemParent>,
+    pub invoice_item_details:
+        Option<BillingBillResourceInvoicingLinesParentsInvoiceLineItemInvoiceItemParent>,
+    pub subscription_item_details:
+        Option<BillingBillResourceInvoicingLinesParentsInvoiceLineItemSubscriptionItemParent>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -14271,7 +14478,8 @@ pub struct BillingCreditGrantsResourceApplicablePrice {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingCreditGrantsResourceBalanceCredit {
     pub amount: BillingCreditGrantsResourceAmount,
-    pub credits_application_invoice_voided: Option<BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoided>,
+    pub credits_application_invoice_voided:
+        Option<BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoided>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -14447,9 +14655,7 @@ pub struct CardIssuingAccountTermsOfService {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CardMandatePaymentMethodDetails {
-
-}
+pub struct CardMandatePaymentMethodDetails {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CashBalance {
@@ -14579,7 +14785,8 @@ pub struct CheckoutSession {
     pub payment_intent: Option<PaymentIntentOrRef>,
     pub payment_link: Option<PaymentLinkOrRef>,
     pub payment_method_collection: Option<String>,
-    pub payment_method_configuration_details: Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
+    pub payment_method_configuration_details:
+        Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
     pub payment_method_options: Option<CheckoutSessionPaymentMethodOptions>,
     pub payment_method_types: Vec<String>,
     pub payment_status: String,
@@ -15038,7 +15245,8 @@ pub struct ConfirmationTokensResourceMandateData {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConfirmationTokensResourceMandateDataResourceCustomerAcceptance {
-    pub online: Option<ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnline>,
+    pub online:
+        Option<ConfirmationTokensResourceMandateDataResourceCustomerAcceptanceResourceOnline>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -15057,7 +15265,8 @@ pub struct ConfirmationTokensResourcePaymentMethodOptions {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConfirmationTokensResourcePaymentMethodOptionsResourceCard {
     pub cvc_token: Option<String>,
-    pub installments: Option<ConfirmationTokensResourcePaymentMethodOptionsResourceCardResourceInstallment>,
+    pub installments:
+        Option<ConfirmationTokensResourcePaymentMethodOptionsResourceCardResourceInstallment>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15191,9 +15400,7 @@ pub struct ConnectEmbeddedBaseConfigClaim {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ConnectEmbeddedBaseFeatures {
-
-}
+pub struct ConnectEmbeddedBaseFeatures {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConnectEmbeddedDisputesListConfig {
@@ -15531,7 +15738,8 @@ pub struct CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPayment
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransaction {
-    pub bank_transfer: CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransfer,
+    pub bank_transfer:
+        CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransfer,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15546,28 +15754,32 @@ pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactio
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceEuBankTransfer {
+pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceEuBankTransfer
+{
     pub bic: Option<String>,
     pub iban_last4: Option<String>,
     pub sender_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceGbBankTransfer {
+pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceGbBankTransfer
+{
     pub account_number_last4: Option<String>,
     pub sender_name: Option<String>,
     pub sort_code: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceJpBankTransfer {
+pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceJpBankTransfer
+{
     pub sender_bank: Option<String>,
     pub sender_branch: Option<String>,
     pub sender_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceUsBankTransfer {
+pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactionResourceBankTransferResourceUsBankTransfer
+{
     pub network: Option<String>,
     pub sender_name: Option<String>,
 }
@@ -15608,8 +15820,10 @@ pub struct CustomerBalanceTransaction {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerCashBalanceTransaction {
-    pub adjusted_for_overdraft: Option<CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft>,
-    pub applied_to_payment: Option<CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction>,
+    pub adjusted_for_overdraft:
+        Option<CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft>,
+    pub applied_to_payment:
+        Option<CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction>,
     pub created: i32,
     pub currency: String,
     pub customer: CustomerOrRef,
@@ -15619,11 +15833,15 @@ pub struct CustomerCashBalanceTransaction {
     pub livemode: bool,
     pub net_amount: i32,
     pub object: String,
-    pub refunded_from_payment: Option<CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction>,
-    pub transferred_to_balance: Option<CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalance>,
+    pub refunded_from_payment:
+        Option<CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction>,
+    pub transferred_to_balance:
+        Option<CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalance>,
     #[serde(rename = "type")]
     pub r#type: String,
-    pub unapplied_from_payment: Option<CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransaction>,
+    pub unapplied_from_payment: Option<
+        CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransaction,
+    >,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15666,7 +15884,8 @@ pub struct CustomerSessionResourceComponentsResourceCustomerSheetResourceFeature
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerSessionResourceComponentsResourceMobilePaymentElement {
     pub enabled: bool,
-    pub features: Option<CustomerSessionResourceComponentsResourceMobilePaymentElementResourceFeatures>,
+    pub features:
+        Option<CustomerSessionResourceComponentsResourceMobilePaymentElementResourceFeatures>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15909,9 +16128,7 @@ pub struct DeletedWebhookEndpoint {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DestinationDetailsUnimplemented {
-
-}
+pub struct DestinationDetailsUnimplemented {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Discount {
@@ -15996,7 +16213,8 @@ pub struct DisputeEnhancedEvidence {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DisputeEnhancedEvidenceVisaCompellingEvidence3 {
     pub disputed_transaction: Option<DisputeVisaCompellingEvidence3DisputedTransaction>,
-    pub prior_undisputed_transactions: Vec<DisputeVisaCompellingEvidence3PriorUndisputedTransaction>,
+    pub prior_undisputed_transactions:
+        Vec<DisputeVisaCompellingEvidence3PriorUndisputedTransaction>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16584,9 +16802,7 @@ pub struct GelatoReportDocumentOptions {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GelatoReportIdNumberOptions {
-
-}
+pub struct GelatoReportIdNumberOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GelatoSelfieReport {
@@ -16616,9 +16832,7 @@ pub struct GelatoSessionEmailOptions {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GelatoSessionIdNumberOptions {
-
-}
+pub struct GelatoSessionIdNumberOptions {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GelatoSessionLastError {
@@ -16889,7 +17103,8 @@ pub struct InvoicePaymentMethodOptionsCustomerBalance {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoicePaymentMethodOptionsCustomerBalanceBankTransfer {
-    pub eu_bank_transfer: Option<InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer>,
+    pub eu_bank_transfer:
+        Option<InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer>,
     #[serde(rename = "type")]
     pub r#type: Option<String>,
 }
@@ -16900,14 +17115,10 @@ pub struct InvoicePaymentMethodOptionsCustomerBalanceBankTransferEuBankTransfer 
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InvoicePaymentMethodOptionsKonbini {
-
-}
+pub struct InvoicePaymentMethodOptionsKonbini {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InvoicePaymentMethodOptionsSepaDebit {
-
-}
+pub struct InvoicePaymentMethodOptionsSepaDebit {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoicePaymentMethodOptionsUsBankAccount {
@@ -18044,7 +18255,9 @@ pub struct LineItemsTaxAmount {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LinkedAccountOptionsCommon {
-    pub filters: Option<PaymentFlowsPrivatePaymentMethodsFinancialConnectionsCommonLinkedAccountOptionsFilters>,
+    pub filters: Option<
+        PaymentFlowsPrivatePaymentMethodsFinancialConnectionsCommonLinkedAccountOptionsFilters,
+    >,
     pub permissions: Option<Vec<String>>,
     pub prefetch: Option<Vec<String>>,
     pub return_url: Option<String>,
@@ -18082,9 +18295,7 @@ pub struct MandateAcssDebit {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateAmazonPay {
-
-}
+pub struct MandateAmazonPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MandateAuBecsDebit {
@@ -18100,44 +18311,28 @@ pub struct MandateBacsDebit {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateCashapp {
-
-}
+pub struct MandateCashapp {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateKakaoPay {
-
-}
+pub struct MandateKakaoPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateKlarna {
-
-}
+pub struct MandateKlarna {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateKrCard {
-
-}
+pub struct MandateKrCard {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateLink {
-
-}
+pub struct MandateLink {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateMultiUse {
-
-}
+pub struct MandateMultiUse {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateNaverPay {
-
-}
+pub struct MandateNaverPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateNzBankAccount {
-
-}
+pub struct MandateNzBankAccount {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MandatePaymentMethodDetails {
@@ -18168,9 +18363,7 @@ pub struct MandatePaypal {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MandateRevolutPay {
-
-}
+pub struct MandateRevolutPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MandateSepaDebit {
@@ -18208,9 +18401,7 @@ pub struct NotificationEventRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OfflineAcceptance {
-
-}
+pub struct OfflineAcceptance {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OnlineAcceptance {
@@ -18298,7 +18489,8 @@ pub struct PaymentAttemptRecord {
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub payment_method_details: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails>,
+    pub payment_method_details:
+        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails>,
     pub payment_record: Option<String>,
     pub processor_details: PaymentsPrimitivesPaymentRecordsResourceProcessorDetails,
     pub reported_by: String,
@@ -18395,9 +18587,7 @@ pub struct PaymentFlowsPaymentIntentPresentmentDetails {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentFlowsPrivatePaymentMethodsAlipay {
-
-}
+pub struct PaymentFlowsPrivatePaymentMethodsAlipay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentFlowsPrivatePaymentMethodsAlipayDetails {
@@ -18407,17 +18597,20 @@ pub struct PaymentFlowsPrivatePaymentMethodsAlipayDetails {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorization {
+pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesExtendedAuthorizationExtendedAuthorization
+{
     pub status: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorization {
+pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesIncrementalAuthorizationIncrementalAuthorization
+{
     pub status: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercapture {
+pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceEnterpriseFeaturesOvercaptureOvercapture
+{
     pub maximum_amount_capturable: i32,
     pub status: String,
 }
@@ -18428,7 +18621,8 @@ pub struct PaymentFlowsPrivatePaymentMethodsCardDetailsApiResourceMulticapture {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentFlowsPrivatePaymentMethodsCardPaymentIntentAmountDetailsLineItemPaymentMethodOptions {
+pub struct PaymentFlowsPrivatePaymentMethodsCardPaymentIntentAmountDetailsLineItemPaymentMethodOptions
+{
     pub commodity_code: Option<String>,
 }
 
@@ -18462,7 +18656,8 @@ pub struct PaymentFlowsPrivatePaymentMethodsKlarnaDob {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentFlowsPrivatePaymentMethodsKlarnaPaymentIntentAmountDetailsLineItemPaymentMethodOptions {
+pub struct PaymentFlowsPrivatePaymentMethodsKlarnaPaymentIntentAmountDetailsLineItemPaymentMethodOptions
+{
     pub image_url: Option<String>,
     pub product_url: Option<String>,
     pub reference: Option<String>,
@@ -18522,7 +18717,8 @@ pub struct PaymentIntent {
     pub on_behalf_of: Option<OnBehalfOfOrRef>,
     pub payment_details: Option<PaymentFlowsPaymentDetails>,
     pub payment_method: Option<PaymentMethodOrRef>,
-    pub payment_method_configuration_details: Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
+    pub payment_method_configuration_details:
+        Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
     pub payment_method_options: Option<PaymentIntentPaymentMethodOptions>,
     pub payment_method_types: Option<Vec<String>>,
     pub presentment_details: Option<PaymentFlowsPaymentIntentPresentmentDetails>,
@@ -18543,7 +18739,9 @@ pub struct PaymentIntentAmountDetailsLineItem {
     pub discount_amount: Option<i32>,
     pub id: String,
     pub object: String,
-    pub payment_method_options: Option<PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourcePaymentMethodOptions>,
+    pub payment_method_options: Option<
+        PaymentFlowsAmountDetailsResourceLineItemsListResourceLineItemResourcePaymentMethodOptions,
+    >,
     pub product_code: Option<String>,
     pub product_name: String,
     pub quantity: i32,
@@ -18562,8 +18760,10 @@ pub struct PaymentIntentNextAction {
     pub alipay_handle_redirect: Option<PaymentIntentNextActionAlipayHandleRedirect>,
     pub boleto_display_details: Option<PaymentIntentNextActionBoleto>,
     pub card_await_notification: Option<PaymentIntentNextActionCardAwaitNotification>,
-    pub cashapp_handle_redirect_or_display_qr_code: Option<PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode>,
-    pub display_bank_transfer_instructions: Option<PaymentIntentNextActionDisplayBankTransferInstructions>,
+    pub cashapp_handle_redirect_or_display_qr_code:
+        Option<PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode>,
+    pub display_bank_transfer_instructions:
+        Option<PaymentIntentNextActionDisplayBankTransferInstructions>,
     pub konbini_display_details: Option<PaymentIntentNextActionKonbini>,
     pub multibanco_display_details: Option<PaymentIntentNextActionDisplayMultibancoDetails>,
     pub oxxo_display_details: Option<PaymentIntentNextActionDisplayOxxoDetails>,
@@ -18571,13 +18771,15 @@ pub struct PaymentIntentNextAction {
     pub pix_display_qr_code: Option<PaymentIntentNextActionPixDisplayQrCode>,
     pub promptpay_display_qr_code: Option<PaymentIntentNextActionPromptpayDisplayQrCode>,
     pub redirect_to_url: Option<PaymentIntentNextActionRedirectToUrl>,
-    pub swish_handle_redirect_or_display_qr_code: Option<PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode>,
+    pub swish_handle_redirect_or_display_qr_code:
+        Option<PaymentIntentNextActionSwishHandleRedirectOrDisplayQrCode>,
     #[serde(rename = "type")]
     pub r#type: String,
     pub use_stripe_sdk: Option<serde_json::Value>,
     pub verify_with_microdeposits: Option<PaymentIntentNextActionVerifyWithMicrodeposits>,
     pub wechat_pay_display_qr_code: Option<PaymentIntentNextActionWechatPayDisplayQrCode>,
-    pub wechat_pay_redirect_to_android_app: Option<PaymentIntentNextActionWechatPayRedirectToAndroidApp>,
+    pub wechat_pay_redirect_to_android_app:
+        Option<PaymentIntentNextActionWechatPayRedirectToAndroidApp>,
     pub wechat_pay_redirect_to_ios_app: Option<PaymentIntentNextActionWechatPayRedirectToIosApp>,
 }
 
@@ -19267,24 +19469,16 @@ pub struct PaymentMethodAcssDebit {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodAffirm {
-
-}
+pub struct PaymentMethodAffirm {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodAfterpayClearpay {
-
-}
+pub struct PaymentMethodAfterpayClearpay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodAlma {
-
-}
+pub struct PaymentMethodAlma {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodAmazonPay {
-
-}
+pub struct PaymentMethodAmazonPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodAuBecsDebit {
@@ -19301,19 +19495,13 @@ pub struct PaymentMethodBacsDebit {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodBancontact {
-
-}
+pub struct PaymentMethodBancontact {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodBillie {
-
-}
+pub struct PaymentMethodBillie {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodBlik {
-
-}
+pub struct PaymentMethodBlik {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodBoleto {
@@ -19393,24 +19581,16 @@ pub struct PaymentMethodCardWallet {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCardWalletAmexExpressCheckout {
-
-}
+pub struct PaymentMethodCardWalletAmexExpressCheckout {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCardWalletApplePay {
-
-}
+pub struct PaymentMethodCardWalletApplePay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCardWalletGooglePay {
-
-}
+pub struct PaymentMethodCardWalletGooglePay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCardWalletLink {
-
-}
+pub struct PaymentMethodCardWalletLink {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodCardWalletMasterpass {
@@ -19421,9 +19601,7 @@ pub struct PaymentMethodCardWalletMasterpass {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCardWalletSamsungPay {
-
-}
+pub struct PaymentMethodCardWalletSamsungPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodCardWalletVisaCheckout {
@@ -19524,9 +19702,7 @@ pub struct PaymentMethodConfiguration {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCrypto {
-
-}
+pub struct PaymentMethodCrypto {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodCustom {
@@ -19537,9 +19713,7 @@ pub struct PaymentMethodCustom {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodCustomerBalance {
-
-}
+pub struct PaymentMethodCustomerBalance {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetails {
@@ -19813,24 +19987,16 @@ pub struct PaymentMethodDetailsCardWallet {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsCardWalletAmexExpressCheckout {
-
-}
+pub struct PaymentMethodDetailsCardWalletAmexExpressCheckout {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsCardWalletApplePay {
-
-}
+pub struct PaymentMethodDetailsCardWalletApplePay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsCardWalletGooglePay {
-
-}
+pub struct PaymentMethodDetailsCardWalletGooglePay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsCardWalletLink {
-
-}
+pub struct PaymentMethodDetailsCardWalletLink {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsCardWalletMasterpass {
@@ -19841,9 +20007,7 @@ pub struct PaymentMethodDetailsCardWalletMasterpass {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsCardWalletSamsungPay {
-
-}
+pub struct PaymentMethodDetailsCardWalletSamsungPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsCardWalletVisaCheckout {
@@ -19869,9 +20033,7 @@ pub struct PaymentMethodDetailsCrypto {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsCustomerBalance {
-
-}
+pub struct PaymentMethodDetailsCustomerBalance {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsEps {
@@ -19980,9 +20142,7 @@ pub struct PaymentMethodDetailsLink {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsMbWay {
-
-}
+pub struct PaymentMethodDetailsMbWay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsMobilepay {
@@ -20034,9 +20194,7 @@ pub struct PaymentMethodDetailsPassthroughCard {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsPayByBank {
-
-}
+pub struct PaymentMethodDetailsPayByBank {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsPayco {
@@ -20112,9 +20270,7 @@ pub struct PaymentMethodDetailsSofort {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsStripeAccount {
-
-}
+pub struct PaymentMethodDetailsStripeAccount {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsSwish {
@@ -20124,9 +20280,7 @@ pub struct PaymentMethodDetailsSwish {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsTwint {
-
-}
+pub struct PaymentMethodDetailsTwint {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsUsBankAccount {
@@ -20141,9 +20295,7 @@ pub struct PaymentMethodDetailsUsBankAccount {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsWechat {
-
-}
+pub struct PaymentMethodDetailsWechat {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDetailsWechatPay {
@@ -20154,9 +20306,7 @@ pub struct PaymentMethodDetailsWechatPay {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodDetailsZip {
-
-}
+pub struct PaymentMethodDetailsZip {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodDomain {
@@ -20196,14 +20346,10 @@ pub struct PaymentMethodFpx {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodGiropay {
-
-}
+pub struct PaymentMethodGiropay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodGrabpay {
-
-}
+pub struct PaymentMethodGrabpay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodIdeal {
@@ -20229,9 +20375,7 @@ pub struct PaymentMethodInteracPresent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodKakaoPay {
-
-}
+pub struct PaymentMethodKakaoPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodKlarna {
@@ -20239,9 +20383,7 @@ pub struct PaymentMethodKlarna {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodKonbini {
-
-}
+pub struct PaymentMethodKonbini {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodKrCard {
@@ -20255,19 +20397,13 @@ pub struct PaymentMethodLink {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodMbWay {
-
-}
+pub struct PaymentMethodMbWay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodMobilepay {
-
-}
+pub struct PaymentMethodMobilepay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodMultibanco {
-
-}
+pub struct PaymentMethodMultibanco {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodNaverPay {
@@ -20417,9 +20553,7 @@ pub struct PaymentMethodOptionsIdeal {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodOptionsInteracPresent {
-
-}
+pub struct PaymentMethodOptionsInteracPresent {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodOptionsKlarna {
@@ -20465,9 +20599,7 @@ pub struct PaymentMethodOptionsP24 {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodOptionsPayByBank {
-
-}
+pub struct PaymentMethodOptionsPayByBank {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodOptionsPaynow {
@@ -20535,9 +20667,7 @@ pub struct PaymentMethodOptionsZip {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodOxxo {
-
-}
+pub struct PaymentMethodOxxo {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodP24 {
@@ -20545,19 +20675,13 @@ pub struct PaymentMethodP24 {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodPayByBank {
-
-}
+pub struct PaymentMethodPayByBank {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodPayco {
-
-}
+pub struct PaymentMethodPayco {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodPaynow {
-
-}
+pub struct PaymentMethodPaynow {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodPaypal {
@@ -20567,29 +20691,19 @@ pub struct PaymentMethodPaypal {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodPix {
-
-}
+pub struct PaymentMethodPix {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodPromptpay {
-
-}
+pub struct PaymentMethodPromptpay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodRevolutPay {
-
-}
+pub struct PaymentMethodRevolutPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodSamsungPay {
-
-}
+pub struct PaymentMethodSamsungPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodSatispay {
-
-}
+pub struct PaymentMethodSatispay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodSepaDebit {
@@ -20607,14 +20721,10 @@ pub struct PaymentMethodSofort {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodSwish {
-
-}
+pub struct PaymentMethodSwish {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodTwint {
-
-}
+pub struct PaymentMethodTwint {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentMethodUsBankAccount {
@@ -20641,14 +20751,10 @@ pub struct PaymentMethodUsBankAccountStatusDetails {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodWechatPay {
-
-}
+pub struct PaymentMethodWechatPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentMethodZip {
-
-}
+pub struct PaymentMethodZip {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentPagesCheckoutSessionAdaptivePricing {
@@ -20730,7 +20836,8 @@ pub struct PaymentPagesCheckoutSessionConsent {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentPagesCheckoutSessionConsentCollection {
-    pub payment_method_reuse_agreement: Option<PaymentPagesCheckoutSessionPaymentMethodReuseAgreement>,
+    pub payment_method_reuse_agreement:
+        Option<PaymentPagesCheckoutSessionPaymentMethodReuseAgreement>,
     pub promotions: Option<String>,
     pub terms_of_service: Option<String>,
 }
@@ -20958,7 +21065,8 @@ pub struct PaymentRecord {
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub payment_method_details: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails>,
+    pub payment_method_details:
+        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails>,
     pub processor_details: PaymentsPrimitivesPaymentRecordsResourceProcessorDetails,
     pub shipping_details: Option<PaymentsPrimitivesPaymentRecordsResourceShippingDetails>,
 }
@@ -21008,7 +21116,8 @@ pub struct PaymentsPrimitivesPaymentRecordsResourceCustomerDetails {
 pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetails {
     pub brand: String,
     pub capture_before: Option<i32>,
-    pub checks: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceChecks>,
+    pub checks:
+        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceChecks>,
     pub country: Option<String>,
     pub exp_month: i32,
     pub exp_year: i32,
@@ -21016,10 +21125,15 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetails {
     pub funding: String,
     pub last4: String,
     pub network: Option<String>,
-    pub network_token: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceNetworkToken>,
+    pub network_token: Option<
+        PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceNetworkToken,
+    >,
     pub network_transaction_id: Option<String>,
-    pub three_d_secure: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceThreeDSecure>,
-    pub wallet: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWallet>,
+    pub three_d_secure: Option<
+        PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceThreeDSecure,
+    >,
+    pub wallet:
+        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWallet>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21052,15 +21166,15 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResou
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceApplePay {
+pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceApplePay
+{
     #[serde(rename = "type")]
     pub r#type: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceGooglePay {
-
-}
+pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCardDetailsResourceWalletResourceGooglePay
+{}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodCustomDetails {
@@ -21127,7 +21241,8 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails {
     pub twint: Option<PaymentMethodDetailsTwint>,
     #[serde(rename = "type")]
     pub r#type: String,
-    pub us_bank_account: Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodUsBankAccountDetails>,
+    pub us_bank_account:
+        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodUsBankAccountDetails>,
     pub wechat: Option<PaymentMethodDetailsWechat>,
     pub wechat_pay: Option<PaymentMethodDetailsWechatPay>,
     pub zip: Option<PaymentMethodDetailsZip>,
@@ -21147,7 +21262,8 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodUsBankAccountDet
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentsPrimitivesPaymentRecordsResourceProcessorDetails {
-    pub custom: Option<PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsResourceCustomDetails>,
+    pub custom:
+        Option<PaymentsPrimitivesPaymentRecordsResourceProcessorDetailsResourceCustomDetails>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -22130,24 +22246,16 @@ pub struct SetupAttemptPaymentMethodDetails {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsAcssDebit {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsAcssDebit {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsAmazonPay {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsAmazonPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsAuBecsDebit {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsAuBecsDebit {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsBacsDebit {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsBacsDebit {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupAttemptPaymentMethodDetailsBancontact {
@@ -22162,9 +22270,7 @@ pub struct SetupAttemptPaymentMethodDetailsBancontact {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsBoleto {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsBoleto {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupAttemptPaymentMethodDetailsCard {
@@ -22203,9 +22309,7 @@ pub struct SetupAttemptPaymentMethodDetailsCardWallet {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsCashapp {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsCashapp {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupAttemptPaymentMethodDetailsIdeal {
@@ -22218,24 +22322,16 @@ pub struct SetupAttemptPaymentMethodDetailsIdeal {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsKakaoPay {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsKakaoPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsKlarna {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsKlarna {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsKrCard {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsKrCard {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsLink {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsLink {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupAttemptPaymentMethodDetailsNaverPay {
@@ -22243,24 +22339,16 @@ pub struct SetupAttemptPaymentMethodDetailsNaverPay {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsNzBankAccount {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsNzBankAccount {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsPaypal {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsPaypal {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsRevolutPay {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsRevolutPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsSepaDebit {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsSepaDebit {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupAttemptPaymentMethodDetailsSofort {
@@ -22275,9 +22363,7 @@ pub struct SetupAttemptPaymentMethodDetailsSofort {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupAttemptPaymentMethodDetailsUsBankAccount {
-
-}
+pub struct SetupAttemptPaymentMethodDetailsUsBankAccount {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupIntent {
@@ -22301,7 +22387,8 @@ pub struct SetupIntent {
     pub object: String,
     pub on_behalf_of: Option<OnBehalfOfOrRef>,
     pub payment_method: Option<PaymentMethodOrRef>,
-    pub payment_method_configuration_details: Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
+    pub payment_method_configuration_details:
+        Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
     pub payment_method_options: Option<SetupIntentPaymentMethodOptions>,
     pub payment_method_types: Vec<String>,
     pub single_use_mandate: Option<SingleUseMandateOrRef>,
@@ -22311,7 +22398,8 @@ pub struct SetupIntent {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupIntentNextAction {
-    pub cashapp_handle_redirect_or_display_qr_code: Option<PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode>,
+    pub cashapp_handle_redirect_or_display_qr_code:
+        Option<PaymentIntentNextActionCashappHandleRedirectOrDisplayQrCode>,
     pub redirect_to_url: Option<SetupIntentNextActionRedirectToUrl>,
     #[serde(rename = "type")]
     pub r#type: String,
@@ -22354,9 +22442,7 @@ pub struct SetupIntentPaymentMethodOptionsAcssDebit {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupIntentPaymentMethodOptionsAmazonPay {
-
-}
+pub struct SetupIntentPaymentMethodOptionsAmazonPay {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupIntentPaymentMethodOptionsBacsDebit {
@@ -22385,9 +22471,7 @@ pub struct SetupIntentPaymentMethodOptionsCardMandateOptions {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupIntentPaymentMethodOptionsCardPresent {
-
-}
+pub struct SetupIntentPaymentMethodOptionsCardPresent {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupIntentPaymentMethodOptionsKlarna {
@@ -22396,9 +22480,7 @@ pub struct SetupIntentPaymentMethodOptionsKlarna {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SetupIntentPaymentMethodOptionsLink {
-
-}
+pub struct SetupIntentPaymentMethodOptionsLink {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupIntentPaymentMethodOptionsMandateOptionsAcssDebit {
@@ -23522,7 +23604,8 @@ pub struct TaxProductRegistrationsResourceCountryOptionsThailand {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TaxProductRegistrationsResourceCountryOptionsUnitedStates {
-    pub local_amusement_tax: Option<TaxProductRegistrationsResourceCountryOptionsUsLocalAmusementTax>,
+    pub local_amusement_tax:
+        Option<TaxProductRegistrationsResourceCountryOptionsUsLocalAmusementTax>,
     pub local_lease_tax: Option<TaxProductRegistrationsResourceCountryOptionsUsLocalLeaseTax>,
     pub state: String,
     pub state_sales_tax: Option<TaxProductRegistrationsResourceCountryOptionsUsStateSalesTax>,
@@ -23542,7 +23625,8 @@ pub struct TaxProductRegistrationsResourceCountryOptionsUsLocalLeaseTax {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TaxProductRegistrationsResourceCountryOptionsUsStateSalesTax {
-    pub elections: Option<Vec<TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxElection>>,
+    pub elections:
+        Option<Vec<TaxProductRegistrationsResourceCountryOptionsUsStateSalesTaxElection>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -23674,9 +23758,7 @@ pub struct TaxProductResourceTaxSettingsStatusDetails {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TaxProductResourceTaxSettingsStatusDetailsResourceActive {
-
-}
+pub struct TaxProductResourceTaxSettingsStatusDetailsResourceActive {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TaxProductResourceTaxSettingsStatusDetailsResourcePending {
@@ -24325,7 +24407,8 @@ pub struct TreasuryInboundTransfer {
     pub returned: Option<bool>,
     pub statement_descriptor: String,
     pub status: String,
-    pub status_transitions: TreasuryInboundTransfersResourceInboundTransferResourceStatusTransitions,
+    pub status_transitions:
+        TreasuryInboundTransfersResourceInboundTransferResourceStatusTransitions,
     pub transaction: Option<TransactionOrRef2>,
 }
 
@@ -24339,7 +24422,8 @@ pub struct TreasuryOutboundPayment {
     pub description: Option<String>,
     pub destination_payment_method: Option<String>,
     pub destination_payment_method_details: Option<OutboundPaymentsPaymentMethodDetails>,
-    pub end_user_details: Option<TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetails>,
+    pub end_user_details:
+        Option<TreasuryOutboundPaymentsResourceOutboundPaymentResourceEndUserDetails>,
     pub expected_arrival_date: i32,
     pub financial_account: String,
     pub hosted_regulatory_receipt_url: Option<String>,
@@ -24350,8 +24434,10 @@ pub struct TreasuryOutboundPayment {
     pub returned_details: Option<TreasuryOutboundPaymentsResourceReturnedStatus>,
     pub statement_descriptor: String,
     pub status: String,
-    pub status_transitions: TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitions,
-    pub tracking_details: Option<TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails>,
+    pub status_transitions:
+        TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitions,
+    pub tracking_details:
+        Option<TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails>,
     pub transaction: TransactionOrRef2,
 }
 
@@ -24375,7 +24461,8 @@ pub struct TreasuryOutboundTransfer {
     pub statement_descriptor: String,
     pub status: String,
     pub status_transitions: TreasuryOutboundTransfersResourceStatusTransitions,
-    pub tracking_details: Option<TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails>,
+    pub tracking_details:
+        Option<TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails>,
     pub transaction: TransactionOrRef2,
 }
 
@@ -24389,7 +24476,8 @@ pub struct TreasuryReceivedCredit {
     pub financial_account: Option<String>,
     pub hosted_regulatory_receipt_url: Option<String>,
     pub id: String,
-    pub initiating_payment_method_details: TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetails,
+    pub initiating_payment_method_details:
+        TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetails,
     pub linked_flows: TreasuryReceivedCreditsResourceLinkedFlows,
     pub livemode: bool,
     pub network: String,
@@ -24409,7 +24497,8 @@ pub struct TreasuryReceivedDebit {
     pub financial_account: Option<String>,
     pub hosted_regulatory_receipt_url: Option<String>,
     pub id: String,
-    pub initiating_payment_method_details: Option<TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetails>,
+    pub initiating_payment_method_details:
+        Option<TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetails>,
     pub linked_flows: TreasuryReceivedDebitsResourceLinkedFlows,
     pub livemode: bool,
     pub network: String,
@@ -24435,7 +24524,8 @@ pub struct TreasuryTransaction {
     pub livemode: bool,
     pub object: String,
     pub status: String,
-    pub status_transitions: TreasuryTransactionsResourceAbstractTransactionResourceStatusTransitions,
+    pub status_transitions:
+        TreasuryTransactionsResourceAbstractTransactionResourceStatusTransitions,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24778,4 +24868,3 @@ pub struct WebhookEndpoint {
     pub status: String,
     pub url: String,
 }
-

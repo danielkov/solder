@@ -1,9 +1,9 @@
 //! Completions service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{post},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::post,
 };
 
 use crate::shared::RequestContext;
@@ -25,7 +25,7 @@ pub enum CreateCompletionsError {
     TooManyRequests(crate::types::ChatError),
     /// Status: Code(500)
     InternalServerError(crate::types::ChatError),
-    }
+}
 
 impl IntoResponse for CreateCompletionsError {
     fn into_response(self) -> Response {
@@ -33,27 +33,24 @@ impl IntoResponse for CreateCompletionsError {
             CreateCompletionsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateCompletionsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateCompletionsError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateCompletionsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Completions service trait
 ///
@@ -117,23 +114,22 @@ where
         &self,
         ctx: RequestContext<S>,
         body: crate::types::CompletionCreateParams,
-        ) -> impl std::future::Future<Output = CreateCompletionsResult> + Send;
+    ) -> impl std::future::Future<Output = CreateCompletionsResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let create_completions_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::CompletionCreateParams>
-        | async move {
-            match service.create_completions(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let create_completions_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::CompletionCreateParams>| async move {
+                match service.create_completions(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/completions", post(create_completions_handler))

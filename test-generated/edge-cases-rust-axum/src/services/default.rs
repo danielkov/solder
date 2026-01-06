@@ -1,9 +1,9 @@
 //! Default service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{get},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::get,
 };
 
 use crate::shared::RequestContext;
@@ -14,7 +14,7 @@ pub type GetRatingsResult = Result<crate::types::RatingSummary, GetRatingsError>
 #[derive(Debug)]
 pub enum GetRatingsError {
     InternalError(String),
-    }
+}
 
 impl IntoResponse for GetRatingsError {
     fn into_response(self) -> Response {
@@ -22,7 +22,24 @@ impl IntoResponse for GetRatingsError {
             GetRatingsError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
+        }
+    }
+}
+
+// GetSelfTest types
+pub type GetSelfTestResult = Result<crate::types::SelfConflictTest, GetSelfTestError>;
+#[derive(Debug)]
+pub enum GetSelfTestError {
+    InternalError(String),
+}
+
+impl IntoResponse for GetSelfTestError {
+    fn into_response(self) -> Response {
+        match self {
+            GetSelfTestError::InternalError(msg) => {
+                (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
+        }
     }
 }
 
@@ -31,7 +48,7 @@ pub type GetTestResult = Result<crate::types::TestResponse, GetTestError>;
 #[derive(Debug)]
 pub enum GetTestError {
     InternalError(String),
-    }
+}
 
 impl IntoResponse for GetTestError {
     fn into_response(self) -> Response {
@@ -39,14 +56,11 @@ impl IntoResponse for GetTestError {
             GetTestError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
-            }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Default service trait
 ///
@@ -57,6 +71,7 @@ impl IntoResponse for GetTestError {
 /// use oas_gen_bug_reproduction::services::default::{
 ///     Default,
 ///     GetRatingsResult,
+///     GetSelfTestResult,
 ///     GetTestResult,
 /// };
 ///
@@ -89,6 +104,15 @@ impl IntoResponse for GetTestError {
 ///         todo!("implement get_ratings")
 ///     }
 ///
+///     async fn get_self_test(
+///         &self,
+///         ctx: RequestContext<AppState>,
+///     ) -> GetSelfTestResult {
+///         // Implement your business logic here
+///         // Return Ok(your_selfconflicttest) or Err(error)
+///         todo!("implement get_self_test")
+///     }
+///
 ///     async fn get_test(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
@@ -118,44 +142,56 @@ where
     fn get_ratings(
         &self,
         ctx: RequestContext<S>,
-        ) -> impl std::future::Future<Output = GetRatingsResult> + Send;
+    ) -> impl std::future::Future<Output = GetRatingsResult> + Send;
+
+    /// Get /self-test
+    fn get_self_test(
+        &self,
+        ctx: RequestContext<S>,
+    ) -> impl std::future::Future<Output = GetSelfTestResult> + Send;
 
     /// Get /test
     fn get_test(
         &self,
         ctx: RequestContext<S>,
-        ) -> impl std::future::Future<Output = GetTestResult> + Send;
+    ) -> impl std::future::Future<Output = GetTestResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_ratings_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
-        | async move {
-            match service.get_ratings(
-                ctx,
-                ).await {
+        let get_ratings_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+            match service.get_ratings(ctx).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
-                    }
+                }
                 Err(e) => e.into_response(),
             }
         };
 
-        let get_test_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
-        | async move {
-            match service.get_test(
-                ctx,
-                ).await {
+        let get_self_test_handler =
+            |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+                match service.get_self_test(ctx).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
+                    }
+                    Err(e) => e.into_response(),
+                }
+            };
+
+        let get_test_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+            match service.get_test(ctx).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
-                    }
+                }
                 Err(e) => e.into_response(),
             }
         };
 
         Router::new()
             .route("/ratings", get(get_ratings_handler))
+            .route("/self-test", get(get_self_test_handler))
             .route("/test", get(get_test_handler))
             .layer(Extension(self))
     }

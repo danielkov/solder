@@ -16,9 +16,7 @@ pub struct Address {
 
 #[cfg(feature = "pets")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DetailsProperty {
-
-}
+pub struct DetailsProperty {}
 
 #[cfg(feature = "pets")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -210,4 +208,3 @@ pub struct UploadFileWithMetadataRequestMetadata {
     pub owner_id: Option<String>,
     pub tags: Option<Vec<String>>,
 }
-

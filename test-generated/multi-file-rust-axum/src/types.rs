@@ -54,9 +54,7 @@ pub struct ItemsItem {
 
 #[cfg(feature = "users")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MetadataProperty {
-
-}
+pub struct MetadataProperty {}
 
 #[cfg(feature = "orders")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -192,9 +190,7 @@ pub struct ProductUpdate {
 
 #[cfg(feature = "products")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SpecificationsProperty {
-
-}
+pub struct SpecificationsProperty {}
 
 #[cfg(feature = "users")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -248,4 +244,3 @@ pub struct UserUpdate {
     pub role: Option<String>,
     pub status: Option<String>,
 }
-

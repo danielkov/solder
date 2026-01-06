@@ -1,9 +1,9 @@
 //! Endpoints service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{get},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::get,
 };
 
 use crate::shared::RequestContext;
@@ -14,12 +14,13 @@ pub struct AuthBearer(pub String);
 
 // Per-operation result and error types
 // ListEndpointsZdr types
-pub type ListEndpointsZdrResult = Result<crate::types::ListEndpointsZdrResponse, ListEndpointsZdrError>;
+pub type ListEndpointsZdrResult =
+    Result<crate::types::ListEndpointsZdrResponse, ListEndpointsZdrError>;
 #[derive(Debug)]
 pub enum ListEndpointsZdrError {
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for ListEndpointsZdrError {
     fn into_response(self) -> Response {
@@ -27,20 +28,21 @@ impl IntoResponse for ListEndpointsZdrError {
             ListEndpointsZdrError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
 // ListEndpoints types
-pub type ListEndpointsResult = Result<crate::types::EndpointsListEndpointsResponse, ListEndpointsError>;
+pub type ListEndpointsResult =
+    Result<crate::types::EndpointsListEndpointsResponse, ListEndpointsError>;
 #[derive(Debug)]
 pub enum ListEndpointsError {
     /// Status: Code(404)
     NotFound(crate::types::NotFoundResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for ListEndpointsError {
     fn into_response(self) -> Response {
@@ -48,19 +50,16 @@ impl IntoResponse for ListEndpointsError {
             ListEndpointsError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, Json(err)).into_response()
-                }
+            }
             ListEndpointsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Endpoints service trait
 ///
@@ -134,7 +133,7 @@ where
     fn list_endpoints_zdr(
         &self,
         ctx: RequestContext<S>,
-        ) -> impl std::future::Future<Output = ListEndpointsZdrResult> + Send;
+    ) -> impl std::future::Future<Output = ListEndpointsZdrResult> + Send;
 
     /// Get /models/{author}/{slug}/endpoints
     fn list_endpoints(
@@ -142,42 +141,41 @@ where
         ctx: RequestContext<S>,
         author: String,
         slug: String,
-        ) -> impl std::future::Future<Output = ListEndpointsResult> + Send;
+    ) -> impl std::future::Future<Output = ListEndpointsResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_endpoints_zdr_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
-        | async move {
-            match service.list_endpoints_zdr(
-                ctx,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let list_endpoints_zdr_handler =
+            |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+                match service.list_endpoints_zdr(ctx).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let list_endpoints_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<(String, String)>
-        | async move {
-            let (author, slug) = path_params;
-            match service.list_endpoints(
-                ctx,
-                author,
-                slug,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let list_endpoints_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             axum::extract::Path(path_params): axum::extract::Path<(String, String)>| async move {
+                let (author, slug) = path_params;
+                match service.list_endpoints(ctx, author, slug).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/endpoints/zdr", get(list_endpoints_zdr_handler))
-            .route("/models/{author}/{slug}/endpoints", get(list_endpoints_handler))
+            .route(
+                "/models/{author}/{slug}/endpoints",
+                get(list_endpoints_handler),
+            )
             .layer(Extension(self))
     }
 }

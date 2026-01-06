@@ -26,6 +26,9 @@ pub enum Error {
     /// Validation error.
     ValidationError(String),
 
+    /// Code generation error.
+    GenerationError(String),
+
     /// Custom error for generator-specific issues.
     Custom(String),
 }
@@ -41,6 +44,7 @@ impl fmt::Display for Error {
             Error::Utf8Error(e) => write!(f, "UTF-8 error: {}", e),
             Error::IoError(e) => write!(f, "I/O error: {}", e),
             Error::ValidationError(e) => write!(f, "Validation error: {}", e),
+            Error::GenerationError(e) => write!(f, "Generation error: {}", e),
             Error::Custom(e) => write!(f, "{}", e),
         }
     }

@@ -123,4 +123,3 @@ pub enum TicketType {
     Event,
     General,
 }
-

@@ -1,9 +1,9 @@
 //! OAuth service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{post},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::post,
 };
 
 use crate::shared::RequestContext;
@@ -14,7 +14,8 @@ pub struct AuthBearer(pub String);
 
 // Per-operation result and error types
 // ExchangeAuthCodeForApiKey types
-pub type ExchangeAuthCodeForApiKeyResult = Result<crate::types::ExchangeAuthCodeForApiKeyResponse, ExchangeAuthCodeForApiKeyError>;
+pub type ExchangeAuthCodeForApiKeyResult =
+    Result<crate::types::ExchangeAuthCodeForApiKeyResponse, ExchangeAuthCodeForApiKeyError>;
 #[derive(Debug)]
 pub enum ExchangeAuthCodeForApiKeyError {
     /// Status: Code(400)
@@ -23,7 +24,7 @@ pub enum ExchangeAuthCodeForApiKeyError {
     Forbidden(crate::types::ForbiddenResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for ExchangeAuthCodeForApiKeyError {
     fn into_response(self) -> Response {
@@ -31,21 +32,22 @@ impl IntoResponse for ExchangeAuthCodeForApiKeyError {
             ExchangeAuthCodeForApiKeyError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             ExchangeAuthCodeForApiKeyError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
                 (status, Json(err)).into_response()
-                }
+            }
             ExchangeAuthCodeForApiKeyError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
 // CreateAuthKeysCode types
-pub type CreateAuthKeysCodeResult = Result<crate::types::CreateAuthKeysCodeResponse, CreateAuthKeysCodeError>;
+pub type CreateAuthKeysCodeResult =
+    Result<crate::types::CreateAuthKeysCodeResponse, CreateAuthKeysCodeError>;
 #[derive(Debug)]
 pub enum CreateAuthKeysCodeError {
     /// Status: Code(400)
@@ -54,7 +56,7 @@ pub enum CreateAuthKeysCodeError {
     Unauthorized(crate::types::UnauthorizedResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for CreateAuthKeysCodeError {
     fn into_response(self) -> Response {
@@ -62,23 +64,20 @@ impl IntoResponse for CreateAuthKeysCodeError {
             CreateAuthKeysCodeError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateAuthKeysCodeError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateAuthKeysCodeError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// OAuth service trait
 ///
@@ -153,44 +152,42 @@ where
         &self,
         ctx: RequestContext<S>,
         body: crate::types::ExchangeAuthCodeForApiKeyRequest,
-        ) -> impl std::future::Future<Output = ExchangeAuthCodeForApiKeyResult> + Send;
+    ) -> impl std::future::Future<Output = ExchangeAuthCodeForApiKeyResult> + Send;
 
     /// Post /auth/keys/code
     fn create_auth_keys_code(
         &self,
         ctx: RequestContext<S>,
         body: crate::types::CreateAuthKeysCodeRequest,
-        ) -> impl std::future::Future<Output = CreateAuthKeysCodeResult> + Send;
+    ) -> impl std::future::Future<Output = CreateAuthKeysCodeResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let exchange_auth_code_for_api_key_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::ExchangeAuthCodeForApiKeyRequest>
-        | async move {
-            match service.exchange_auth_code_for_api_key(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let exchange_auth_code_for_api_key_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::ExchangeAuthCodeForApiKeyRequest>| async move {
+                match service.exchange_auth_code_for_api_key(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let create_auth_keys_code_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::CreateAuthKeysCodeRequest>
-        | async move {
-            match service.create_auth_keys_code(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let create_auth_keys_code_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::CreateAuthKeysCodeRequest>| async move {
+                match service.create_auth_keys_code(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/auth/keys", post(exchange_auth_code_for_api_key_handler))

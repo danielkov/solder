@@ -1,9 +1,9 @@
 //! Chat service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{post},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::post,
 };
 
 use crate::shared::RequestContext;
@@ -14,7 +14,8 @@ pub struct AuthBearer(pub String);
 
 // Per-operation result and error types
 // SendChatCompletionRequest types
-pub type SendChatCompletionRequestResult = Result<crate::types::ChatResponse, SendChatCompletionRequestError>;
+pub type SendChatCompletionRequestResult =
+    Result<crate::types::ChatResponse, SendChatCompletionRequestError>;
 #[derive(Debug)]
 pub enum SendChatCompletionRequestError {
     /// Status: Code(400)
@@ -25,7 +26,7 @@ pub enum SendChatCompletionRequestError {
     TooManyRequests(crate::types::ChatError),
     /// Status: Code(500)
     InternalServerError(crate::types::ChatError),
-    }
+}
 
 impl IntoResponse for SendChatCompletionRequestError {
     fn into_response(self) -> Response {
@@ -33,27 +34,24 @@ impl IntoResponse for SendChatCompletionRequestError {
             SendChatCompletionRequestError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             SendChatCompletionRequestError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             SendChatCompletionRequestError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, Json(err)).into_response()
-                }
+            }
             SendChatCompletionRequestError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Chat service trait
 ///
@@ -117,26 +115,28 @@ where
         &self,
         ctx: RequestContext<S>,
         body: crate::types::ChatGenerationParams,
-        ) -> impl std::future::Future<Output = SendChatCompletionRequestResult> + Send;
+    ) -> impl std::future::Future<Output = SendChatCompletionRequestResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let send_chat_completion_request_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::ChatGenerationParams>
-        | async move {
-            match service.send_chat_completion_request(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let send_chat_completion_request_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::ChatGenerationParams>| async move {
+                match service.send_chat_completion_request(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
-            .route("/chat/completions", post(send_chat_completion_request_handler))
+            .route(
+                "/chat/completions",
+                post(send_chat_completion_request_handler),
+            )
             .layer(Extension(self))
     }
 }

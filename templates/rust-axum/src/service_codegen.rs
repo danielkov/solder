@@ -3,15 +3,19 @@
 use askama::Template;
 use ir::gen_ir::{AuthKind, AuthScheme, HttpMethod, Operation, Service};
 
-/// Escape Rust keywords with r# prefix
+/// Escape Rust keywords with r# prefix.
+/// Note: `self` and `Self` cannot be raw identifiers, so they use underscore prefix instead.
 fn escape_keyword(name: &str) -> String {
     match name {
+        // self and Self cannot use r# prefix - use underscore instead
+        "self" | "Self" => format!("_{}", name),
+        // All other keywords can use r# prefix
         "as" | "break" | "const" | "continue" | "crate" | "else" | "enum" | "extern" | "false"
         | "fn" | "for" | "if" | "impl" | "in" | "let" | "loop" | "match" | "mod" | "move"
-        | "mut" | "pub" | "ref" | "return" | "self" | "Self" | "static" | "struct" | "super"
-        | "trait" | "true" | "type" | "unsafe" | "use" | "where" | "while" | "async" | "await"
-        | "dyn" | "abstract" | "become" | "box" | "do" | "final" | "macro" | "override"
-        | "priv" | "typeof" | "unsized" | "virtual" | "yield" | "try" => format!("r#{}", name),
+        | "mut" | "pub" | "ref" | "return" | "static" | "struct" | "super" | "trait" | "true"
+        | "type" | "unsafe" | "use" | "where" | "while" | "async" | "await" | "dyn"
+        | "abstract" | "become" | "box" | "do" | "final" | "macro" | "override" | "priv"
+        | "typeof" | "unsized" | "virtual" | "yield" | "try" => format!("r#{}", name),
         _ => name.to_string(),
     }
 }

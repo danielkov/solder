@@ -30,6 +30,18 @@ pub struct RatingSummary {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SelfConflictTest {
+    #[serde(rename = "Self")]
+    pub _self: Option<String>,
+    #[serde(rename = "___self")]
+    pub __self: Option<String>,
+    #[serde(rename = "_self")]
+    pub ___self: Option<String>,
+    #[serde(rename = "self")]
+    pub ____self: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestItem {
     pub id: Option<String>,
     pub name: Option<String>,
@@ -40,4 +52,3 @@ pub struct TestResponse {
     pub items: Vec<TestItem>,
     pub pagination: PaginationMeta,
 }
-

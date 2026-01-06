@@ -1,9 +1,9 @@
 //! Credits service module
 use axum::{
-    http::{StatusCode},
+    Extension, Json, Router,
+    http::StatusCode,
     response::{IntoResponse, Response},
     routing::{get, post},
-    Extension, Json, Router,
 };
 
 use crate::shared::RequestContext;
@@ -23,7 +23,7 @@ pub enum GetCreditsError {
     Forbidden(crate::types::ForbiddenResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for GetCreditsError {
     fn into_response(self) -> Response {
@@ -31,21 +31,22 @@ impl IntoResponse for GetCreditsError {
             GetCreditsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             GetCreditsError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
                 (status, Json(err)).into_response()
-                }
+            }
             GetCreditsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
 // CreateCoinbaseCharge types
-pub type CreateCoinbaseChargeResult = Result<crate::types::CreateCoinbaseChargeResponse, CreateCoinbaseChargeError>;
+pub type CreateCoinbaseChargeResult =
+    Result<crate::types::CreateCoinbaseChargeResponse, CreateCoinbaseChargeError>;
 #[derive(Debug)]
 pub enum CreateCoinbaseChargeError {
     /// Status: Code(400)
@@ -56,7 +57,7 @@ pub enum CreateCoinbaseChargeError {
     TooManyRequests(crate::types::TooManyRequestsResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for CreateCoinbaseChargeError {
     fn into_response(self) -> Response {
@@ -64,27 +65,24 @@ impl IntoResponse for CreateCoinbaseChargeError {
             CreateCoinbaseChargeError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateCoinbaseChargeError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateCoinbaseChargeError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateCoinbaseChargeError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Credits service trait
 ///
@@ -157,43 +155,39 @@ where
     fn get_credits(
         &self,
         ctx: RequestContext<S>,
-        ) -> impl std::future::Future<Output = GetCreditsResult> + Send;
+    ) -> impl std::future::Future<Output = GetCreditsResult> + Send;
 
     /// Post /credits/coinbase
     fn create_coinbase_charge(
         &self,
         ctx: RequestContext<S>,
         body: crate::types::CreateChargeRequest,
-        ) -> impl std::future::Future<Output = CreateCoinbaseChargeResult> + Send;
+    ) -> impl std::future::Future<Output = CreateCoinbaseChargeResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_credits_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
-        | async move {
-            match service.get_credits(
-                ctx,
-                ).await {
+        let get_credits_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+            match service.get_credits(ctx).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
-                    }
+                }
                 Err(e) => e.into_response(),
             }
         };
 
-        let create_coinbase_charge_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::CreateChargeRequest>
-        | async move {
-            match service.create_coinbase_charge(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let create_coinbase_charge_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::CreateChargeRequest>| async move {
+                match service.create_coinbase_charge(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/credits", get(get_credits_handler))

@@ -1,9 +1,9 @@
 //! Owners service module
 use axum::{
-    http::{StatusCode},
+    Extension, Json, Router,
+    http::StatusCode,
     response::{IntoResponse, Response},
     routing::{get, post},
-    Extension, Json, Router,
 };
 
 use crate::shared::RequestContext;
@@ -14,7 +14,7 @@ pub type ListOwnersResult = Result<crate::types::Owner, ListOwnersError>;
 #[derive(Debug)]
 pub enum ListOwnersError {
     InternalError(String),
-    }
+}
 
 impl IntoResponse for ListOwnersError {
     fn into_response(self) -> Response {
@@ -22,7 +22,7 @@ impl IntoResponse for ListOwnersError {
             ListOwnersError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
-            }
+        }
     }
 }
 
@@ -31,7 +31,7 @@ pub type CreateOwnerResult = Result<crate::types::Owner, CreateOwnerError>;
 #[derive(Debug)]
 pub enum CreateOwnerError {
     InternalError(String),
-    }
+}
 
 impl IntoResponse for CreateOwnerError {
     fn into_response(self) -> Response {
@@ -39,14 +39,11 @@ impl IntoResponse for CreateOwnerError {
             CreateOwnerError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
-            }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Owners service trait
 ///
@@ -119,43 +116,39 @@ where
     fn list_owners(
         &self,
         ctx: RequestContext<S>,
-        ) -> impl std::future::Future<Output = ListOwnersResult> + Send;
+    ) -> impl std::future::Future<Output = ListOwnersResult> + Send;
 
     /// Post /owners
     fn create_owner(
         &self,
         ctx: RequestContext<S>,
         body: crate::types::NewOwner,
-        ) -> impl std::future::Future<Output = CreateOwnerResult> + Send;
+    ) -> impl std::future::Future<Output = CreateOwnerResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_owners_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
-        | async move {
-            match service.list_owners(
-                ctx,
-                ).await {
+        let list_owners_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+            match service.list_owners(ctx).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
-                    }
+                }
                 Err(e) => e.into_response(),
             }
         };
 
-        let create_owner_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::NewOwner>
-        | async move {
-            match service.create_owner(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::CREATED;
-                    (status, Json(result)).into_response()
+        let create_owner_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::NewOwner>| async move {
+                match service.create_owner(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::CREATED;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/owners", get(list_owners_handler))

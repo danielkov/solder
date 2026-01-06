@@ -58,7 +58,7 @@ pub struct GetBookingsUnionUnion {
     pub next: Option<String>,
     pub prev: Option<String>,
     #[serde(rename = "self")]
-    pub r#self: Option<String>,
+    pub _self: Option<String>,
 }
 
 #[cfg(feature = "stations")]
@@ -88,7 +88,7 @@ pub struct GetTripsUnionUnion {
     pub origin: Option<String>,
     pub price: Option<f32>,
     #[serde(rename = "self")]
-    pub r#self: Option<String>,
+    pub _self: Option<String>,
 }
 
 #[cfg(feature = "payments")]
@@ -101,10 +101,15 @@ pub struct LinksBooking {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LinksSelf {
     #[serde(rename = "self")]
-    pub r#self: Option<String>,
+    pub _self: Option<String>,
 }
 
-#[cfg(any(feature = "bookings", feature = "payments", feature = "stations", feature = "trips"))]
+#[cfg(any(
+    feature = "bookings",
+    feature = "payments",
+    feature = "stations",
+    feature = "trips"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Problem {
     pub detail: Option<String>,
@@ -160,4 +165,3 @@ pub struct Station {
     pub name: String,
     pub timezone: Option<String>,
 }
-

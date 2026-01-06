@@ -1,16 +1,17 @@
 //! Payments service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{post},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::post,
 };
 
 use crate::shared::RequestContext;
 
 // Per-operation result and error types
 // CreateBookingPayment types
-pub type CreateBookingPaymentResult = Result<crate::types::CreateBookingPaymentUnion, CreateBookingPaymentError>;
+pub type CreateBookingPaymentResult =
+    Result<crate::types::CreateBookingPaymentUnion, CreateBookingPaymentError>;
 #[derive(Debug)]
 pub enum CreateBookingPaymentError {
     /// Status: Code(400)
@@ -23,7 +24,7 @@ pub enum CreateBookingPaymentError {
     TooManyRequests(crate::types::Problem),
     /// Status: Code(500)
     InternalServerError(crate::types::Problem),
-    }
+}
 
 impl IntoResponse for CreateBookingPaymentError {
     fn into_response(self) -> Response {
@@ -31,31 +32,28 @@ impl IntoResponse for CreateBookingPaymentError {
             CreateBookingPaymentError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateBookingPaymentError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateBookingPaymentError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateBookingPaymentError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateBookingPaymentError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Payments service trait
 ///
@@ -119,26 +117,28 @@ where
         &self,
         ctx: RequestContext<S>,
         body: crate::types::BookingPayment,
-        ) -> impl std::future::Future<Output = CreateBookingPaymentResult> + Send;
+    ) -> impl std::future::Future<Output = CreateBookingPaymentResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let create_booking_payment_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::BookingPayment>
-        | async move {
-            match service.create_booking_payment(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let create_booking_payment_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::BookingPayment>| async move {
+                match service.create_booking_payment(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
-            .route("/bookings/{bookingId}/payment", post(create_booking_payment_handler))
+            .route(
+                "/bookings/{bookingId}/payment",
+                post(create_booking_payment_handler),
+            )
             .layer(Extension(self))
     }
 }

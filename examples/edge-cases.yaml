@@ -26,6 +26,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RatingSummary"
+  /self-test:
+    get:
+      operationId: getSelfTest
+      responses:
+        "200":
+          description: Test self/Self keyword escaping
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SelfConflictTest"
 
 components:
   schemas:
@@ -139,3 +149,32 @@ components:
           type: string
         name:
           type: string
+
+    # =========================================================================
+    # ISSUE 3: `self` and `Self` cannot be raw identifiers
+    # =========================================================================
+    # In Rust, `self` and `Self` cannot use the r# prefix for escaping.
+    # Unlike other keywords (e.g., `type` -> `r#type`), these fail:
+    #   error: `self` cannot be a raw identifier
+    #
+    # Expected: Use underscore prefix with conflict detection:
+    #   #[serde(rename = "self")]
+    #   pub _self: Option<String>,
+    #   #[serde(rename = "_self")]
+    #   pub __self: Option<String>,  // conflicts with _self, so use __self
+    # =========================================================================
+    SelfConflictTest:
+      type: object
+      properties:
+        self:
+          type: string
+          description: The `self` keyword - cannot use r#self in Rust
+        Self:
+          type: string
+          description: The `Self` keyword - also cannot use r#Self
+        _self:
+          type: string
+          description: Already uses underscore prefix - forces conflict resolution
+        ___self:
+          type: string
+          description: Triple underscore - tests multi-level conflict

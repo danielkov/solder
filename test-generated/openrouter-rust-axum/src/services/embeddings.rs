@@ -1,9 +1,9 @@
 //! Embeddings service module
 use axum::{
-    http::{StatusCode},
+    Extension, Json, Router,
+    http::StatusCode,
     response::{IntoResponse, Response},
     routing::{get, post},
-    Extension, Json, Router,
 };
 
 use crate::shared::RequestContext;
@@ -14,7 +14,8 @@ pub struct AuthBearer(pub String);
 
 // Per-operation result and error types
 // CreateEmbeddings types
-pub type CreateEmbeddingsResult = Result<crate::types::CreateEmbeddingsResponse, CreateEmbeddingsError>;
+pub type CreateEmbeddingsResult =
+    Result<crate::types::CreateEmbeddingsResponse, CreateEmbeddingsError>;
 #[derive(Debug)]
 pub enum CreateEmbeddingsError {
     /// Status: Code(400)
@@ -37,7 +38,7 @@ pub enum CreateEmbeddingsError {
     Status524(crate::types::EdgeNetworkTimeoutResponse),
     /// Status: Code(529)
     Status529(crate::types::ProviderOverloadedResponse),
-    }
+}
 
 impl IntoResponse for CreateEmbeddingsError {
     fn into_response(self) -> Response {
@@ -45,56 +46,59 @@ impl IntoResponse for CreateEmbeddingsError {
             CreateEmbeddingsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::Status402(err) => {
                 let status = StatusCode::PAYMENT_REQUIRED;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::BadGateway(err) => {
                 let status = StatusCode::BAD_GATEWAY;
                 (status, Json(err)).into_response()
-                }
+            }
             CreateEmbeddingsError::ServiceUnavailable(err) => {
                 let status = StatusCode::SERVICE_UNAVAILABLE;
                 (status, Json(err)).into_response()
-                }
-            CreateEmbeddingsError::Status524(err) => {
-                let status = { StatusCode::from_u16(524).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
-                (status, Json(err)).into_response()
-                }
-            CreateEmbeddingsError::Status529(err) => {
-                let status = { StatusCode::from_u16(529).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
-                (status, Json(err)).into_response()
-                }
             }
+            CreateEmbeddingsError::Status524(err) => {
+                let status =
+                    { StatusCode::from_u16(524).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
+                (status, Json(err)).into_response()
+            }
+            CreateEmbeddingsError::Status529(err) => {
+                let status =
+                    { StatusCode::from_u16(529).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
+                (status, Json(err)).into_response()
+            }
+        }
     }
 }
 
 // ListEmbeddingsModels types
-pub type ListEmbeddingsModelsResult = Result<crate::types::ModelsListResponse, ListEmbeddingsModelsError>;
+pub type ListEmbeddingsModelsResult =
+    Result<crate::types::ModelsListResponse, ListEmbeddingsModelsError>;
 #[derive(Debug)]
 pub enum ListEmbeddingsModelsError {
     /// Status: Code(400)
     BadRequest(crate::types::BadRequestResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-    }
+}
 
 impl IntoResponse for ListEmbeddingsModelsError {
     fn into_response(self) -> Response {
@@ -102,19 +106,16 @@ impl IntoResponse for ListEmbeddingsModelsError {
             ListEmbeddingsModelsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, Json(err)).into_response()
-                }
+            }
             ListEmbeddingsModelsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Embeddings service trait
 ///
@@ -188,42 +189,39 @@ where
         &self,
         ctx: RequestContext<S>,
         body: crate::types::CreateEmbeddingsRequest,
-        ) -> impl std::future::Future<Output = CreateEmbeddingsResult> + Send;
+    ) -> impl std::future::Future<Output = CreateEmbeddingsResult> + Send;
 
     /// Get /embeddings/models
     fn list_embeddings_models(
         &self,
         ctx: RequestContext<S>,
-        ) -> impl std::future::Future<Output = ListEmbeddingsModelsResult> + Send;
+    ) -> impl std::future::Future<Output = ListEmbeddingsModelsResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let create_embeddings_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, Json(body): Json<crate::types::CreateEmbeddingsRequest>
-        | async move {
-            match service.create_embeddings(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let create_embeddings_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             Json(body): Json<crate::types::CreateEmbeddingsRequest>| async move {
+                match service.create_embeddings(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let list_embeddings_models_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
-        | async move {
-            match service.list_embeddings_models(
-                ctx,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let list_embeddings_models_handler =
+            |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
+                match service.list_embeddings_models(ctx).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/embeddings", post(create_embeddings_handler))

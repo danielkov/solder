@@ -1,9 +1,9 @@
 //! Faq service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{get},
     Extension, Json, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::get,
 };
 
 use crate::shared::RequestContext;
@@ -15,7 +15,7 @@ pub type ListFaqItemsResult = Result<crate::types::FaqList, ListFaqItemsError>;
 pub enum ListFaqItemsError {
     /// Status: Code(500)
     InternalServerError(crate::types::HttpError),
-    }
+}
 
 impl IntoResponse for ListFaqItemsError {
     fn into_response(self) -> Response {
@@ -23,8 +23,8 @@ impl IntoResponse for ListFaqItemsError {
             ListFaqItemsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
@@ -34,7 +34,7 @@ pub type GetFaqItemResult = Result<crate::types::FaqItem, GetFaqItemError>;
 pub enum GetFaqItemError {
     /// Status: Code(404)
     NotFound(crate::types::HttpError),
-    }
+}
 
 impl IntoResponse for GetFaqItemError {
     fn into_response(self) -> Response {
@@ -42,15 +42,12 @@ impl IntoResponse for GetFaqItemError {
             GetFaqItemError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Faq service trait
 ///
@@ -126,45 +123,43 @@ where
         &self,
         ctx: RequestContext<S>,
         query: ListFaqItemsQuery,
-        ) -> impl std::future::Future<Output = ListFaqItemsResult> + Send;
+    ) -> impl std::future::Future<Output = ListFaqItemsResult> + Send;
 
     /// Get /faq/{id}
     fn get_faq_item(
         &self,
         ctx: RequestContext<S>,
         id: String,
-        ) -> impl std::future::Future<Output = GetFaqItemResult> + Send;
+    ) -> impl std::future::Future<Output = GetFaqItemResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_faq_items_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<ListFaqItemsQuery>
-        | async move {
-            match service.list_faq_items(
-                ctx,
-                query,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let list_faq_items_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             axum::extract::Query(query): axum::extract::Query<ListFaqItemsQuery>| async move {
+                match service.list_faq_items(ctx, query).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let get_faq_item_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>
-        | async move {
-            let id = path_params;
-            match service.get_faq_item(
-                ctx,
-                id,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
+        let get_faq_item_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             axum::extract::Path(path_params): axum::extract::Path<String>| async move {
+                let id = path_params;
+                match service.get_faq_item(ctx, id).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/faq", get(list_faq_items_handler))
@@ -177,6 +172,4 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct ListFaqItemsQuery {
     pub category: Option<String>,
-    
 }
-
