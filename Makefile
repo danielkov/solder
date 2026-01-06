@@ -59,7 +59,7 @@ run-all: run-petstore run-unkey run-stripe run-openrouter run-axum-petstore run-
 # Clean build artifacts
 clean:
 	cargo clean
-	rm -rf test-generated/
+	rm -rf test-generated/*/
 
 # Format code
 fmt:

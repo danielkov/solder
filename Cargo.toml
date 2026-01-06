@@ -12,3 +12,14 @@ members = [
   "lint",
   "test-generated/*-axum",
 ]
+default-members = [
+  "cli",
+  "codegen",
+  "generate",
+  "ir",
+  "parser",
+  "templates/typescript",
+  "templates/rust-axum",
+  "overlay",
+  "lint",
+]
