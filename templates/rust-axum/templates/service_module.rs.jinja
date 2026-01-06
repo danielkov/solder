@@ -1,6 +1,6 @@
 //! {{ trait_name }} service module
 use axum::{
-    http::{header, StatusCode},
+    http::{StatusCode},
     response::{IntoResponse, Response},
     routing::{
         {%- for method in methods %}{{ method }}{% if !loop.last %}, {% endif %}{% endfor -%}
@@ -49,11 +49,11 @@ impl IntoResponse for {{ op.name.pascal }}Response {
             {% for ct in op_wrap.binary_content_types -%}
             {% let variant_name = ct.replace("/", "_").replace("-", "_").replace("+", "_").replace(".", "_") -%}
             {{ op.name.pascal }}Response::{{ variant_name|to_pascal_case }}(body) => {
-                ([(header::CONTENT_TYPE, "{{ ct }}")], body).into_response()
+                ([(axum::http::header::CONTENT_TYPE, "{{ ct }}")], body).into_response()
             }
             {% endfor -%}
             {{ op.name.pascal }}Response::Custom { content_type, body } => {
-                ([(header::CONTENT_TYPE, content_type)], body).into_response()
+                ([(axum::http::header::CONTENT_TYPE, content_type)], body).into_response()
             }
         }
     }
@@ -70,9 +70,9 @@ pub struct {{ op.name.pascal }}Response(pub {{ ty.target|render_type }});
 impl IntoResponse for {{ op.name.pascal }}Response {
     fn into_response(self) -> Response {
         {% if let Some(ct) = success.content_type -%}
-        ([(header::CONTENT_TYPE, "{{ ct }}")], self.0).into_response()
+        ([(axum::http::header::CONTENT_TYPE, "{{ ct }}")], self.0).into_response()
         {% else -%}
-        ([(header::CONTENT_TYPE, "application/octet-stream")], self.0).into_response()
+        ([(axum::http::header::CONTENT_TYPE, "application/octet-stream")], self.0).into_response()
         {% endif -%}
     }
 }

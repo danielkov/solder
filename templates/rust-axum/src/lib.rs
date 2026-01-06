@@ -12,9 +12,12 @@ mod service_codegen;
 
 use askama::Template;
 use codegen::{Config, Error, GenIr, Generator, Result, VirtualFS};
-use ir::gen_ir::{CanonicalName, Service, TypeDecl};
+use ir::gen_ir::{
+    Additional, AliasTarget, CanonicalName, Composite, ErrorUse, Service, StableId, TypeDecl,
+    TypeKind, TypeMod, TypeRef,
+};
 use service_codegen::ServiceModuleGenerator;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 /// Rust Axum server generator.
@@ -25,9 +28,316 @@ impl RustAxumGenerator {
         Self
     }
 
-    /// Generate types in a single file with feature flags
+    /// Collect all types that are actually referenced from services/operations.
+    /// Returns a map of type ID -> tags that reference it.
+    /// This is the authoritative set - only these types will be generated.
+    /// Types in ir.types that aren't referenced (e.g., base types always overridden
+    /// in allOf compositions) are excluded, preventing compilation issues with
+    /// feature-gated fields on unused types.
+    fn collect_referenced_types(
+        &self,
+        ir: &GenIr,
+    ) -> std::collections::BTreeMap<StableId, BTreeSet<String>> {
+        let mut referenced: std::collections::BTreeMap<StableId, BTreeSet<String>> =
+            std::collections::BTreeMap::new();
+        let mut visited = BTreeSet::new();
+
+        // Traverse all services and their operations
+        for service in &ir.services {
+            // Get the service tag (used for feature flags)
+            let service_tag = if service.name.canonical == "default" {
+                None
+            } else {
+                Some(service.name.snake.clone())
+            };
+
+            for op in &service.operations {
+                // Reset visited for each operation to allow the same type to be
+                // referenced by multiple operations (accumulating their tags)
+                visited.clear();
+
+                // Path parameters
+                for param in &op.http.path_params {
+                    self.collect_type_ref_recursive(
+                        &param.ty,
+                        ir,
+                        &mut referenced,
+                        &mut visited,
+                        &service_tag,
+                    );
+                }
+
+                // Query parameters
+                for param in &op.http.query {
+                    self.collect_type_ref_recursive(
+                        &param.ty,
+                        ir,
+                        &mut referenced,
+                        &mut visited,
+                        &service_tag,
+                    );
+                }
+
+                // Header parameters
+                for param in &op.http.headers {
+                    self.collect_type_ref_recursive(
+                        &param.ty,
+                        ir,
+                        &mut referenced,
+                        &mut visited,
+                        &service_tag,
+                    );
+                }
+
+                // Cookie parameters
+                for param in &op.http.cookies {
+                    self.collect_type_ref_recursive(
+                        &param.ty,
+                        ir,
+                        &mut referenced,
+                        &mut visited,
+                        &service_tag,
+                    );
+                }
+
+                // Request body variants
+                if let Some(body) = &op.http.body {
+                    for variant in &body.variants {
+                        self.collect_type_ref_recursive(
+                            &variant.ty,
+                            ir,
+                            &mut referenced,
+                            &mut visited,
+                            &service_tag,
+                        );
+                        // Part encodings in multipart
+                        for part in &variant.encoding {
+                            self.collect_type_ref_recursive(
+                                &part.ty,
+                                ir,
+                                &mut referenced,
+                                &mut visited,
+                                &service_tag,
+                            );
+                        }
+                    }
+                }
+
+                // Success response
+                if let Some(success) = &op.success {
+                    if let Some(ty) = &success.ty {
+                        self.collect_type_ref_recursive(
+                            ty,
+                            ir,
+                            &mut referenced,
+                            &mut visited,
+                            &service_tag,
+                        );
+                    }
+                    for header in &success.headers {
+                        self.collect_type_ref_recursive(
+                            &header.ty,
+                            ir,
+                            &mut referenced,
+                            &mut visited,
+                            &service_tag,
+                        );
+                    }
+                }
+
+                // Alternative success responses
+                for alt in &op.alt_success {
+                    if let Some(ty) = &alt.ty {
+                        self.collect_type_ref_recursive(
+                            ty,
+                            ir,
+                            &mut referenced,
+                            &mut visited,
+                            &service_tag,
+                        );
+                    }
+                }
+
+                // Error responses
+                match &op.errors {
+                    ErrorUse::Inline(error_decl) => {
+                        for variant in &error_decl.variants {
+                            if let Some(ty) = &variant.ty {
+                                self.collect_type_ref_recursive(
+                                    ty,
+                                    ir,
+                                    &mut referenced,
+                                    &mut visited,
+                                    &service_tag,
+                                );
+                            }
+                        }
+                    }
+                    ErrorUse::Shared(id) => {
+                        // Find the shared error decl and traverse it
+                        if let Some(error_decl) = ir.errors.iter().find(|e| &e.id == id) {
+                            for variant in &error_decl.variants {
+                                if let Some(ty) = &variant.ty {
+                                    self.collect_type_ref_recursive(
+                                        ty,
+                                        ir,
+                                        &mut referenced,
+                                        &mut visited,
+                                        &service_tag,
+                                    );
+                                }
+                            }
+                        }
+                    }
+                    ErrorUse::None => {}
+                }
+            }
+        }
+
+        referenced
+    }
+
+    /// Recursively collect type references, handling cycles via visited set.
+    /// This traverses into struct fields, union variants, aliases, and nested containers.
+    /// Propagates the service tag to all referenced types for proper feature flag generation.
+    fn collect_type_ref_recursive(
+        &self,
+        type_ref: &TypeRef,
+        ir: &GenIr,
+        referenced: &mut std::collections::BTreeMap<StableId, BTreeSet<String>>,
+        visited: &mut BTreeSet<StableId>,
+        service_tag: &Option<String>,
+    ) {
+        // Skip primitives - they're built-in, not generated
+        if matches!(type_ref.target, StableId::Primitive(_)) {
+            // But still check modifiers for nested types (e.g., Map values)
+            for modifier in &type_ref.modifiers {
+                if let TypeMod::Map(value_type) = modifier {
+                    self.collect_type_ref_recursive(
+                        value_type,
+                        ir,
+                        referenced,
+                        visited,
+                        service_tag,
+                    );
+                }
+            }
+            return;
+        }
+
+        // Check for cycles (within this operation's traversal)
+        if !visited.insert(type_ref.target.clone()) {
+            return;
+        }
+
+        // Mark as referenced and add the service tag
+        let tags = referenced.entry(type_ref.target.clone()).or_default();
+        if let Some(tag) = service_tag {
+            tags.insert(tag.clone());
+        }
+
+        // Handle modifiers (Map contains nested TypeRef)
+        for modifier in &type_ref.modifiers {
+            if let TypeMod::Map(value_type) = modifier {
+                self.collect_type_ref_recursive(value_type, ir, referenced, visited, service_tag);
+            }
+        }
+
+        // Recursively traverse into the type's internals
+        if let Some(type_decl) = ir.types.get(&type_ref.target) {
+            self.collect_type_decl_refs(type_decl, ir, referenced, visited, service_tag);
+        }
+    }
+
+    /// Collect references from within a type declaration (fields, variants, aliases).
+    fn collect_type_decl_refs(
+        &self,
+        type_decl: &TypeDecl,
+        ir: &GenIr,
+        referenced: &mut std::collections::BTreeMap<StableId, BTreeSet<String>>,
+        visited: &mut BTreeSet<StableId>,
+        service_tag: &Option<String>,
+    ) {
+        match &type_decl.kind {
+            TypeKind::Struct {
+                fields, additional, ..
+            } => {
+                for field in fields {
+                    self.collect_type_ref_recursive(
+                        &field.ty,
+                        ir,
+                        referenced,
+                        visited,
+                        service_tag,
+                    );
+                }
+                // Handle additionalProperties typed map
+                if let Additional::Typed(type_ref) = additional {
+                    self.collect_type_ref_recursive(type_ref, ir, referenced, visited, service_tag);
+                }
+            }
+            TypeKind::Union { variants, .. } => {
+                for variant in variants {
+                    self.collect_type_ref_recursive(
+                        &variant.ty,
+                        ir,
+                        referenced,
+                        visited,
+                        service_tag,
+                    );
+                }
+            }
+            TypeKind::Alias { aliased } => {
+                self.collect_alias_target_refs(aliased, ir, referenced, visited, service_tag);
+            }
+            TypeKind::Enum { .. } => {
+                // Enums don't contain type references
+            }
+        }
+    }
+
+    /// Collect references from alias targets.
+    fn collect_alias_target_refs(
+        &self,
+        target: &AliasTarget,
+        ir: &GenIr,
+        referenced: &mut std::collections::BTreeMap<StableId, BTreeSet<String>>,
+        visited: &mut BTreeSet<StableId>,
+        service_tag: &Option<String>,
+    ) {
+        match target {
+            AliasTarget::Primitive(_) => {}
+            AliasTarget::Reference(type_ref) => {
+                self.collect_type_ref_recursive(type_ref, ir, referenced, visited, service_tag);
+            }
+            AliasTarget::Composite(composite) => match composite {
+                Composite::List(inner) => {
+                    self.collect_type_ref_recursive(inner, ir, referenced, visited, service_tag);
+                }
+                Composite::Map { value, .. } => {
+                    self.collect_type_ref_recursive(value, ir, referenced, visited, service_tag);
+                }
+                Composite::Tuple(types) => {
+                    for ty in types {
+                        self.collect_type_ref_recursive(ty, ir, referenced, visited, service_tag);
+                    }
+                }
+            },
+        }
+    }
+
+    /// Generate types in a single file with feature flags.
+    /// Only generates types that are actually referenced from services/operations.
+    /// Feature flags are computed from which services reference each type (not from type_decl.tags).
     fn generate_types(&self, ir: &GenIr, _config: &Config, vfs: &mut VirtualFS) -> Result<()> {
-        let mut content = String::from("//! API types\n\nuse serde::{Deserialize, Serialize};\n\n");
+        // Allow unused imports when no features are enabled (all types are feature-gated)
+        let mut content = String::from(
+            "//! API types\n\n#[allow(unused_imports)]\nuse serde::{Deserialize, Serialize};\n\n",
+        );
+
+        // Collect the authoritative set of referenced types with their service tags
+        // This is our source of truth for both which types to generate AND their feature flags
+        let referenced_types = self.collect_referenced_types(ir);
 
         // Collect type IDs used in multipart request bodies (these will be generated in service modules)
         let mut multipart_request_types = BTreeSet::new();
@@ -43,32 +353,23 @@ impl RustAxumGenerator {
             }
         }
 
-        // Group types by their tags for feature flag generation
-        let mut type_features: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
-        for type_decl in ir.types.values() {
-            let mut features = BTreeSet::new();
-            if type_decl.tags.is_empty() {
-                // Types with no tags are always included (no feature flag)
-            } else {
-                for tag in &type_decl.tags {
-                    let feature_name = CanonicalName::from_string(tag).snake;
-                    features.insert(feature_name);
-                }
-            }
-            type_features.insert(type_decl.name.pascal.clone(), features);
-        }
-
-        // Generate each type with its feature flags
-        for type_decl in ir.types.values() {
-            // Skip types that are used as multipart request bodies
-            let type_id = ir::gen_ir::StableId::new(&type_decl.name.pascal);
-            if multipart_request_types.contains(&type_id) {
+        // Generate only referenced types (iterate over referenced set, not ir.types)
+        for (type_id, service_tags) in &referenced_types {
+            // Skip multipart request types (generated inline in service modules)
+            if multipart_request_types.contains(type_id) {
                 continue;
             }
 
-            let features = &type_features[&type_decl.name.pascal];
+            // Look up the type declaration
+            let Some(type_decl) = ir.types.get(type_id) else {
+                continue;
+            };
 
-            // Add feature flag if type has tags
+            // Use service tags collected during traversal for feature flags
+            // This ensures types referenced only by specific services get proper flags
+            let features = service_tags;
+
+            // Add feature flag if type is referenced by specific services (not default)
             if !features.is_empty() {
                 let feature_list: Vec<String> = features
                     .iter()

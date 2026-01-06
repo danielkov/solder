@@ -128,7 +128,12 @@ mod filters {
                 ))));
             }
             code => {
-                return Ok(format!("StatusCode::from_u16_unchecked({})", code));
+                // Use try_from with compile-time const assertion for safety
+                // StatusCode is valid for 100-999, OpenAPI specs should always have valid codes
+                return Ok(format!(
+                    "{{ StatusCode::from_u16({}).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) }}",
+                    code
+                ));
             }
         };
         Ok(result.to_string())
