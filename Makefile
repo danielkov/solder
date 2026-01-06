@@ -1,104 +1,146 @@
-.PHONY: help build test run clean fmt fmt-check lint doc install release check check-ci test-cli all
+.PHONY: help build test clean fmt fmt-check lint doc install release check check-ci test-cli all
 
-# Default target
+# ============================================================================
+# Configuration
+# ============================================================================
+
+# Auto-discover specs (files in examples/, excluding directories)
+SPEC_FILES := $(wildcard examples/*.json examples/*.yaml examples/*.yml)
+SPEC_NAMES := $(basename $(notdir $(SPEC_FILES)))
+
+# Available templates
+TEMPLATES := typescript rust-axum
+
+# Output directory base
+OUTPUT_BASE := test-generated
+
+# Default spec and template for `make run`
+SPEC ?= petstore
+TEMPLATE ?= typescript
+
+# ============================================================================
+# Help
+# ============================================================================
+
 help:
 	@echo "OAS-Gen2 Development Commands"
 	@echo "=============================="
-	@echo "make build       - Build in debug mode"
-	@echo "make test        - Run all tests"
-	@echo "make run         - Run CLI with petstore example"
-	@echo "make clean       - Clean build artifacts"
-	@echo "make fmt         - Format code"
-	@echo "make fmt-check   - Check code formatting (CI)"
-	@echo "make lint        - Run clippy"
-	@echo "make doc         - Generate and open documentation"
-	@echo "make install     - Build and install binary"
-	@echo "make release     - Build optimized release binary"
-	@echo "make test-cli    - Test CLI with petstore example"
-	@echo "make check       - Run fmt, lint, and test (local)"
-	@echo "make check-ci    - Run fmt-check, lint, and test (CI)"
-	@echo "make all         - Run check and build"
+	@echo ""
+	@echo "Build & Test:"
+	@echo "  make build       - Build in debug mode"
+	@echo "  make test        - Run all tests"
+	@echo "  make check       - Run fmt, lint, and test (local)"
+	@echo "  make check-ci    - Run fmt-check, lint, and test (CI)"
+	@echo "  make all         - Run check and build"
+	@echo ""
+	@echo "Code Generation:"
+	@echo "  make run SPEC=<name> TEMPLATE=<template>  - Generate from spec"
+	@echo "  make run                                  - Generate petstore with typescript (default)"
+	@echo "  make run-all                              - Generate all specs with all templates"
+	@echo "  make list-specs                           - List available specs"
+	@echo "  make list-templates                       - List available templates"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make run SPEC=openrouter TEMPLATE=typescript"
+	@echo "  make run SPEC=petstore TEMPLATE=rust-axum"
+	@echo "  make run SPEC=multi-file TEMPLATE=typescript"
+	@echo ""
+	@echo "Maintenance:"
+	@echo "  make clean       - Clean build artifacts"
+	@echo "  make fmt         - Format code"
+	@echo "  make lint        - Run clippy"
+	@echo "  make doc         - Generate and open documentation"
+	@echo "  make install     - Build and install binary"
+	@echo "  make release     - Build optimized release binary"
+	@echo ""
+	@echo "Available specs: $(SPEC_NAMES) multi-file"
+	@echo "Available templates: $(TEMPLATES)"
 
-# Build in debug mode
+# List available specs
+list-specs:
+	@echo "Available specs:"
+	@for spec in $(SPEC_NAMES); do echo "  $$spec"; done
+	@echo "  multi-file"
+
+# List available templates
+list-templates:
+	@echo "Available templates:"
+	@for tmpl in $(TEMPLATES); do echo "  $$tmpl"; done
+
+# ============================================================================
+# Code Generation
+# ============================================================================
+
+# Main run target - finds spec file automatically
+run:
+	@SPEC_FILE=""; \
+	RECURSIVE_FLAG=""; \
+	if [ -f "examples/$(SPEC).json" ]; then \
+		SPEC_FILE="examples/$(SPEC).json"; \
+	elif [ -f "examples/$(SPEC).yaml" ]; then \
+		SPEC_FILE="examples/$(SPEC).yaml"; \
+	elif [ -f "examples/$(SPEC).yml" ]; then \
+		SPEC_FILE="examples/$(SPEC).yml"; \
+	elif [ -f "examples/$(SPEC)/spec.yaml" ]; then \
+		SPEC_FILE="examples/$(SPEC)/spec.yaml"; \
+		RECURSIVE_FLAG="-r"; \
+	elif [ -f "examples/$(SPEC)/spec.yml" ]; then \
+		SPEC_FILE="examples/$(SPEC)/spec.yml"; \
+		RECURSIVE_FLAG="-r"; \
+	elif [ -f "examples/$(SPEC)/spec.json" ]; then \
+		SPEC_FILE="examples/$(SPEC)/spec.json"; \
+		RECURSIVE_FLAG="-r"; \
+	else \
+		echo "Error: Spec not found: $(SPEC)"; \
+		echo "Available specs:"; \
+		for f in examples/*.json examples/*.yaml examples/*.yml; do \
+			[ -f "$$f" ] && basename "$$f" | sed 's/\.[^.]*$$//'; \
+		done; \
+		for d in examples/*/spec.*; do \
+			[ -f "$$d" ] && dirname "$$d" | xargs basename; \
+		done; \
+		exit 1; \
+	fi; \
+	OUTPUT_DIR="$(OUTPUT_BASE)/$(SPEC)-$(TEMPLATE)"; \
+	echo "Generating $(SPEC) with $(TEMPLATE) -> $$OUTPUT_DIR"; \
+	cargo run --bin oas-gen -- generate $$SPEC_FILE -t $(TEMPLATE) -v -o $$OUTPUT_DIR $$RECURSIVE_FLAG
+
+# Generate all combinations
+run-all:
+	@for spec in $(SPEC_NAMES) multi-file; do \
+		for tmpl in $(TEMPLATES); do \
+			echo ""; \
+			echo "========================================"; \
+			echo "Generating $$spec with $$tmpl"; \
+			echo "========================================"; \
+			$(MAKE) run SPEC=$$spec TEMPLATE=$$tmpl || true; \
+		done; \
+	done
+
+# ============================================================================
+# Build
+# ============================================================================
+
 build:
 	cargo build
 
-# Run all tests
-test:
-	cargo test --verbose
-
-# Run CLI with example
-run-petstore:
-	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v -o test-generated/typescript
-
-# Run CLI with unkey example
-run-unkey:
-	cargo run --bin oas-gen -- generate examples/unkey.yml -t typescript -v -o test-generated/unkey-typescript
-
-# Run CLI with stripe example
-run-stripe:
-	cargo run --bin oas-gen -- generate examples/stripe.json -t typescript -v -o test-generated/stripe-typescript
-
-run-openrouter:
-	cargo run --bin oas-gen -- generate examples/openrouter.yml -t typescript -v -o test-generated/openrouter-typescript
-
-run-axum-petstore:
-	cargo run --bin oas-gen -- generate examples/petstore.json -t rust-axum -v -o test-generated/petstore-axum
-
-run-axum-openrouter:
-	cargo run --bin oas-gen -- generate examples/openrouter.yml -t rust-axum -v -o test-generated/openrouter-axum
-
-run-axum-multi-file:
-	cargo run --bin oas-gen -- generate examples/multi-file/spec.yaml -r -t rust-axum -v -o test-generated/multi-file-axum
-
-run-multi-file:
-	cargo run --bin oas-gen -- generate examples/multi-file/spec.yaml -r -t typescript -v -o test-generated/multi-file-typescript
-
-run-all: run-petstore run-unkey run-stripe run-openrouter run-axum-petstore run-axum-openrouter run-axum-multi-file run-multi-file
-
-# Clean build artifacts
-clean:
-	cargo clean
-	rm -rf test-generated/*/
-
-# Format code
-fmt:
-	cargo fmt
-
-# Check formatting
-fmt-check:
-	cargo fmt -- --check
-
-# Run clippy
-lint:
-	cargo clippy -- -D warnings
-
-# Generate documentation
-doc:
-	cargo doc --open --no-deps
-
-# Build and install
-install:
-	cargo install --path cli
-
-# Build release binary
 release:
 	cargo build --release
 	@echo "Binary at: target/release/oas-gen"
 
-# Run all checks (for CI - non-modifying)
-check-ci: fmt-check lint test
+install:
+	cargo install --path cli
 
-# Run all checks (for local dev - modifies code)
-check: fmt lint test
+# ============================================================================
+# Testing
+# ============================================================================
 
-# Full build pipeline
-all: check build
+test:
+	cargo test --verbose
 
-# Test CLI with petstore example
 test-cli: run-all
 
-# Test specific crate
+# Test specific crates
 test-parser:
 	cargo test -p parser
 
@@ -122,53 +164,91 @@ test-lint:
 
 test-all: test-parser test-ir test-codegen test-generate test-typescript test-overlay test-lint
 
-# Watch mode (requires cargo-watch)
-watch:
-	cargo watch -x check -x test
+# ============================================================================
+# Code Quality
+# ============================================================================
 
-# Generate from petstore with different styles
+fmt:
+	cargo fmt
+
+fmt-check:
+	cargo fmt -- --check
+
+lint:
+	cargo clippy -- -D warnings
+
+check: fmt lint test
+
+check-ci: fmt-check lint test
+
+# ============================================================================
+# Documentation
+# ============================================================================
+
+doc:
+	cargo doc --open --no-deps
+
+# ============================================================================
+# Cleanup
+# ============================================================================
+
+clean:
+	cargo clean
+	rm -rf $(OUTPUT_BASE)/*/
+
+clean-generated:
+	rm -rf $(OUTPUT_BASE)/*/
+
+# ============================================================================
+# Demo targets (different service styles)
+# ============================================================================
+
 demo-per-service:
-	cargo run --bin oas-gen -- examples/petstore.json -t typescript --service-style per-service -o demo-per-service
+	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript --service-style per-service -o demo-per-service
 
 demo-single-client:
-	cargo run --bin oas-gen -- examples/petstore.json -t typescript --service-style single-client -o demo-single-client
+	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript --service-style single-client -o demo-single-client
 
 demo-by-tag:
-	cargo run --bin oas-gen -- examples/petstore.json -t typescript --service-style by-tag -o demo-by-tag
+	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript --service-style by-tag -o demo-by-tag
 
-# Clean demo outputs
 clean-demo:
 	rm -rf demo-per-service demo-single-client demo-by-tag
 
-# Verify generated TypeScript compiles
-verify-typescript: run
-	@if [ -d "petstore-typescript" ]; then \
+# ============================================================================
+# Verification
+# ============================================================================
+
+verify-typescript:
+	@OUTPUT_DIR="$(OUTPUT_BASE)/petstore-typescript"; \
+	if [ -d "$$OUTPUT_DIR" ]; then \
 		echo "Checking TypeScript compilation..."; \
-		cd petstore-typescript && npm install && npx tsc --noEmit || echo "TypeScript check failed"; \
+		cd "$$OUTPUT_DIR" && npm install && npx tsc --noEmit || echo "TypeScript check failed"; \
 	else \
-		echo "No generated TypeScript found"; \
+		echo "No generated TypeScript found. Run: make run SPEC=petstore TEMPLATE=typescript"; \
 	fi
 
-# Update dependencies
+# ============================================================================
+# Utilities
+# ============================================================================
+
 update:
 	cargo update
 
-# Show dependency tree
 tree:
 	cargo tree
 
-# Build timings
 timings:
 	cargo build --timings
 
-# Profile build
 profile:
 	cargo build --release --timings
 
-# Run with backtrace
 debug-run:
-	RUST_BACKTRACE=1 cargo run --bin oas-gen -- examples/petstore.json -t typescript -v
+	RUST_BACKTRACE=1 cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v
 
-# Check for outdated dependencies
 outdated:
 	cargo outdated
+
+watch:
+	cargo watch -x check -x test

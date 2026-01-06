@@ -1,3 +1,4 @@
+# source: https://github.com/OpenRouterTeam/typescript-sdk/blob/main/.speakeasy/out.openapi.yaml
 openapi: 3.1.0
 info:
   title: OpenRouter API

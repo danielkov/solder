@@ -17,8 +17,19 @@ use ir::gen_ir::{
     TypeKind, TypeMod, TypeRef,
 };
 use service_codegen::ServiceModuleGenerator;
+use std::borrow::Cow;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
+
+/// Validates a version string as semver. Returns "0.0.1" if invalid.
+fn sanitize_version(version: &str) -> Cow<'_, str> {
+    let parts: Vec<&str> = version.split('.').collect();
+    if parts.len() == 3 && parts.iter().all(|p| p.parse::<u64>().is_ok()) {
+        Cow::Borrowed(version)
+    } else {
+        Cow::Owned("0.0.1".to_string())
+    }
+}
 
 /// Rust Axum server generator.
 pub struct RustAxumGenerator;
@@ -757,9 +768,10 @@ impl RustAxumGenerator {
             }
         }
 
+        let version = sanitize_version(&ir.api.version);
         let data = CargoTomlData {
             package_name: &ir.api.package_name.snake,
-            version: &ir.api.version,
+            version: &version,
             tags: tags.iter().cloned().collect(),
         };
 

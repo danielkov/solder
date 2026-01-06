@@ -26,7 +26,7 @@ edition = "2024"
 
 [dependencies]
 codegen = { path = "../../codegen" }
-ast = { path = "../../ast" }
+ir = { path = "../../ir" }
 handlebars = "5.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

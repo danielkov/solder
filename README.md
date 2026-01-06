@@ -19,10 +19,12 @@ OpenAPI Spec → Parser → AST/GenIR → Generator → Virtual FS → Disk
 ### Crates
 
 - **`parser`**: Parses OpenAPI 3.x specifications
-- **`ast`**: Converts OpenAPI to language-agnostic GenIR
+- **`ir`**: Converts OpenAPI to language-agnostic GenIR (Intermediate Representation)
 - **`codegen`**: Core generation abstractions (VirtualFS, Generator trait, etc.)
 - **`generate`**: Generator registry and plugin loading
-- **`templates/*`**: Language-specific generators (TypeScript, Python, etc.)
+- **`lint`**: Linting rules for OpenAPI specifications
+- **`overlay`**: OpenAPI overlay support for spec modifications
+- **`templates/*`**: Language-specific generators (TypeScript, Rust Axum)
 - **`cli`**: Command-line interface
 
 ## Quick Start
@@ -99,7 +101,7 @@ cargo new --lib templates/python
 ```toml
 [dependencies]
 codegen = { path = "../../codegen" }
-ast = { path = "../../ast" }
+ir = { path = "../../ir" }
 serde = { version = "1.0", features = ["derive"] }
 ```
 

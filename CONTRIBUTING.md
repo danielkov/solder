@@ -30,13 +30,16 @@ cargo run --bin oas-gen -- examples/petstore.json -t typescript -v
 ```
 oas-gen2/
 ├── parser/          # OpenAPI spec parsing
-├── ast/            # AST and GenIR construction
-├── codegen/        # Core generation abstractions
-├── generate/       # Generator registry
-├── templates/      # Language-specific generators
-│   └── typescript/ # TypeScript generator
-├── cli/           # Command-line interface
-└── examples/      # Example OpenAPI specs
+├── ir/              # GenIR (Intermediate Representation) construction
+├── codegen/         # Core generation abstractions
+├── generate/        # Generator registry
+├── lint/            # OpenAPI linting rules
+├── overlay/         # OpenAPI overlay support
+├── templates/       # Language-specific generators
+│   ├── typescript/  # TypeScript SDK generator
+│   └── rust-axum/   # Rust Axum server generator
+├── cli/             # Command-line interface
+└── examples/        # Example OpenAPI specs
 ```
 
 ## Development Workflow
@@ -212,7 +215,7 @@ edition = "2024"
 
 [dependencies]
 codegen = { path = "../../codegen" }
-ast = { path = "../../ast" }
+ir = { path = "../../ir" }
 handlebars = "5.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -279,11 +282,14 @@ Update root `Cargo.toml`:
 ```toml
 [workspace]
 members = [
-    "ast",
     "cli",
     "codegen",
     "generate",
+    "ir",
+    "lint",
+    "overlay",
     "parser",
+    "templates/rust-axum",
     "templates/typescript",
     "templates/python",  # Add this
 ]

@@ -21,7 +21,7 @@ rustc --version  # Should be 1.75+
 **Solution**: Ensure all crates are listed in root `Cargo.toml`:
 ```toml
 [workspace]
-members = ["ast", "cli", "codegen", "generate", "parser", "templates/typescript"]
+members = ["cli", "codegen", "generate", "ir", "lint", "overlay", "parser", "templates/typescript", "templates/rust-axum"]
 ```
 
 ### Error: "package collision"

@@ -25,11 +25,14 @@ cargo test -p ast
 cargo test -p codegen
 cargo test -p typescript
 
-# Use make targets
-make run              # Generate from petstore example
-make run-unkey        # Generate from unkey example
-make run-stripe       # Generate from stripe example
-make run-openrouter   # Generate from openrouter example
+# Use make targets (dynamic based on examples/ directory)
+make run                                    # Generate petstore with typescript (default)
+make run SPEC=openrouter TEMPLATE=typescript
+make run SPEC=petstore TEMPLATE=rust-axum
+make run SPEC=multi-file TEMPLATE=typescript  # auto-adds -r for recursive refs
+make run-all                                # Generate all specs with all templates
+make list-specs                             # Show available specs
+make list-templates                         # Show available templates
 
 # Or run the CLI (development)
 cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v
@@ -66,7 +69,10 @@ OpenAPI Spec → Parser (parser) → AST Conversion (ir) → GenIR (codegen) →
 - **`ir/`**: Converts OpenAPI AST to language-agnostic GenIR (Intermediate Representation)
 - **`codegen/`**: Core abstractions - `Generator` trait, `VirtualFS`, `Config`, and `GenIr` type
 - **`generate/`**: Generator registry and plugin loading system
+- **`lint/`**: Linting rules for OpenAPI specifications
+- **`overlay/`**: OpenAPI overlay support for spec modifications
 - **`templates/typescript/`**: TypeScript SDK generator (reference implementation)
+- **`templates/rust-axum/`**: Rust Axum server generator
 - **`cli/`**: Command-line interface (`oas-gen` binary)
 
 ### Key Data Structures
@@ -236,8 +242,11 @@ oas-gen2/
 ├── ir/src/gen_ir.rs             # GenIr data structures
 ├── generate/src/lib.rs          # GeneratorRegistry, plugin system
 ├── parser/src/lib.rs            # OpenAPI parser (uses oas3 crate)
-├── templates/typescript/src/    # TypeScript generator implementation
-└── examples/                    # Test OpenAPI specs
+├── lint/src/lib.rs              # OpenAPI linting rules
+├── overlay/src/lib.rs           # OpenAPI overlay support
+├── templates/typescript/src/    # TypeScript SDK generator
+├── templates/rust-axum/src/     # Rust Axum server generator
+└── examples/                    # Test OpenAPI specs (petstore, openrouter, stripe, etc.)
 ```
 
 ### Testing Strategy

@@ -37,7 +37,7 @@ OAS-Gen2 is designed as a clean, modular pipeline for generating code from OpenA
 
 **Error Handling**: Returns parse errors for invalid JSON/YAML or malformed OpenAPI
 
-### Stage 2: AST Generation (ast crate)
+### Stage 2: IR Generation (ir crate)
 
 **Responsibility**: Convert OpenAPI structures into language-agnostic GenIR
 
@@ -235,7 +235,7 @@ cargo new --lib templates/python
 ```toml
 [dependencies]
 codegen = { path = "../../codegen" }
-ast = { path = "../../ast" }
+ir = { path = "../../ir" }
 handlebars = "5.0"
 serde = { version = "1.0", features = ["derive"] }
 ```

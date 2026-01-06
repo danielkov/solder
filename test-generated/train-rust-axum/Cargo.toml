@@ -1,0 +1,23 @@
+[package]
+name = "train_travel_api"
+version = "1.2.1"
+edition = "2024"
+description = "Generated Axum API"
+
+[dependencies]
+axum = { version = "0.8.7", features = ["multipart"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bytes = "1.10"
+jiff = { version = "0.1", features = ["serde"] }
+uuid = { version = "1.11", features = ["serde", "v4"] }
+rust_decimal = { version = "1.37", features = ["serde"] }
+tokio = { version = "1", features = ["fs", "io-util"] }
+tempfile = "3"
+
+[features]
+default = []
+bookings = []
+payments = []
+stations = []
+trips = []

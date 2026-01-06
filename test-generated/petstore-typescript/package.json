@@ -1,0 +1,15 @@
+{
+  "description": "Generated SDK",
+  "devDependencies": {
+    "@types/web": "^0.0.294",
+    "typescript": "^5.0.0"
+  },
+  "main": "dist/index.js",
+  "name": "pet-store-api",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "types": "dist/index.d.ts",
+  "version": "1.0.0"
+}

@@ -14,5 +14,3 @@
 # Testing
 *.profraw
 *.profdata
-
-test-generated/
