@@ -18,8 +18,12 @@ use ir::gen_ir::{
 };
 use service_codegen::ServiceModuleGenerator;
 use std::borrow::Cow;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::PathBuf;
+
+/// Represents edges that need Box wrapping to break cycles.
+/// Key is (source_type_id, target_type_id) pair.
+type BoxedEdges = BTreeSet<(StableId, StableId)>;
 
 /// Validates a version string as semver. Returns "0.0.1" if invalid.
 fn sanitize_version(version: &str) -> Cow<'_, str> {
@@ -337,6 +341,222 @@ impl RustAxumGenerator {
         }
     }
 
+    /// Build a dependency graph of types. Returns adjacency list mapping each type
+    /// to the types it directly references.
+    fn build_type_graph(&self, ir: &GenIr) -> BTreeMap<StableId, BTreeSet<StableId>> {
+        let mut graph: BTreeMap<StableId, BTreeSet<StableId>> = BTreeMap::new();
+
+        for (id, type_decl) in &ir.types {
+            let deps = self.collect_direct_deps(type_decl, ir);
+            graph.insert(id.clone(), deps);
+        }
+
+        graph
+    }
+
+    /// Collect direct type dependencies from a type declaration.
+    fn collect_direct_deps(&self, type_decl: &TypeDecl, ir: &GenIr) -> BTreeSet<StableId> {
+        let mut deps = BTreeSet::new();
+
+        match &type_decl.kind {
+            TypeKind::Struct {
+                fields, additional, ..
+            } => {
+                for field in fields {
+                    self.collect_type_ref_deps(&field.ty, ir, &mut deps);
+                }
+                if let Additional::Typed(type_ref) = additional {
+                    self.collect_type_ref_deps(type_ref, ir, &mut deps);
+                }
+            }
+            TypeKind::Union { variants, .. } => {
+                for variant in variants {
+                    self.collect_type_ref_deps(&variant.ty, ir, &mut deps);
+                }
+            }
+            TypeKind::Alias { aliased } => {
+                self.collect_alias_deps(aliased, ir, &mut deps);
+            }
+            TypeKind::Enum { .. } => {
+                // Enums don't have type dependencies
+            }
+        }
+
+        deps
+    }
+
+    /// Collect dependencies from a type reference.
+    #[allow(clippy::only_used_in_recursion)]
+    fn collect_type_ref_deps(&self, type_ref: &TypeRef, ir: &GenIr, deps: &mut BTreeSet<StableId>) {
+        // Skip primitives
+        if !matches!(type_ref.target, StableId::Primitive(_)) {
+            // Only add if this type actually exists in ir.types
+            if ir.types.contains_key(&type_ref.target) {
+                deps.insert(type_ref.target.clone());
+            }
+        }
+
+        // Check modifiers for nested types
+        for modifier in &type_ref.modifiers {
+            if let TypeMod::Map(value_type) = modifier {
+                self.collect_type_ref_deps(value_type, ir, deps);
+            }
+        }
+    }
+
+    /// Collect dependencies from an alias target.
+    fn collect_alias_deps(&self, target: &AliasTarget, ir: &GenIr, deps: &mut BTreeSet<StableId>) {
+        match target {
+            AliasTarget::Primitive(_) => {}
+            AliasTarget::Reference(type_ref) => {
+                self.collect_type_ref_deps(type_ref, ir, deps);
+            }
+            AliasTarget::Composite(composite) => match composite {
+                Composite::List(inner) => {
+                    self.collect_type_ref_deps(inner, ir, deps);
+                }
+                Composite::Map { value, .. } => {
+                    self.collect_type_ref_deps(value, ir, deps);
+                }
+                Composite::Tuple(types) => {
+                    for ty in types {
+                        self.collect_type_ref_deps(ty, ir, deps);
+                    }
+                }
+            },
+        }
+    }
+
+    /// Find strongly connected components using Tarjan's algorithm.
+    /// Returns components in reverse topological order (leaf SCCs first).
+    fn find_sccs(&self, graph: &BTreeMap<StableId, BTreeSet<StableId>>) -> Vec<BTreeSet<StableId>> {
+        let mut index_counter = 0u32;
+        let mut stack: Vec<StableId> = Vec::new();
+        let mut on_stack: BTreeSet<StableId> = BTreeSet::new();
+        let mut indices: HashMap<StableId, u32> = HashMap::new();
+        let mut low_links: HashMap<StableId, u32> = HashMap::new();
+        let mut sccs: Vec<BTreeSet<StableId>> = Vec::new();
+
+        for node in graph.keys() {
+            if !indices.contains_key(node) {
+                self.tarjan_strongconnect(
+                    node,
+                    graph,
+                    &mut index_counter,
+                    &mut stack,
+                    &mut on_stack,
+                    &mut indices,
+                    &mut low_links,
+                    &mut sccs,
+                );
+            }
+        }
+
+        sccs
+    }
+
+    /// Tarjan's algorithm helper - process a single node.
+    #[allow(clippy::too_many_arguments, clippy::only_used_in_recursion)]
+    fn tarjan_strongconnect(
+        &self,
+        node: &StableId,
+        graph: &BTreeMap<StableId, BTreeSet<StableId>>,
+        index_counter: &mut u32,
+        stack: &mut Vec<StableId>,
+        on_stack: &mut BTreeSet<StableId>,
+        indices: &mut HashMap<StableId, u32>,
+        low_links: &mut HashMap<StableId, u32>,
+        sccs: &mut Vec<BTreeSet<StableId>>,
+    ) {
+        let index = *index_counter;
+        *index_counter += 1;
+        indices.insert(node.clone(), index);
+        low_links.insert(node.clone(), index);
+        stack.push(node.clone());
+        on_stack.insert(node.clone());
+
+        // Visit successors
+        if let Some(successors) = graph.get(node) {
+            for successor in successors {
+                if !indices.contains_key(successor) {
+                    // Successor not yet visited
+                    self.tarjan_strongconnect(
+                        successor,
+                        graph,
+                        index_counter,
+                        stack,
+                        on_stack,
+                        indices,
+                        low_links,
+                        sccs,
+                    );
+                    let succ_low = *low_links.get(successor).unwrap();
+                    let node_low = low_links.get_mut(node).unwrap();
+                    *node_low = (*node_low).min(succ_low);
+                } else if on_stack.contains(successor) {
+                    // Successor is on stack, part of current SCC
+                    let succ_index = *indices.get(successor).unwrap();
+                    let node_low = low_links.get_mut(node).unwrap();
+                    *node_low = (*node_low).min(succ_index);
+                }
+            }
+        }
+
+        // If node is a root, pop the SCC
+        if low_links.get(node) == indices.get(node) {
+            let mut scc = BTreeSet::new();
+            loop {
+                let w = stack.pop().unwrap();
+                on_stack.remove(&w);
+                scc.insert(w.clone());
+                if &w == node {
+                    break;
+                }
+            }
+            sccs.push(scc);
+        }
+    }
+
+    /// Determine which edges need Box wrapping to break cycles.
+    /// For each SCC with multiple nodes, we box all edges within the SCC.
+    /// This ensures all cycles are broken, though it may over-box slightly.
+    fn compute_boxed_edges(&self, ir: &GenIr) -> BoxedEdges {
+        let graph = self.build_type_graph(ir);
+        let sccs = self.find_sccs(&graph);
+
+        let mut boxed_edges = BoxedEdges::new();
+
+        // For each SCC with more than one node (a cycle), box all internal edges
+        for scc in &sccs {
+            if scc.len() <= 1 {
+                continue; // No cycle in singleton SCC
+            }
+
+            // Box all edges within this SCC
+            for type_id in scc {
+                if let Some(deps) = graph.get(type_id) {
+                    for dep in deps {
+                        if scc.contains(dep) {
+                            boxed_edges.insert((type_id.clone(), dep.clone()));
+                        }
+                    }
+                }
+            }
+        }
+
+        boxed_edges
+    }
+
+    /// Check if a reference from source_type to target_type needs Box wrapping.
+    fn needs_boxing(
+        &self,
+        source_type: &StableId,
+        target_type: &StableId,
+        boxed_edges: &BoxedEdges,
+    ) -> bool {
+        boxed_edges.contains(&(source_type.clone(), target_type.clone()))
+    }
+
     /// Generate types in a single file with feature flags.
     /// Only generates types that are actually referenced from services/operations.
     /// Feature flags are computed from which services reference each type (not from type_decl.tags).
@@ -345,6 +565,9 @@ impl RustAxumGenerator {
         let mut content = String::from(
             "//! API types\n\n#[allow(unused_imports)]\nuse serde::{Deserialize, Serialize};\n\n",
         );
+
+        // Compute which edges need Box wrapping to break cycles
+        let boxed_edges = self.compute_boxed_edges(ir);
 
         // Collect the authoritative set of referenced types with their service tags
         // This is our source of truth for both which types to generate AND their feature flags
@@ -393,7 +616,7 @@ impl RustAxumGenerator {
                 }
             }
 
-            let rendered = self.render_type(type_decl, ir)?;
+            let rendered = self.render_type(type_decl, ir, &boxed_edges)?;
             content.push_str(&rendered);
             content.push_str("\n\n");
         }
@@ -497,7 +720,12 @@ impl RustAxumGenerator {
     }
 
     /// Render a type declaration
-    fn render_type(&self, type_decl: &TypeDecl, ir: &GenIr) -> Result<String> {
+    fn render_type(
+        &self,
+        type_decl: &TypeDecl,
+        ir: &GenIr,
+        boxed_edges: &BoxedEdges,
+    ) -> Result<String> {
         use ir::gen_ir::TypeKind;
 
         match &type_decl.kind {
@@ -525,7 +753,7 @@ impl RustAxumGenerator {
                     } else {
                         Self::make_valid_field_name(&f.name.canonical, &f.name.snake)
                     };
-                    let type_str = self.render_type_ref(&f.ty, ir);
+                    let type_str = self.render_type_ref(&f.ty, ir, &type_decl.id, boxed_edges);
                     if needs_rename {
                         fields_str.push(format!(
                             "    #[serde(rename = \"{}\")]\n    pub {}: {},",
@@ -558,11 +786,11 @@ impl RustAxumGenerator {
                 ))
             }
             TypeKind::Alias { aliased } => {
-                let target = self.render_alias_target(aliased, ir);
+                let target = self.render_alias_target(aliased, ir, &type_decl.id, boxed_edges);
                 Ok(format!("pub type {} = {};", type_decl.name.pascal, target))
             }
             TypeKind::Union { style, variants } => {
-                self.render_union(type_decl, style, variants, ir)
+                self.render_union(type_decl, style, variants, ir, boxed_edges)
             }
         }
     }
@@ -573,15 +801,20 @@ impl RustAxumGenerator {
         style: &ir::gen_ir::UnionStyle,
         variants: &[ir::gen_ir::Variant],
         ir: &GenIr,
+        boxed_edges: &BoxedEdges,
     ) -> Result<String> {
         use ir::gen_ir::UnionStyle;
 
         match style {
-            UnionStyle::AllOf => self.render_allof(type_decl, variants, ir),
-            UnionStyle::OneOf => self.render_oneof_anyof(type_decl, variants, ir, false),
-            UnionStyle::AnyOf => self.render_oneof_anyof(type_decl, variants, ir, false),
+            UnionStyle::AllOf => self.render_allof(type_decl, variants, ir, boxed_edges),
+            UnionStyle::OneOf => {
+                self.render_oneof_anyof(type_decl, variants, ir, false, boxed_edges)
+            }
+            UnionStyle::AnyOf => {
+                self.render_oneof_anyof(type_decl, variants, ir, false, boxed_edges)
+            }
             UnionStyle::Discriminated { tag } => {
-                self.render_discriminated(type_decl, variants, tag, ir)
+                self.render_discriminated(type_decl, variants, tag, ir, boxed_edges)
             }
         }
     }
@@ -591,6 +824,7 @@ impl RustAxumGenerator {
         type_decl: &TypeDecl,
         variants: &[ir::gen_ir::Variant],
         ir: &GenIr,
+        boxed_edges: &BoxedEdges,
     ) -> Result<String> {
         // Collect variant names for self/Self conflict detection.
         // Track both original names AND generated names.
@@ -600,7 +834,7 @@ impl RustAxumGenerator {
         let mut fields = Vec::new();
 
         for variant in variants {
-            let variant_type = self.render_type_ref(&variant.ty, ir);
+            let variant_type = self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges);
             let field_name = if Self::is_self_keyword(&variant.name.snake) {
                 let escaped =
                     Self::escape_self_keyword(&variant.name.snake, &used_names).map_err(|e| {
@@ -634,12 +868,13 @@ impl RustAxumGenerator {
         variants: &[ir::gen_ir::Variant],
         ir: &GenIr,
         _is_strict: bool,
+        boxed_edges: &BoxedEdges,
     ) -> Result<String> {
         let mut variant_lines = Vec::new();
 
         for variant in variants {
             let variant_name = Self::escape_rust_keyword(&variant.name.pascal);
-            let variant_type = self.render_type_ref(&variant.ty, ir);
+            let variant_type = self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges);
             variant_lines.push(format!("    {}({}),", variant_name, variant_type));
         }
 
@@ -656,12 +891,13 @@ impl RustAxumGenerator {
         variants: &[ir::gen_ir::Variant],
         tag: &str,
         ir: &GenIr,
+        boxed_edges: &BoxedEdges,
     ) -> Result<String> {
         let mut variant_lines = Vec::new();
 
         for variant in variants {
             let variant_name = Self::escape_rust_keyword(&variant.name.pascal);
-            let variant_type = self.render_type_ref(&variant.ty, ir);
+            let variant_type = self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges);
 
             if let Some(tag_value) = &variant.tag_value {
                 variant_lines.push(format!(
@@ -681,11 +917,27 @@ impl RustAxumGenerator {
         ))
     }
 
-    fn render_type_ref(&self, type_ref: &ir::gen_ir::TypeRef, ir: &GenIr) -> String {
-        let base = if let Some(type_decl) = ir.types.get(&type_ref.target) {
-            type_decl.name.pascal.clone()
+    fn render_type_ref(
+        &self,
+        type_ref: &ir::gen_ir::TypeRef,
+        ir: &GenIr,
+        source_type: &StableId,
+        boxed_edges: &BoxedEdges,
+    ) -> String {
+        let target = &type_ref.target;
+
+        // Check if this edge needs boxing to break a cycle
+        let needs_box = self.needs_boxing(source_type, target, boxed_edges);
+
+        let base = if let Some(type_decl) = ir.types.get(target) {
+            let name = type_decl.name.pascal.clone();
+            if needs_box {
+                format!("Box<{}>", name)
+            } else {
+                name
+            }
         } else {
-            self.render_type_id(&type_ref.target)
+            self.render_type_id(target)
         };
 
         let mut result = base;
@@ -697,7 +949,7 @@ impl RustAxumGenerator {
                 ir::gen_ir::TypeMod::Map(value_type) => {
                     format!(
                         "std::collections::HashMap<String, {}>",
-                        self.render_type_ref(value_type, ir)
+                        self.render_type_ref(value_type, ir, source_type, boxed_edges)
                     )
                 }
                 _ => result,
@@ -734,7 +986,13 @@ impl RustAxumGenerator {
         }
     }
 
-    fn render_alias_target(&self, target: &ir::gen_ir::AliasTarget, ir: &GenIr) -> String {
+    fn render_alias_target(
+        &self,
+        target: &ir::gen_ir::AliasTarget,
+        ir: &GenIr,
+        source_type: &StableId,
+        boxed_edges: &BoxedEdges,
+    ) -> String {
         use ir::gen_ir::{AliasTarget, Composite, Primitive};
         match target {
             AliasTarget::Primitive(Primitive::String) => "String".to_string(),
@@ -750,20 +1008,27 @@ impl RustAxumGenerator {
             AliasTarget::Primitive(Primitive::Decimal) => "rust_decimal::Decimal".to_string(),
             AliasTarget::Primitive(Primitive::Any) => "serde_json::Value".to_string(),
             AliasTarget::Composite(Composite::List(inner)) => {
-                format!("Vec<{}>", self.render_type_ref(inner, ir))
+                format!(
+                    "Vec<{}>",
+                    self.render_type_ref(inner, ir, source_type, boxed_edges)
+                )
             }
             AliasTarget::Composite(Composite::Map { value, .. }) => {
                 format!(
                     "std::collections::HashMap<String, {}>",
-                    self.render_type_ref(value, ir)
+                    self.render_type_ref(value, ir, source_type, boxed_edges)
                 )
             }
             AliasTarget::Composite(Composite::Tuple(types)) => {
-                let rendered: Vec<String> =
-                    types.iter().map(|t| self.render_type_ref(t, ir)).collect();
+                let rendered: Vec<String> = types
+                    .iter()
+                    .map(|t| self.render_type_ref(t, ir, source_type, boxed_edges))
+                    .collect();
                 format!("({})", rendered.join(", "))
             }
-            AliasTarget::Reference(type_ref) => self.render_type_ref(type_ref, ir),
+            AliasTarget::Reference(type_ref) => {
+                self.render_type_ref(type_ref, ir, source_type, boxed_edges)
+            }
         }
     }
 

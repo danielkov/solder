@@ -7,14 +7,14 @@ use serde::{Deserialize, Serialize};
 #[serde(untagged)]
 pub enum AccountOrRef {
     Variant1(String),
-    Account(Account),
+    Account(Box<Account>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AccountTaxIdsItemUnion {
     Variant1(String),
-    TaxId(TaxId),
+    TaxId(Box<TaxId>),
     DeletedTaxId(DeletedTaxId),
 }
 
@@ -116,7 +116,7 @@ pub enum AmountDetailsUnion {
 #[serde(untagged)]
 pub enum ApplicationFeeOrRef {
     Variant1(String),
-    ApplicationFee(ApplicationFee),
+    ApplicationFee(Box<ApplicationFee>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -147,7 +147,7 @@ pub enum AuBecsDebitUnion {
 #[serde(untagged)]
 pub enum AuthorizationOrRef {
     Variant1(String),
-    IssuingAuthorization(IssuingAuthorization),
+    IssuingAuthorization(Box<IssuingAuthorization>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -182,7 +182,7 @@ pub enum BacsDebitUnion2 {
 #[serde(untagged)]
 pub enum BalanceTransactionOrRef {
     Variant1(String),
-    BalanceTransaction(BalanceTransaction),
+    BalanceTransaction(Box<BalanceTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -315,7 +315,7 @@ pub enum CashappUnion {
 #[serde(untagged)]
 pub enum ChargeOrRef {
     Variant1(String),
-    Charge(Charge),
+    Charge(Box<Charge>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -350,21 +350,21 @@ pub enum CouponOrRef {
 #[serde(untagged)]
 pub enum CreditBalanceTransactionOrRef {
     Variant1(String),
-    BillingCreditBalanceTransaction(BillingCreditBalanceTransaction),
+    BillingCreditBalanceTransaction(Box<BillingCreditBalanceTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreditGrantOrRef {
     Variant1(String),
-    BillingCreditGrant(BillingCreditGrant),
+    BillingCreditGrant(Box<BillingCreditGrant>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreditNoteOrRef {
     Variant1(String),
-    CreditNote(CreditNote),
+    CreditNote(Box<CreditNote>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -389,7 +389,7 @@ pub struct CurrentProperty {}
 #[serde(untagged)]
 pub enum CustomerBalanceTransactionOrRef {
     Variant1(String),
-    CustomerBalanceTransaction(CustomerBalanceTransaction),
+    CustomerBalanceTransaction(Box<CustomerBalanceTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -412,7 +412,7 @@ pub enum CustomerCommunicationOrRef {
 #[serde(untagged)]
 pub enum CustomerOrRef {
     Variant1(String),
-    Customer(Customer),
+    Customer(Box<Customer>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -426,22 +426,22 @@ pub enum CustomerSignatureOrRef {
 #[serde(untagged)]
 pub enum CustomerUnion {
     Variant1(String),
-    Customer(Customer),
+    Customer(Box<Customer>),
     DeletedCustomer(DeletedCustomer),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DataItemUnion {
-    BankAccount(BankAccount),
-    Card(Card),
+    BankAccount(Box<BankAccount>),
+    Card(Box<Card>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DataItemUnion2 {
-    BankAccount(BankAccount),
-    Card(Card),
+    BankAccount(Box<BankAccount>),
+    Card(Box<Card>),
     Source(Source),
 }
 
@@ -449,14 +449,14 @@ pub enum DataItemUnion2 {
 #[serde(untagged)]
 pub enum DefaultAccountTaxIdsItemOrRef {
     Variant1(String),
-    TaxId(TaxId),
+    TaxId(Box<TaxId>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DefaultPaymentMethodOrRef {
     Variant1(String),
-    PaymentMethod(PaymentMethod),
+    PaymentMethod(Box<PaymentMethod>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -766,15 +766,15 @@ pub struct DefaultPostTestHelpersIssuingAuthorizationsRequestFuel {
 #[serde(untagged)]
 pub enum DefaultPriceOrRef {
     Variant1(String),
-    Price(Price),
+    Price(Box<Price>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DefaultSourceUnion {
     Variant1(String),
-    BankAccount(BankAccount),
-    Card(Card),
+    BankAccount(Box<BankAccount>),
+    Card(Box<Card>),
     Source(Source),
 }
 
@@ -819,29 +819,29 @@ pub struct DeleteSubscriptionsSubscriptionExposedIdRequest {
 #[serde(untagged)]
 pub enum DestinationOrRef {
     Variant1(String),
-    Account(Account),
+    Account(Box<Account>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DestinationPaymentOrRef {
     Variant1(String),
-    Charge(Charge),
+    Charge(Box<Charge>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DestinationPaymentRefundOrRef {
     Variant1(String),
-    Refund(Refund),
+    Refund(Box<Refund>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DestinationUnion {
     Variant1(String),
-    BankAccount(BankAccount),
-    Card(Card),
+    BankAccount(Box<BankAccount>),
+    Card(Box<Card>),
     DeletedBankAccount(DeletedBankAccount),
     DeletedCard(DeletedCard),
 }
@@ -850,37 +850,37 @@ pub enum DestinationUnion {
 #[serde(untagged)]
 pub enum DiscountOrRef {
     Variant1(String),
-    Discount(Discount),
+    Discount(Box<Discount>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DiscountUnion {
     Variant1(String),
-    Discount(Discount),
-    DeletedDiscount(DeletedDiscount),
+    Discount(Box<Discount>),
+    DeletedDiscount(Box<DeletedDiscount>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DiscountsItemOrRef {
     Variant1(String),
-    Discount(Discount),
+    Discount(Box<Discount>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DiscountsItemUnion {
     Variant1(String),
-    Discount(Discount),
-    DeletedDiscount(DeletedDiscount),
+    Discount(Box<Discount>),
+    DeletedDiscount(Box<DeletedDiscount>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum DisputeOrRef {
     Variant1(String),
-    IssuingDispute(IssuingDispute),
+    IssuingDispute(Box<IssuingDispute>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -892,7 +892,7 @@ pub enum DuplicateChargeDocumentationOrRef {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EntriesProperty {
-    pub data: Vec<TreasuryTransactionEntry>,
+    pub data: Vec<Box<TreasuryTransactionEntry>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -909,7 +909,7 @@ pub enum EpsUnion {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExternalAccountsProperty {
-    pub data: Vec<DataItemUnion>,
+    pub data: Vec<Box<DataItemUnion>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -919,7 +919,7 @@ pub struct ExternalAccountsProperty {
 #[serde(untagged)]
 pub enum FailureBalanceTransactionOrRef {
     Variant1(String),
-    BalanceTransaction(BalanceTransaction),
+    BalanceTransaction(Box<BalanceTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -933,14 +933,14 @@ pub enum FeatureOrRef {
 #[serde(untagged)]
 pub enum FeeOrRef {
     Variant1(String),
-    ApplicationFee(ApplicationFee),
+    ApplicationFee(Box<ApplicationFee>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FileOrRef {
     Variant1(String),
-    File(File),
+    File(Box<File>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -963,21 +963,21 @@ pub enum FrontOrRef {
 #[serde(untagged)]
 pub enum GeneratedCardOrRef {
     Variant1(String),
-    PaymentMethod(PaymentMethod),
+    PaymentMethod(Box<PaymentMethod>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GeneratedSepaDebitMandateOrRef {
     Variant1(String),
-    Mandate(Mandate),
+    Mandate(Box<Mandate>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum GeneratedSepaDebitOrRef {
     Variant1(String),
-    PaymentMethod(PaymentMethod),
+    PaymentMethod(Box<PaymentMethod>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2185,20 +2185,20 @@ pub struct InvoiceCreditBalanceProperty {}
 #[serde(untagged)]
 pub enum InvoiceOrRef {
     Variant1(String),
-    Invoice(Invoice),
+    Invoice(Box<Invoice>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum InvoiceUnion {
     Variant1(String),
-    Invoice(Invoice),
+    Invoice(Box<Invoice>),
     DeletedInvoice(DeletedInvoice),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ItemsProperty {
-    pub data: Vec<SubscriptionItem>,
+    pub data: Vec<Box<SubscriptionItem>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -2262,28 +2262,28 @@ pub enum LastVerificationReportOrRef {
 #[serde(untagged)]
 pub enum LatestAttemptOrRef {
     Variant1(String),
-    SetupAttempt(SetupAttempt),
+    SetupAttempt(Box<SetupAttempt>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum LatestChargeOrRef {
     Variant1(String),
-    Charge(Charge),
+    Charge(Box<Charge>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum LatestInvoiceOrRef {
     Variant1(String),
-    Invoice(Invoice),
+    Invoice(Box<Invoice>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum LatestRevisionOrRef {
     Variant1(String),
-    Invoice(Invoice),
+    Invoice(Box<Invoice>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2328,7 +2328,7 @@ pub struct LinesProperty {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LinesProperty2 {
-    pub data: Vec<LineItem>,
+    pub data: Vec<Box<LineItem>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -2356,12 +2356,12 @@ pub enum LinkUnion2 {
 #[serde(untagged)]
 pub enum LinkedTransactionOrRef {
     Variant1(String),
-    CustomerCashBalanceTransaction(CustomerCashBalanceTransaction),
+    CustomerCashBalanceTransaction(Box<CustomerCashBalanceTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LinksProperty {
-    pub data: Vec<FileLink>,
+    pub data: Vec<Box<FileLink>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -2393,7 +2393,7 @@ pub enum LogoOrRef {
 #[serde(untagged)]
 pub enum MandateOrRef {
     Variant1(String),
-    Mandate(Mandate),
+    Mandate(Box<Mandate>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2460,21 +2460,21 @@ pub enum NzBankAccountUnion {
 #[serde(untagged)]
 pub enum OnBehalfOfOrRef {
     Variant1(String),
-    Account(Account),
+    Account(Box<Account>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum OriginalPayoutOrRef {
     Variant1(String),
-    Payout(Payout),
+    Payout(Box<Payout>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum OriginatingTransactionOrRef {
     Variant1(String),
-    Charge(Charge),
+    Charge(Box<Charge>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2540,7 +2540,7 @@ pub struct PayloadProperty {}
 #[serde(untagged)]
 pub enum PaymentIntentOrRef {
     Variant1(String),
-    PaymentIntent(PaymentIntent),
+    PaymentIntent(Box<PaymentIntent>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2554,19 +2554,19 @@ pub enum PaymentLinkOrRef {
 #[serde(untagged)]
 pub enum PaymentMethodOrRef {
     Variant1(String),
-    PaymentMethod(PaymentMethod),
+    PaymentMethod(Box<PaymentMethod>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PaymentRecordOrRef {
     Variant1(String),
-    PaymentRecord(PaymentRecord),
+    PaymentRecord(Box<PaymentRecord>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PaymentsProperty {
-    pub data: Vec<InvoicePayment>,
+    pub data: Vec<Box<InvoicePayment>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -2603,7 +2603,7 @@ pub enum PaypalUnion2 {
 #[serde(untagged)]
 pub enum PendingSetupIntentOrRef {
     Variant1(String),
-    SetupIntent(SetupIntent),
+    SetupIntent(Box<SetupIntent>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13178,7 +13178,7 @@ pub enum ProductOrRef {
 #[serde(untagged)]
 pub enum ProductUnion {
     Variant1(String),
-    Product(Product),
+    Product(Box<Product>),
     DeletedProduct(DeletedProduct),
 }
 
@@ -13186,7 +13186,7 @@ pub enum ProductUnion {
 #[serde(untagged)]
 pub enum PromotionCodeOrRef {
     Variant1(String),
-    PromotionCode(PromotionCode),
+    PromotionCode(Box<PromotionCode>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13202,7 +13202,7 @@ pub enum PromptpayUnion {
 #[serde(untagged)]
 pub enum QuoteOrRef {
     Variant1(String),
-    Quote(Quote),
+    Quote(Box<Quote>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13219,7 +13219,7 @@ pub enum ReceiptOrRef {
 #[serde(untagged)]
 pub enum RefundOrRef {
     Variant1(String),
-    Refund(Refund),
+    Refund(Box<Refund>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13231,7 +13231,7 @@ pub enum RefundPolicyOrRef {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RefundsProperty {
-    pub data: Vec<FeeRefund>,
+    pub data: Vec<Box<FeeRefund>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -13239,7 +13239,7 @@ pub struct RefundsProperty {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RefundsProperty2 {
-    pub data: Vec<Refund>,
+    pub data: Vec<Box<Refund>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -13249,19 +13249,19 @@ pub struct RefundsProperty2 {
 #[serde(untagged)]
 pub enum ReplacedByOrRef {
     Variant1(String),
-    IssuingCard(IssuingCard),
+    IssuingCard(Box<IssuingCard>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ReplacementForOrRef {
     Variant1(String),
-    IssuingCard(IssuingCard),
+    IssuingCard(Box<IssuingCard>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReversalsProperty {
-    pub data: Vec<TransferReversal>,
+    pub data: Vec<Box<TransferReversal>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -13271,14 +13271,14 @@ pub struct ReversalsProperty {
 #[serde(untagged)]
 pub enum ReversedByOrRef {
     Variant1(String),
-    Payout(Payout),
+    Payout(Box<Payout>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ReviewOrRef {
     Variant1(String),
-    Review(Review),
+    Review(Box<Review>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13321,7 +13321,7 @@ pub enum SatispayUnion {
 #[serde(untagged)]
 pub enum ScheduleOrRef {
     Variant1(String),
-    SubscriptionSchedule(SubscriptionSchedule),
+    SubscriptionSchedule(Box<SubscriptionSchedule>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13353,14 +13353,14 @@ pub enum ServiceDocumentationOrRef {
 #[serde(untagged)]
 pub enum SetupAttemptOrRef {
     Variant1(String),
-    SetupAttempt(SetupAttempt),
+    SetupAttempt(Box<SetupAttempt>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SetupIntentOrRef {
     Variant1(String),
-    SetupIntent(SetupIntent),
+    SetupIntent(Box<SetupIntent>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13381,7 +13381,7 @@ pub enum ShippingRateOrRef {
 #[serde(untagged)]
 pub enum SingleUseMandateOrRef {
     Variant1(String),
-    Mandate(Mandate),
+    Mandate(Box<Mandate>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13397,35 +13397,35 @@ pub enum SofortUnion {
 #[serde(untagged)]
 pub enum SourceRefundOrRef {
     Variant1(String),
-    Refund(Refund),
+    Refund(Box<Refund>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SourceTransactionOrRef {
     Variant1(String),
-    Charge(Charge),
+    Charge(Box<Charge>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SourceTransferOrRef {
     Variant1(String),
-    Transfer(Transfer),
+    Transfer(Box<Transfer>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SourceTransferReversalOrRef {
     Variant1(String),
-    TransferReversal(TransferReversal),
+    TransferReversal(Box<TransferReversal>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SourceUnion {
-    BankAccount(BankAccount),
-    Card(Card),
+    BankAccount(Box<BankAccount>),
+    Card(Box<Card>),
     Source(Source),
 }
 
@@ -13433,27 +13433,27 @@ pub enum SourceUnion {
 #[serde(untagged)]
 pub enum SourceUnion2 {
     Variant1(String),
-    ApplicationFee(ApplicationFee),
-    Charge(Charge),
-    ConnectCollectionTransfer(ConnectCollectionTransfer),
-    CustomerCashBalanceTransaction(CustomerCashBalanceTransaction),
-    Dispute(Dispute),
-    FeeRefund(FeeRefund),
-    IssuingAuthorization(IssuingAuthorization),
-    IssuingDispute(IssuingDispute),
-    IssuingTransaction(IssuingTransaction),
-    Payout(Payout),
-    Refund(Refund),
+    ApplicationFee(Box<ApplicationFee>),
+    Charge(Box<Charge>),
+    ConnectCollectionTransfer(Box<ConnectCollectionTransfer>),
+    CustomerCashBalanceTransaction(Box<CustomerCashBalanceTransaction>),
+    Dispute(Box<Dispute>),
+    FeeRefund(Box<FeeRefund>),
+    IssuingAuthorization(Box<IssuingAuthorization>),
+    IssuingDispute(Box<IssuingDispute>),
+    IssuingTransaction(Box<IssuingTransaction>),
+    Payout(Box<Payout>),
+    Refund(Box<Refund>),
     ReserveTransaction(ReserveTransaction),
     TaxDeductedAtSource(TaxDeductedAtSource),
-    Topup(Topup),
-    Transfer(Transfer),
-    TransferReversal(TransferReversal),
+    Topup(Box<Topup>),
+    Transfer(Box<Transfer>),
+    TransferReversal(Box<TransferReversal>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SourcesProperty {
-    pub data: Vec<DataItemUnion2>,
+    pub data: Vec<Box<DataItemUnion2>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -13470,7 +13470,7 @@ pub enum SplashscreenOrRef {
 #[serde(untagged)]
 pub enum SubscriptionOrRef {
     Variant1(String),
-    Subscription(Subscription),
+    Subscription(Box<Subscription>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13482,7 +13482,7 @@ pub enum SubscriptionScheduleOrRef {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionsProperty {
-    pub data: Vec<Subscription>,
+    pub data: Vec<Box<Subscription>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -13509,7 +13509,7 @@ pub enum TaxCodeOrRef {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TaxIdsProperty {
-    pub data: Vec<TaxId>,
+    pub data: Vec<Box<TaxId>>,
     pub has_more: bool,
     pub object: String,
     pub url: String,
@@ -13533,28 +13533,28 @@ pub enum TokenOrRef {
 #[serde(untagged)]
 pub enum TransactionOrRef {
     Variant1(String),
-    IssuingTransaction(IssuingTransaction),
+    IssuingTransaction(Box<IssuingTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TransactionOrRef2 {
     Variant1(String),
-    TreasuryTransaction(TreasuryTransaction),
+    TreasuryTransaction(Box<TreasuryTransaction>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TransferOrRef {
     Variant1(String),
-    Transfer(Transfer),
+    Transfer(Box<Transfer>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TransferReversalOrRef {
     Variant1(String),
-    TransferReversal(TransferReversal),
+    TransferReversal(Box<TransferReversal>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -13625,7 +13625,7 @@ pub struct Account {
     pub default_currency: Option<String>,
     pub details_submitted: Option<bool>,
     pub email: Option<String>,
-    pub external_accounts: Option<ExternalAccountsProperty>,
+    pub external_accounts: Option<Box<ExternalAccountsProperty>>,
     pub future_requirements: Option<AccountFutureRequirements>,
     pub groups: Option<AccountGroupMembership>,
     pub id: String,
@@ -13634,7 +13634,7 @@ pub struct Account {
     pub object: String,
     pub payouts_enabled: Option<bool>,
     pub requirements: Option<AccountRequirements>,
-    pub settings: Option<AccountSettings>,
+    pub settings: Option<Box<AccountSettings>>,
     pub tos_acceptance: Option<AccountTosAcceptance>,
     #[serde(rename = "type")]
     pub r#type: Option<String>,
@@ -13809,7 +13809,7 @@ pub struct AccountGroupMembership {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AccountInvoicesSettings {
-    pub default_account_tax_ids: Option<Vec<DefaultAccountTaxIdsItemOrRef>>,
+    pub default_account_tax_ids: Option<Vec<Box<DefaultAccountTaxIdsItemOrRef>>>,
     pub hosted_payment_method_save: Option<String>,
 }
 
@@ -13888,7 +13888,7 @@ pub struct AccountSettings {
     pub card_issuing: Option<AccountCardIssuingSettings>,
     pub card_payments: AccountCardPaymentsSettings,
     pub dashboard: AccountDashboardSettings,
-    pub invoices: Option<AccountInvoicesSettings>,
+    pub invoices: Option<Box<AccountInvoicesSettings>>,
     pub payments: AccountPaymentsSettings,
     pub payouts: Option<AccountPayoutSettings>,
     pub sepa_debit_payments: Option<AccountSepaDebitPaymentsSettings>,
@@ -13975,12 +13975,12 @@ pub struct ApiErrors {
     pub network_advice_code: Option<String>,
     pub network_decline_code: Option<String>,
     pub param: Option<String>,
-    pub payment_intent: Option<PaymentIntent>,
-    pub payment_method: Option<PaymentMethod>,
+    pub payment_intent: Option<Box<PaymentIntent>>,
+    pub payment_method: Option<Box<PaymentMethod>>,
     pub payment_method_type: Option<String>,
     pub request_log_url: Option<String>,
-    pub setup_intent: Option<SetupIntent>,
-    pub source: Option<SourceUnion>,
+    pub setup_intent: Option<Box<SetupIntent>>,
+    pub source: Option<Box<SourceUnion>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -14003,21 +14003,21 @@ pub struct Application {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ApplicationFee {
-    pub account: AccountOrRef,
+    pub account: Box<AccountOrRef>,
     pub amount: i32,
     pub amount_refunded: i32,
     pub application: ApplicationOrRef,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
-    pub charge: ChargeOrRef,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
+    pub charge: Box<ChargeOrRef>,
     pub created: i32,
     pub currency: String,
     pub fee_source: Option<PlatformEarningFeeSource>,
     pub id: String,
     pub livemode: bool,
     pub object: String,
-    pub originating_transaction: Option<OriginatingTransactionOrRef>,
+    pub originating_transaction: Option<Box<OriginatingTransactionOrRef>>,
     pub refunded: bool,
-    pub refunds: RefundsProperty,
+    pub refunds: Box<RefundsProperty>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -14037,7 +14037,7 @@ pub struct AppsSecret {
 pub struct AutomaticTax {
     pub disabled_reason: Option<String>,
     pub enabled: bool,
-    pub liability: Option<ConnectAccountReference>,
+    pub liability: Option<Box<ConnectAccountReference>>,
     pub provider: Option<String>,
     pub status: Option<String>,
 }
@@ -14143,7 +14143,7 @@ pub struct BalanceTransaction {
     pub net: i32,
     pub object: String,
     pub reporting_category: String,
-    pub source: Option<SourceUnion2>,
+    pub source: Option<Box<SourceUnion2>>,
     pub status: String,
     #[serde(rename = "type")]
     pub r#type: String,
@@ -14151,7 +14151,7 @@ pub struct BalanceTransaction {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BankAccount {
-    pub account: Option<AccountOrRef>,
+    pub account: Option<Box<AccountOrRef>>,
     pub account_holder_name: Option<String>,
     pub account_holder_type: Option<String>,
     pub account_type: Option<String>,
@@ -14159,7 +14159,7 @@ pub struct BankAccount {
     pub bank_name: Option<String>,
     pub country: String,
     pub currency: String,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub default_for_currency: Option<bool>,
     pub fingerprint: Option<String>,
     pub future_requirements: Option<ExternalAccountRequirements>,
@@ -14264,9 +14264,9 @@ pub struct BillingCreditBalanceSummary {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingCreditBalanceTransaction {
     pub created: i32,
-    pub credit: Option<BillingCreditGrantsResourceBalanceCredit>,
-    pub credit_grant: CreditGrantOrRef,
-    pub debit: Option<BillingCreditGrantsResourceBalanceDebit>,
+    pub credit: Option<Box<BillingCreditGrantsResourceBalanceCredit>>,
+    pub credit_grant: Box<CreditGrantOrRef>,
+    pub debit: Option<Box<BillingCreditGrantsResourceBalanceDebit>>,
     pub effective_at: i32,
     pub id: String,
     pub livemode: bool,
@@ -14282,7 +14282,7 @@ pub struct BillingCreditGrant {
     pub applicability_config: BillingCreditGrantsResourceApplicabilityConfig,
     pub category: String,
     pub created: i32,
-    pub customer: CustomerUnion,
+    pub customer: Box<CustomerUnion>,
     pub effective_at: Option<i32>,
     pub expires_at: Option<i32>,
     pub id: String,
@@ -14401,7 +14401,8 @@ pub struct BillingBillResourceInvoicingLinesParentsInvoiceLineItemSubscriptionIt
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingBillResourceInvoicingParentsInvoiceParent {
     pub quote_details: Option<BillingBillResourceInvoicingParentsInvoiceQuoteParent>,
-    pub subscription_details: Option<BillingBillResourceInvoicingParentsInvoiceSubscriptionParent>,
+    pub subscription_details:
+        Option<Box<BillingBillResourceInvoicingParentsInvoiceSubscriptionParent>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -14414,7 +14415,7 @@ pub struct BillingBillResourceInvoicingParentsInvoiceQuoteParent {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingBillResourceInvoicingParentsInvoiceSubscriptionParent {
     pub metadata: Option<MetadataProperty>,
-    pub subscription: SubscriptionOrRef,
+    pub subscription: Box<SubscriptionOrRef>,
     pub subscription_proration_date: Option<i32>,
 }
 
@@ -14479,27 +14480,27 @@ pub struct BillingCreditGrantsResourceApplicablePrice {
 pub struct BillingCreditGrantsResourceBalanceCredit {
     pub amount: BillingCreditGrantsResourceAmount,
     pub credits_application_invoice_voided:
-        Option<BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoided>,
+        Option<Box<BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoided>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingCreditGrantsResourceBalanceCreditsApplicationInvoiceVoided {
-    pub invoice: InvoiceOrRef,
+    pub invoice: Box<InvoiceOrRef>,
     pub invoice_line_item: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingCreditGrantsResourceBalanceCreditsApplied {
-    pub invoice: InvoiceOrRef,
+    pub invoice: Box<InvoiceOrRef>,
     pub invoice_line_item: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BillingCreditGrantsResourceBalanceDebit {
     pub amount: BillingCreditGrantsResourceAmount,
-    pub credits_applied: Option<BillingCreditGrantsResourceBalanceCreditsApplied>,
+    pub credits_applied: Option<Box<BillingCreditGrantsResourceBalanceCreditsApplied>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -14606,7 +14607,7 @@ pub struct Capability {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Card {
-    pub account: Option<AccountOrRef>,
+    pub account: Option<Box<AccountOrRef>>,
     pub address_city: Option<String>,
     pub address_country: Option<String>,
     pub address_line1: Option<String>,
@@ -14620,7 +14621,7 @@ pub struct Card {
     pub brand: String,
     pub country: Option<String>,
     pub currency: Option<String>,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub cvc_check: Option<String>,
     pub default_for_currency: Option<bool>,
     pub dynamic_last4: Option<String>,
@@ -14672,18 +14673,18 @@ pub struct Charge {
     pub amount_captured: i32,
     pub amount_refunded: i32,
     pub application: Option<ApplicationOrRef>,
-    pub application_fee: Option<ApplicationFeeOrRef>,
+    pub application_fee: Option<Box<ApplicationFeeOrRef>>,
     pub application_fee_amount: Option<i32>,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub billing_details: BillingDetails,
     pub calculated_statement_descriptor: Option<String>,
     pub captured: bool,
     pub created: i32,
     pub currency: String,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub description: Option<String>,
     pub disputed: bool,
-    pub failure_balance_transaction: Option<FailureBalanceTransactionOrRef>,
+    pub failure_balance_transaction: Option<Box<FailureBalanceTransactionOrRef>>,
     pub failure_code: Option<String>,
     pub failure_message: Option<String>,
     pub fraud_details: Option<ChargeFraudDetails>,
@@ -14691,27 +14692,27 @@ pub struct Charge {
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
     pub outcome: Option<ChargeOutcome>,
     pub paid: bool,
-    pub payment_intent: Option<PaymentIntentOrRef>,
+    pub payment_intent: Option<Box<PaymentIntentOrRef>>,
     pub payment_method: Option<String>,
-    pub payment_method_details: Option<PaymentMethodDetails>,
+    pub payment_method_details: Option<Box<PaymentMethodDetails>>,
     pub presentment_details: Option<PaymentFlowsPaymentIntentPresentmentDetails>,
     pub radar_options: Option<RadarRadarOptions>,
     pub receipt_email: Option<String>,
     pub receipt_number: Option<String>,
     pub receipt_url: Option<String>,
     pub refunded: bool,
-    pub refunds: Option<RefundsProperty2>,
-    pub review: Option<ReviewOrRef>,
+    pub refunds: Option<Box<RefundsProperty2>>,
+    pub review: Option<Box<ReviewOrRef>>,
     pub shipping: Option<Shipping>,
-    pub source_transfer: Option<SourceTransferOrRef>,
+    pub source_transfer: Option<Box<SourceTransferOrRef>>,
     pub statement_descriptor: Option<String>,
     pub statement_descriptor_suffix: Option<String>,
     pub status: String,
-    pub transfer: Option<TransferOrRef>,
-    pub transfer_data: Option<ChargeTransferData>,
+    pub transfer: Option<Box<TransferOrRef>>,
+    pub transfer_data: Option<Box<ChargeTransferData>>,
     pub transfer_group: Option<String>,
 }
 
@@ -14739,7 +14740,7 @@ pub struct ChargeOutcome {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ChargeTransferData {
     pub amount: Option<i32>,
-    pub destination: DestinationOrRef,
+    pub destination: Box<DestinationOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15343,7 +15344,7 @@ pub struct ConfirmationTokensResourceShipping {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConnectAccountReference {
-    pub account: Option<AccountOrRef>,
+    pub account: Option<Box<AccountOrRef>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -15352,7 +15353,7 @@ pub struct ConnectAccountReference {
 pub struct ConnectCollectionTransfer {
     pub amount: i32,
     pub currency: String,
-    pub destination: DestinationOrRef,
+    pub destination: Box<DestinationOrRef>,
     pub id: String,
     pub livemode: bool,
     pub object: String,
@@ -15588,7 +15589,7 @@ pub struct CreditNote {
     pub created: i32,
     pub currency: String,
     pub customer: CustomerUnion,
-    pub customer_balance_transaction: Option<CustomerBalanceTransactionOrRef>,
+    pub customer_balance_transaction: Option<Box<CustomerBalanceTransactionOrRef>>,
     pub discount_amount: i32,
     pub discount_amounts: Vec<DiscountsResourceDiscountAmount>,
     pub effective_at: Option<i32>,
@@ -15684,16 +15685,16 @@ pub struct Customer {
     pub cash_balance: Option<CashBalance>,
     pub created: i32,
     pub currency: Option<String>,
-    pub default_source: Option<DefaultSourceUnion>,
+    pub default_source: Option<Box<DefaultSourceUnion>>,
     pub delinquent: Option<bool>,
     pub description: Option<String>,
-    pub discount: Option<Discount>,
+    pub discount: Option<Box<Discount>>,
     pub email: Option<String>,
     pub id: String,
     pub individual_name: Option<String>,
     pub invoice_credit_balance: Option<InvoiceCreditBalanceProperty>,
     pub invoice_prefix: Option<String>,
-    pub invoice_settings: Option<InvoiceSettingCustomerSetting>,
+    pub invoice_settings: Option<Box<InvoiceSettingCustomerSetting>>,
     pub livemode: bool,
     pub metadata: Option<MetadataProperty>,
     pub name: Option<String>,
@@ -15702,11 +15703,11 @@ pub struct Customer {
     pub phone: Option<String>,
     pub preferred_locales: Option<Vec<String>>,
     pub shipping: Option<Shipping>,
-    pub sources: Option<SourcesProperty>,
-    pub subscriptions: Option<SubscriptionsProperty>,
+    pub sources: Option<Box<SourcesProperty>>,
+    pub subscriptions: Option<Box<SubscriptionsProperty>>,
     pub tax: Option<CustomerTax>,
     pub tax_exempt: Option<String>,
-    pub tax_ids: Option<TaxIdsProperty>,
+    pub tax_ids: Option<Box<TaxIdsProperty>>,
     pub test_clock: Option<TestClockOrRef>,
 }
 
@@ -15727,13 +15728,13 @@ pub struct CustomerBalanceCustomerBalanceSettings {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft {
-    pub balance_transaction: BalanceTransactionOrRef,
-    pub linked_transaction: LinkedTransactionOrRef,
+    pub balance_transaction: Box<BalanceTransactionOrRef>,
+    pub linked_transaction: Box<LinkedTransactionOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction {
-    pub payment_intent: PaymentIntentOrRef,
+    pub payment_intent: Box<PaymentIntentOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15786,17 +15787,17 @@ pub struct CustomerBalanceResourceCashBalanceTransactionResourceFundedTransactio
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction {
-    pub refund: RefundOrRef,
+    pub refund: Box<RefundOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalance {
-    pub balance_transaction: BalanceTransactionOrRef,
+    pub balance_transaction: Box<BalanceTransactionOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransaction {
-    pub payment_intent: PaymentIntentOrRef,
+    pub payment_intent: Box<PaymentIntentOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15804,7 +15805,7 @@ pub struct CustomerBalanceTransaction {
     pub amount: i32,
     pub checkout_session: Option<CheckoutSessionOrRef>,
     pub created: i32,
-    pub credit_note: Option<CreditNoteOrRef>,
+    pub credit_note: Option<Box<CreditNoteOrRef>>,
     pub currency: String,
     pub customer: CustomerOrRef,
     pub description: Option<String>,
@@ -15821,26 +15822,28 @@ pub struct CustomerBalanceTransaction {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CustomerCashBalanceTransaction {
     pub adjusted_for_overdraft:
-        Option<CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft>,
-    pub applied_to_payment:
-        Option<CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction>,
+        Option<Box<CustomerBalanceResourceCashBalanceTransactionResourceAdjustedForOverdraft>>,
+    pub applied_to_payment: Option<
+        Box<CustomerBalanceResourceCashBalanceTransactionResourceAppliedToPaymentTransaction>,
+    >,
     pub created: i32,
     pub currency: String,
-    pub customer: CustomerOrRef,
+    pub customer: Box<CustomerOrRef>,
     pub ending_balance: i32,
     pub funded: Option<CustomerBalanceResourceCashBalanceTransactionResourceFundedTransaction>,
     pub id: String,
     pub livemode: bool,
     pub net_amount: i32,
     pub object: String,
-    pub refunded_from_payment:
-        Option<CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction>,
+    pub refunded_from_payment: Option<
+        Box<CustomerBalanceResourceCashBalanceTransactionResourceRefundedFromPaymentTransaction>,
+    >,
     pub transferred_to_balance:
-        Option<CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalance>,
+        Option<Box<CustomerBalanceResourceCashBalanceTransactionResourceTransferredToBalance>>,
     #[serde(rename = "type")]
     pub r#type: String,
     pub unapplied_from_payment: Option<
-        CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransaction,
+        Box<CustomerBalanceResourceCashBalanceTransactionResourceUnappliedFromPaymentTransaction>,
     >,
 }
 
@@ -15988,13 +15991,13 @@ pub struct DeletedCustomer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DeletedDiscount {
     pub checkout_session: Option<String>,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub deleted: bool,
     pub id: String,
     pub invoice: Option<String>,
     pub invoice_item: Option<String>,
     pub object: String,
-    pub promotion_code: Option<PromotionCodeOrRef>,
+    pub promotion_code: Option<Box<PromotionCodeOrRef>>,
     pub source: DiscountSource,
     pub start: i32,
     pub subscription: Option<String>,
@@ -16133,13 +16136,13 @@ pub struct DestinationDetailsUnimplemented {}
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Discount {
     pub checkout_session: Option<String>,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub end: Option<i32>,
     pub id: String,
     pub invoice: Option<String>,
     pub invoice_item: Option<String>,
     pub object: String,
-    pub promotion_code: Option<PromotionCodeOrRef>,
+    pub promotion_code: Option<Box<PromotionCodeOrRef>>,
     pub source: DiscountSource,
     pub start: i32,
     pub subscription: Option<String>,
@@ -16156,21 +16159,21 @@ pub struct DiscountSource {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DiscountsResourceDiscountAmount {
     pub amount: i32,
-    pub discount: DiscountUnion,
+    pub discount: Box<DiscountUnion>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DiscountsResourceStackableDiscount {
     pub coupon: Option<CouponOrRef>,
-    pub discount: Option<DiscountOrRef>,
-    pub promotion_code: Option<PromotionCodeOrRef>,
+    pub discount: Option<Box<DiscountOrRef>>,
+    pub promotion_code: Option<Box<PromotionCodeOrRef>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Dispute {
     pub amount: i32,
-    pub balance_transactions: Vec<BalanceTransaction>,
-    pub charge: ChargeOrRef,
+    pub balance_transactions: Vec<Box<BalanceTransaction>>,
+    pub charge: Box<ChargeOrRef>,
     pub created: i32,
     pub currency: String,
     pub enhanced_eligibility_types: Vec<String>,
@@ -16181,7 +16184,7 @@ pub struct Dispute {
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub payment_intent: Option<PaymentIntentOrRef>,
+    pub payment_intent: Option<Box<PaymentIntentOrRef>>,
     pub payment_method_details: Option<DisputePaymentMethodDetails>,
     pub reason: String,
     pub status: String,
@@ -16418,10 +16421,10 @@ pub struct Fee {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FeeRefund {
     pub amount: i32,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub created: i32,
     pub currency: String,
-    pub fee: FeeOrRef,
+    pub fee: Box<FeeOrRef>,
     pub id: String,
     pub metadata: Option<MetadataProperty>,
     pub object: String,
@@ -16433,7 +16436,7 @@ pub struct File {
     pub expires_at: Option<i32>,
     pub filename: Option<String>,
     pub id: String,
-    pub links: Option<LinksProperty>,
+    pub links: Option<Box<LinksProperty>>,
     pub object: String,
     pub purpose: String,
     pub size: i32,
@@ -16448,7 +16451,7 @@ pub struct FileLink {
     pub created: i32,
     pub expired: bool,
     pub expires_at: Option<i32>,
-    pub file: FileOrRef,
+    pub file: Box<FileOrRef>,
     pub id: String,
     pub livemode: bool,
     pub metadata: MetadataProperty,
@@ -16957,7 +16960,7 @@ pub struct InternalCard {
 pub struct Invoice {
     pub account_country: Option<String>,
     pub account_name: Option<String>,
-    pub account_tax_ids: Option<Vec<AccountTaxIdsItemUnion>>,
+    pub account_tax_ids: Option<Vec<Box<AccountTaxIdsItemUnion>>>,
     pub amount_due: i32,
     pub amount_overpaid: i32,
     pub amount_paid: i32,
@@ -16967,7 +16970,7 @@ pub struct Invoice {
     pub attempt_count: i32,
     pub attempted: bool,
     pub auto_advance: bool,
-    pub automatic_tax: AutomaticTax,
+    pub automatic_tax: Box<AutomaticTax>,
     pub automatically_finalizes_at: Option<i32>,
     pub billing_reason: Option<String>,
     pub collection_method: String,
@@ -16975,7 +16978,7 @@ pub struct Invoice {
     pub created: i32,
     pub currency: String,
     pub custom_fields: Option<Vec<InvoiceSettingCustomField>>,
-    pub customer: CustomerUnion,
+    pub customer: Box<CustomerUnion>,
     pub customer_address: Option<Address>,
     pub customer_email: Option<String>,
     pub customer_name: Option<String>,
@@ -16983,32 +16986,32 @@ pub struct Invoice {
     pub customer_shipping: Option<Shipping>,
     pub customer_tax_exempt: Option<String>,
     pub customer_tax_ids: Option<Vec<InvoicesResourceInvoiceTaxId>>,
-    pub default_payment_method: Option<DefaultPaymentMethodOrRef>,
-    pub default_source: Option<DefaultSourceUnion>,
+    pub default_payment_method: Option<Box<DefaultPaymentMethodOrRef>>,
+    pub default_source: Option<Box<DefaultSourceUnion>>,
     pub default_tax_rates: Vec<TaxRate>,
     pub description: Option<String>,
-    pub discounts: Vec<DiscountsItemUnion>,
+    pub discounts: Vec<Box<DiscountsItemUnion>>,
     pub due_date: Option<i32>,
     pub effective_at: Option<i32>,
     pub ending_balance: Option<i32>,
     pub footer: Option<String>,
-    pub from_invoice: Option<InvoicesResourceFromInvoice>,
+    pub from_invoice: Option<Box<InvoicesResourceFromInvoice>>,
     pub hosted_invoice_url: Option<String>,
     pub id: String,
     pub invoice_pdf: Option<String>,
-    pub issuer: ConnectAccountReference,
-    pub last_finalization_error: Option<ApiErrors>,
-    pub latest_revision: Option<LatestRevisionOrRef>,
-    pub lines: LinesProperty2,
+    pub issuer: Box<ConnectAccountReference>,
+    pub last_finalization_error: Option<Box<ApiErrors>>,
+    pub latest_revision: Option<Box<LatestRevisionOrRef>>,
+    pub lines: Box<LinesProperty2>,
     pub livemode: bool,
     pub metadata: Option<MetadataProperty>,
     pub next_payment_attempt: Option<i32>,
     pub number: Option<String>,
     pub object: String,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
-    pub parent: Option<BillingBillResourceInvoicingParentsInvoiceParent>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
+    pub parent: Option<Box<BillingBillResourceInvoicingParentsInvoiceParent>>,
     pub payment_settings: InvoicesPaymentSettings,
-    pub payments: Option<PaymentsProperty>,
+    pub payments: Option<Box<PaymentsProperty>>,
     pub period_end: i32,
     pub period_start: i32,
     pub post_payment_credit_notes_amount: i32,
@@ -17026,9 +17029,9 @@ pub struct Invoice {
     pub test_clock: Option<TestClockOrRef>,
     pub threshold_reason: Option<InvoiceThresholdReason>,
     pub total: i32,
-    pub total_discount_amounts: Option<Vec<DiscountsResourceDiscountAmount>>,
+    pub total_discount_amounts: Option<Vec<Box<DiscountsResourceDiscountAmount>>>,
     pub total_excluding_tax: Option<i32>,
-    pub total_pretax_credit_amounts: Option<Vec<InvoicesResourcePretaxCreditAmount>>,
+    pub total_pretax_credit_amounts: Option<Vec<Box<InvoicesResourcePretaxCreditAmount>>>,
     pub total_taxes: Option<Vec<BillingBillResourceInvoicingTaxesTax>>,
     pub webhooks_delivered_at: Option<i32>,
 }
@@ -17064,11 +17067,11 @@ pub struct InvoicePayment {
     pub created: i32,
     pub currency: String,
     pub id: String,
-    pub invoice: InvoiceUnion,
+    pub invoice: Box<InvoiceUnion>,
     pub is_default: bool,
     pub livemode: bool,
     pub object: String,
-    pub payment: InvoicesPaymentsInvoicePaymentAssociatedPayment,
+    pub payment: Box<InvoicesPaymentsInvoicePaymentAssociatedPayment>,
     pub status: String,
     pub status_transitions: InvoicesPaymentsInvoicePaymentStatusTransitions,
 }
@@ -17176,7 +17179,7 @@ pub struct InvoiceSettingCustomerRenderingOptions {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoiceSettingCustomerSetting {
     pub custom_fields: Option<Vec<InvoiceSettingCustomField>>,
-    pub default_payment_method: Option<DefaultPaymentMethodOrRef>,
+    pub default_payment_method: Option<Box<DefaultPaymentMethodOrRef>>,
     pub footer: Option<String>,
     pub rendering_options: Option<InvoiceSettingCustomerRenderingOptions>,
 }
@@ -17189,16 +17192,16 @@ pub struct InvoiceSettingQuoteSetting {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoiceSettingSubscriptionSchedulePhaseSetting {
-    pub account_tax_ids: Option<Vec<AccountTaxIdsItemUnion>>,
+    pub account_tax_ids: Option<Vec<Box<AccountTaxIdsItemUnion>>>,
     pub days_until_due: Option<i32>,
-    pub issuer: Option<ConnectAccountReference>,
+    pub issuer: Option<Box<ConnectAccountReference>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoiceSettingSubscriptionScheduleSetting {
-    pub account_tax_ids: Option<Vec<AccountTaxIdsItemUnion>>,
+    pub account_tax_ids: Option<Vec<Box<AccountTaxIdsItemUnion>>>,
     pub days_until_due: Option<i32>,
-    pub issuer: ConnectAccountReference,
+    pub issuer: Box<ConnectAccountReference>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17252,9 +17255,9 @@ pub struct InvoicesPaymentSettings {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoicesPaymentsInvoicePaymentAssociatedPayment {
-    pub charge: Option<ChargeOrRef>,
-    pub payment_intent: Option<PaymentIntentOrRef>,
-    pub payment_record: Option<PaymentRecordOrRef>,
+    pub charge: Option<Box<ChargeOrRef>>,
+    pub payment_intent: Option<Box<PaymentIntentOrRef>>,
+    pub payment_record: Option<Box<PaymentRecordOrRef>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -17275,7 +17278,7 @@ pub struct InvoicesResourceConfirmationSecret {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoicesResourceFromInvoice {
     pub action: String,
-    pub invoice: InvoiceOrRef,
+    pub invoice: Box<InvoiceOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17296,8 +17299,8 @@ pub struct InvoicesResourceInvoiceTaxId {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InvoicesResourcePretaxCreditAmount {
     pub amount: i32,
-    pub credit_balance_transaction: Option<CreditBalanceTransactionOrRef>,
-    pub discount: Option<DiscountUnion>,
+    pub credit_balance_transaction: Option<Box<CreditBalanceTransactionOrRef>>,
+    pub discount: Option<Box<DiscountUnion>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -17325,7 +17328,7 @@ pub struct IssuingAuthorization {
     pub amount_details: Option<IssuingAuthorizationAmountDetails>,
     pub approved: bool,
     pub authorization_method: String,
-    pub balance_transactions: Vec<BalanceTransaction>,
+    pub balance_transactions: Vec<Box<BalanceTransaction>>,
     pub card: IssuingCard,
     pub cardholder: Option<CardholderOrRef>,
     pub created: i32,
@@ -17345,7 +17348,7 @@ pub struct IssuingAuthorization {
     pub request_history: Vec<IssuingAuthorizationRequest>,
     pub status: String,
     pub token: Option<TokenOrRef>,
-    pub transactions: Vec<IssuingTransaction>,
+    pub transactions: Vec<Box<IssuingTransaction>>,
     pub treasury: Option<IssuingAuthorizationTreasury>,
     pub verification_data: IssuingAuthorizationVerificationData,
     pub verified_by_fraud_challenge: Option<bool>,
@@ -17371,8 +17374,8 @@ pub struct IssuingCard {
     pub number: Option<String>,
     pub object: String,
     pub personalization_design: Option<PersonalizationDesignOrRef>,
-    pub replaced_by: Option<ReplacedByOrRef>,
-    pub replacement_for: Option<ReplacementForOrRef>,
+    pub replaced_by: Option<Box<ReplacedByOrRef>>,
+    pub replacement_for: Option<Box<ReplacementForOrRef>>,
     pub replacement_reason: Option<String>,
     pub second_line: Option<String>,
     pub shipping: Option<IssuingCardShipping>,
@@ -17407,7 +17410,7 @@ pub struct IssuingCardholder {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IssuingDispute {
     pub amount: i32,
-    pub balance_transactions: Option<Vec<BalanceTransaction>>,
+    pub balance_transactions: Option<Vec<Box<BalanceTransaction>>>,
     pub created: i32,
     pub currency: String,
     pub evidence: IssuingDisputeEvidence,
@@ -17417,7 +17420,7 @@ pub struct IssuingDispute {
     pub metadata: MetadataProperty,
     pub object: String,
     pub status: String,
-    pub transaction: TransactionOrRef,
+    pub transaction: Box<TransactionOrRef>,
     pub treasury: Option<IssuingDisputeTreasury>,
 }
 
@@ -17491,13 +17494,13 @@ pub struct IssuingToken {
 pub struct IssuingTransaction {
     pub amount: i32,
     pub amount_details: Option<IssuingTransactionAmountDetails>,
-    pub authorization: Option<AuthorizationOrRef>,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub authorization: Option<Box<AuthorizationOrRef>>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub card: CardOrRef,
     pub cardholder: Option<CardholderOrRef>,
     pub created: i32,
     pub currency: String,
-    pub dispute: Option<DisputeOrRef>,
+    pub dispute: Option<Box<DisputeOrRef>>,
     pub id: String,
     pub livemode: bool,
     pub merchant_amount: i32,
@@ -18222,9 +18225,9 @@ pub struct LineItem {
     pub amount: i32,
     pub currency: String,
     pub description: Option<String>,
-    pub discount_amounts: Option<Vec<DiscountsResourceDiscountAmount>>,
+    pub discount_amounts: Option<Vec<Box<DiscountsResourceDiscountAmount>>>,
     pub discountable: bool,
-    pub discounts: Vec<DiscountsItemOrRef>,
+    pub discounts: Vec<Box<DiscountsItemOrRef>>,
     pub id: String,
     pub invoice: Option<String>,
     pub livemode: bool,
@@ -18232,10 +18235,10 @@ pub struct LineItem {
     pub object: String,
     pub parent: Option<BillingBillResourceInvoicingLinesParentsInvoiceLineItemParent>,
     pub period: InvoiceLineItemPeriod,
-    pub pretax_credit_amounts: Option<Vec<InvoicesResourcePretaxCreditAmount>>,
+    pub pretax_credit_amounts: Option<Vec<Box<InvoicesResourcePretaxCreditAmount>>>,
     pub pricing: Option<BillingBillResourceInvoicingPricingPricing>,
     pub quantity: Option<i32>,
-    pub subscription: Option<SubscriptionOrRef>,
+    pub subscription: Option<Box<SubscriptionOrRef>>,
     pub taxes: Option<Vec<BillingBillResourceInvoicingTaxesTax>>,
 }
 
@@ -18278,7 +18281,7 @@ pub struct Mandate {
     pub multi_use: Option<MandateMultiUse>,
     pub object: String,
     pub on_behalf_of: Option<String>,
-    pub payment_method: PaymentMethodOrRef,
+    pub payment_method: Box<PaymentMethodOrRef>,
     pub payment_method_details: MandatePaymentMethodDetails,
     pub single_use: Option<MandateSingleUse>,
     pub status: String,
@@ -18703,20 +18706,20 @@ pub struct PaymentIntent {
     pub confirmation_method: Option<String>,
     pub created: i32,
     pub currency: Option<String>,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub description: Option<String>,
     pub excluded_payment_method_types: Option<Vec<String>>,
     pub hooks: Option<PaymentFlowsPaymentIntentAsyncWorkflows>,
     pub id: String,
-    pub last_payment_error: Option<ApiErrors>,
-    pub latest_charge: Option<LatestChargeOrRef>,
+    pub last_payment_error: Option<Box<ApiErrors>>,
+    pub latest_charge: Option<Box<LatestChargeOrRef>>,
     pub livemode: bool,
     pub metadata: Option<MetadataProperty>,
     pub next_action: Option<PaymentIntentNextAction>,
     pub object: String,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
     pub payment_details: Option<PaymentFlowsPaymentDetails>,
-    pub payment_method: Option<PaymentMethodOrRef>,
+    pub payment_method: Option<Box<PaymentMethodOrRef>>,
     pub payment_method_configuration_details:
         Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
     pub payment_method_options: Option<PaymentIntentPaymentMethodOptions>,
@@ -18724,13 +18727,13 @@ pub struct PaymentIntent {
     pub presentment_details: Option<PaymentFlowsPaymentIntentPresentmentDetails>,
     pub processing: Option<PaymentIntentProcessing>,
     pub receipt_email: Option<String>,
-    pub review: Option<ReviewOrRef>,
+    pub review: Option<Box<ReviewOrRef>>,
     pub setup_future_usage: Option<String>,
     pub shipping: Option<Shipping>,
     pub statement_descriptor: Option<String>,
     pub statement_descriptor_suffix: Option<String>,
     pub status: String,
-    pub transfer_data: Option<TransferData>,
+    pub transfer_data: Option<Box<TransferData>>,
     pub transfer_group: Option<String>,
 }
 
@@ -19408,13 +19411,13 @@ pub struct PaymentMethod {
     pub billing_details: BillingDetails,
     pub blik: Option<PaymentMethodBlik>,
     pub boleto: Option<PaymentMethodBoleto>,
-    pub card: Option<PaymentMethodCard>,
+    pub card: Option<Box<PaymentMethodCard>>,
     pub card_present: Option<PaymentMethodCardPresent>,
     pub cashapp: Option<PaymentMethodCashapp>,
     pub created: i32,
     pub crypto: Option<PaymentMethodCrypto>,
     pub custom: Option<PaymentMethodCustom>,
-    pub customer: Option<CustomerOrRef>,
+    pub customer: Option<Box<CustomerOrRef>>,
     pub customer_balance: Option<PaymentMethodCustomerBalance>,
     pub eps: Option<PaymentMethodEps>,
     pub fpx: Option<PaymentMethodFpx>,
@@ -19448,7 +19451,7 @@ pub struct PaymentMethod {
     pub revolut_pay: Option<PaymentMethodRevolutPay>,
     pub samsung_pay: Option<PaymentMethodSamsungPay>,
     pub satispay: Option<PaymentMethodSatispay>,
-    pub sepa_debit: Option<PaymentMethodSepaDebit>,
+    pub sepa_debit: Option<Box<PaymentMethodSepaDebit>>,
     pub sofort: Option<PaymentMethodSofort>,
     pub swish: Option<PaymentMethodSwish>,
     pub twint: Option<PaymentMethodTwint>,
@@ -19518,7 +19521,7 @@ pub struct PaymentMethodCard {
     pub exp_year: i32,
     pub fingerprint: Option<String>,
     pub funding: String,
-    pub generated_from: Option<PaymentMethodCardGeneratedCard>,
+    pub generated_from: Option<Box<PaymentMethodCardGeneratedCard>>,
     pub last4: String,
     pub networks: Option<Networks>,
     pub regulated_status: Option<String>,
@@ -19537,7 +19540,7 @@ pub struct PaymentMethodCardChecks {
 pub struct PaymentMethodCardGeneratedCard {
     pub charge: Option<String>,
     pub payment_method_details: Option<CardGeneratedFromPaymentMethodDetails>,
-    pub setup_attempt: Option<SetupAttemptOrRef>,
+    pub setup_attempt: Option<Box<SetupAttemptOrRef>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -19727,7 +19730,7 @@ pub struct PaymentMethodDetails {
     pub amazon_pay: Option<PaymentMethodDetailsAmazonPay>,
     pub au_becs_debit: Option<PaymentMethodDetailsAuBecsDebit>,
     pub bacs_debit: Option<PaymentMethodDetailsBacsDebit>,
-    pub bancontact: Option<PaymentMethodDetailsBancontact>,
+    pub bancontact: Option<Box<PaymentMethodDetailsBancontact>>,
     pub billie: Option<PaymentMethodDetailsBillie>,
     pub blik: Option<PaymentMethodDetailsBlik>,
     pub boleto: Option<PaymentMethodDetailsBoleto>,
@@ -19740,7 +19743,7 @@ pub struct PaymentMethodDetails {
     pub fpx: Option<PaymentMethodDetailsFpx>,
     pub giropay: Option<PaymentMethodDetailsGiropay>,
     pub grabpay: Option<PaymentMethodDetailsGrabpay>,
-    pub ideal: Option<PaymentMethodDetailsIdeal>,
+    pub ideal: Option<Box<PaymentMethodDetailsIdeal>>,
     pub interac_present: Option<PaymentMethodDetailsInteracPresent>,
     pub kakao_pay: Option<PaymentMethodDetailsKakaoPay>,
     pub klarna: Option<PaymentMethodDetailsKlarna>,
@@ -19764,13 +19767,13 @@ pub struct PaymentMethodDetails {
     pub samsung_pay: Option<PaymentMethodDetailsSamsungPay>,
     pub satispay: Option<PaymentMethodDetailsSatispay>,
     pub sepa_debit: Option<PaymentMethodDetailsSepaDebit>,
-    pub sofort: Option<PaymentMethodDetailsSofort>,
+    pub sofort: Option<Box<PaymentMethodDetailsSofort>>,
     pub stripe_account: Option<PaymentMethodDetailsStripeAccount>,
     pub swish: Option<PaymentMethodDetailsSwish>,
     pub twint: Option<PaymentMethodDetailsTwint>,
     #[serde(rename = "type")]
     pub r#type: String,
-    pub us_bank_account: Option<PaymentMethodDetailsUsBankAccount>,
+    pub us_bank_account: Option<Box<PaymentMethodDetailsUsBankAccount>>,
     pub wechat: Option<PaymentMethodDetailsWechat>,
     pub wechat_pay: Option<PaymentMethodDetailsWechatPay>,
     pub zip: Option<PaymentMethodDetailsZip>,
@@ -19850,8 +19853,8 @@ pub struct PaymentMethodDetailsBancontact {
     pub bank_code: Option<String>,
     pub bank_name: Option<String>,
     pub bic: Option<String>,
-    pub generated_sepa_debit: Option<GeneratedSepaDebitOrRef>,
-    pub generated_sepa_debit_mandate: Option<GeneratedSepaDebitMandateOrRef>,
+    pub generated_sepa_debit: Option<Box<GeneratedSepaDebitOrRef>>,
+    pub generated_sepa_debit_mandate: Option<Box<GeneratedSepaDebitMandateOrRef>>,
     pub iban_last4: Option<String>,
     pub preferred_language: Option<String>,
     pub verified_name: Option<String>,
@@ -20064,8 +20067,8 @@ pub struct PaymentMethodDetailsGrabpay {
 pub struct PaymentMethodDetailsIdeal {
     pub bank: Option<String>,
     pub bic: Option<String>,
-    pub generated_sepa_debit: Option<GeneratedSepaDebitOrRef>,
-    pub generated_sepa_debit_mandate: Option<GeneratedSepaDebitMandateOrRef>,
+    pub generated_sepa_debit: Option<Box<GeneratedSepaDebitOrRef>>,
+    pub generated_sepa_debit_mandate: Option<Box<GeneratedSepaDebitMandateOrRef>>,
     pub iban_last4: Option<String>,
     pub transaction_id: Option<String>,
     pub verified_name: Option<String>,
@@ -20262,8 +20265,8 @@ pub struct PaymentMethodDetailsSofort {
     pub bank_name: Option<String>,
     pub bic: Option<String>,
     pub country: Option<String>,
-    pub generated_sepa_debit: Option<GeneratedSepaDebitOrRef>,
-    pub generated_sepa_debit_mandate: Option<GeneratedSepaDebitMandateOrRef>,
+    pub generated_sepa_debit: Option<Box<GeneratedSepaDebitOrRef>>,
+    pub generated_sepa_debit_mandate: Option<Box<GeneratedSepaDebitMandateOrRef>>,
     pub iban_last4: Option<String>,
     pub preferred_language: Option<String>,
     pub verified_name: Option<String>,
@@ -20289,7 +20292,7 @@ pub struct PaymentMethodDetailsUsBankAccount {
     pub bank_name: Option<String>,
     pub fingerprint: Option<String>,
     pub last4: Option<String>,
-    pub mandate: Option<MandateOrRef>,
+    pub mandate: Option<Box<MandateOrRef>>,
     pub payment_reference: Option<String>,
     pub routing_number: Option<String>,
 }
@@ -20711,7 +20714,7 @@ pub struct PaymentMethodSepaDebit {
     pub branch_code: Option<String>,
     pub country: Option<String>,
     pub fingerprint: Option<String>,
-    pub generated_from: Option<SepaDebitGeneratedFrom>,
+    pub generated_from: Option<Box<SepaDebitGeneratedFrom>>,
     pub last4: Option<String>,
 }
 
@@ -21066,7 +21069,7 @@ pub struct PaymentRecord {
     pub metadata: MetadataProperty,
     pub object: String,
     pub payment_method_details:
-        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails>,
+        Option<Box<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails>>,
     pub processor_details: PaymentsPrimitivesPaymentRecordsResourceProcessorDetails,
     pub shipping_details: Option<PaymentsPrimitivesPaymentRecordsResourceShippingDetails>,
 }
@@ -21195,7 +21198,7 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails {
     pub amazon_pay: Option<PaymentMethodDetailsAmazonPay>,
     pub au_becs_debit: Option<PaymentMethodDetailsAuBecsDebit>,
     pub bacs_debit: Option<PaymentMethodDetailsBacsDebit>,
-    pub bancontact: Option<PaymentMethodDetailsBancontact>,
+    pub bancontact: Option<Box<PaymentMethodDetailsBancontact>>,
     pub billie: Option<PaymentMethodDetailsBillie>,
     pub billing_details: Option<PaymentsPrimitivesPaymentRecordsResourceBillingDetails>,
     pub blik: Option<PaymentMethodDetailsBlik>,
@@ -21210,7 +21213,7 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails {
     pub fpx: Option<PaymentMethodDetailsFpx>,
     pub giropay: Option<PaymentMethodDetailsGiropay>,
     pub grabpay: Option<PaymentMethodDetailsGrabpay>,
-    pub ideal: Option<PaymentMethodDetailsIdeal>,
+    pub ideal: Option<Box<PaymentMethodDetailsIdeal>>,
     pub interac_present: Option<PaymentMethodDetailsInteracPresent>,
     pub kakao_pay: Option<PaymentMethodDetailsKakaoPay>,
     pub klarna: Option<PaymentMethodDetailsKlarna>,
@@ -21235,14 +21238,14 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodDetails {
     pub samsung_pay: Option<PaymentMethodDetailsSamsungPay>,
     pub satispay: Option<PaymentMethodDetailsSatispay>,
     pub sepa_debit: Option<PaymentMethodDetailsSepaDebit>,
-    pub sofort: Option<PaymentMethodDetailsSofort>,
+    pub sofort: Option<Box<PaymentMethodDetailsSofort>>,
     pub stripe_account: Option<PaymentMethodDetailsStripeAccount>,
     pub swish: Option<PaymentMethodDetailsSwish>,
     pub twint: Option<PaymentMethodDetailsTwint>,
     #[serde(rename = "type")]
     pub r#type: String,
     pub us_bank_account:
-        Option<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodUsBankAccountDetails>,
+        Option<Box<PaymentsPrimitivesPaymentRecordsResourcePaymentMethodUsBankAccountDetails>>,
     pub wechat: Option<PaymentMethodDetailsWechat>,
     pub wechat_pay: Option<PaymentMethodDetailsWechatPay>,
     pub zip: Option<PaymentMethodDetailsZip>,
@@ -21255,7 +21258,7 @@ pub struct PaymentsPrimitivesPaymentRecordsResourcePaymentMethodUsBankAccountDet
     pub bank_name: Option<String>,
     pub fingerprint: Option<String>,
     pub last4: Option<String>,
-    pub mandate: Option<MandateOrRef>,
+    pub mandate: Option<Box<MandateOrRef>>,
     pub payment_reference: Option<String>,
     pub routing_number: Option<String>,
 }
@@ -21283,16 +21286,16 @@ pub struct PaymentsPrimitivesPaymentRecordsResourceShippingDetails {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Payout {
     pub amount: i32,
-    pub application_fee: Option<ApplicationFeeOrRef>,
+    pub application_fee: Option<Box<ApplicationFeeOrRef>>,
     pub application_fee_amount: Option<i32>,
     pub arrival_date: i32,
     pub automatic: bool,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub created: i32,
     pub currency: String,
     pub description: Option<String>,
-    pub destination: Option<DestinationUnion>,
-    pub failure_balance_transaction: Option<FailureBalanceTransactionOrRef>,
+    pub destination: Option<Box<DestinationUnion>>,
+    pub failure_balance_transaction: Option<Box<FailureBalanceTransactionOrRef>>,
     pub failure_code: Option<String>,
     pub failure_message: Option<String>,
     pub id: String,
@@ -21300,10 +21303,10 @@ pub struct Payout {
     pub metadata: Option<MetadataProperty>,
     pub method: String,
     pub object: String,
-    pub original_payout: Option<OriginalPayoutOrRef>,
+    pub original_payout: Option<Box<OriginalPayoutOrRef>>,
     pub payout_method: Option<String>,
     pub reconciliation_status: String,
-    pub reversed_by: Option<ReversedByOrRef>,
+    pub reversed_by: Option<Box<ReversedByOrRef>>,
     pub source_type: String,
     pub statement_descriptor: Option<String>,
     pub status: String,
@@ -21637,7 +21640,7 @@ pub struct Price {
     pub metadata: MetadataProperty,
     pub nickname: Option<String>,
     pub object: String,
-    pub product: ProductUnion,
+    pub product: Box<ProductUnion>,
     pub recurring: Option<Recurring>,
     pub tax_behavior: Option<String>,
     pub tiers: Option<Vec<PriceTier>>,
@@ -21662,7 +21665,7 @@ pub struct PriceTier {
 pub struct Product {
     pub active: bool,
     pub created: i32,
-    pub default_price: Option<DefaultPriceOrRef>,
+    pub default_price: Option<Box<DefaultPriceOrRef>>,
     pub description: Option<String>,
     pub id: String,
     pub images: Vec<String>,
@@ -21698,7 +21701,7 @@ pub struct PromotionCode {
     pub active: bool,
     pub code: String,
     pub created: i32,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub expires_at: Option<i32>,
     pub id: String,
     pub livemode: bool,
@@ -21748,7 +21751,7 @@ pub struct Quote {
     pub discounts: Vec<DiscountsItemOrRef>,
     pub expires_at: i32,
     pub footer: Option<String>,
-    pub from_quote: Option<QuotesResourceFromQuote>,
+    pub from_quote: Option<Box<QuotesResourceFromQuote>>,
     pub header: Option<String>,
     pub id: String,
     pub invoice: Option<InvoiceUnion>,
@@ -21786,7 +21789,7 @@ pub struct QuotesResourceComputed {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QuotesResourceFromQuote {
     pub is_revision: bool,
-    pub quote: QuoteOrRef,
+    pub quote: Box<QuoteOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21926,27 +21929,27 @@ pub struct Recurring {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Refund {
     pub amount: i32,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
-    pub charge: Option<ChargeOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
+    pub charge: Option<Box<ChargeOrRef>>,
     pub created: i32,
     pub currency: String,
     pub description: Option<String>,
     pub destination_details: Option<RefundDestinationDetails>,
-    pub failure_balance_transaction: Option<FailureBalanceTransactionOrRef>,
+    pub failure_balance_transaction: Option<Box<FailureBalanceTransactionOrRef>>,
     pub failure_reason: Option<String>,
     pub id: String,
     pub instructions_email: Option<String>,
     pub metadata: Option<MetadataProperty>,
     pub next_action: Option<RefundNextAction>,
     pub object: String,
-    pub payment_intent: Option<PaymentIntentOrRef>,
+    pub payment_intent: Option<Box<PaymentIntentOrRef>>,
     pub pending_reason: Option<String>,
     pub presentment_details: Option<PaymentFlowsPaymentIntentPresentmentDetails>,
     pub reason: Option<String>,
     pub receipt_number: Option<String>,
-    pub source_transfer_reversal: Option<SourceTransferReversalOrRef>,
+    pub source_transfer_reversal: Option<Box<SourceTransferReversalOrRef>>,
     pub status: Option<String>,
-    pub transfer_reversal: Option<TransferReversalOrRef>,
+    pub transfer_reversal: Option<Box<TransferReversalOrRef>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -22135,7 +22138,7 @@ pub struct ReserveTransaction {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Review {
     pub billing_zip: Option<String>,
-    pub charge: Option<ChargeOrRef>,
+    pub charge: Option<Box<ChargeOrRef>>,
     pub closed_reason: Option<String>,
     pub created: i32,
     pub id: String,
@@ -22145,7 +22148,7 @@ pub struct Review {
     pub object: String,
     pub open: bool,
     pub opened_reason: String,
-    pub payment_intent: Option<PaymentIntentOrRef>,
+    pub payment_intent: Option<Box<PaymentIntentOrRef>>,
     pub reason: String,
     pub session: Option<RadarReviewResourceSession>,
 }
@@ -22183,7 +22186,7 @@ pub struct ScheduledQueryRun {
 pub struct SchedulesPhaseAutomaticTax {
     pub disabled_reason: Option<String>,
     pub enabled: bool,
-    pub liability: Option<ConnectAccountReference>,
+    pub liability: Option<Box<ConnectAccountReference>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -22195,8 +22198,8 @@ pub struct SecretServiceResourceScope {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SepaDebitGeneratedFrom {
-    pub charge: Option<ChargeOrRef>,
-    pub setup_attempt: Option<SetupAttemptOrRef>,
+    pub charge: Option<Box<ChargeOrRef>>,
+    pub setup_attempt: Option<Box<SetupAttemptOrRef>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -22204,16 +22207,16 @@ pub struct SetupAttempt {
     pub application: Option<ApplicationOrRef>,
     pub attach_to_self: Option<bool>,
     pub created: i32,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub flow_directions: Option<Vec<String>>,
     pub id: String,
     pub livemode: bool,
     pub object: String,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
-    pub payment_method: PaymentMethodOrRef,
-    pub payment_method_details: SetupAttemptPaymentMethodDetails,
-    pub setup_error: Option<ApiErrors>,
-    pub setup_intent: SetupIntentOrRef,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
+    pub payment_method: Box<PaymentMethodOrRef>,
+    pub payment_method_details: Box<SetupAttemptPaymentMethodDetails>,
+    pub setup_error: Option<Box<ApiErrors>>,
+    pub setup_intent: Box<SetupIntentOrRef>,
     pub status: String,
     pub usage: String,
 }
@@ -22224,12 +22227,12 @@ pub struct SetupAttemptPaymentMethodDetails {
     pub amazon_pay: Option<SetupAttemptPaymentMethodDetailsAmazonPay>,
     pub au_becs_debit: Option<SetupAttemptPaymentMethodDetailsAuBecsDebit>,
     pub bacs_debit: Option<SetupAttemptPaymentMethodDetailsBacsDebit>,
-    pub bancontact: Option<SetupAttemptPaymentMethodDetailsBancontact>,
+    pub bancontact: Option<Box<SetupAttemptPaymentMethodDetailsBancontact>>,
     pub boleto: Option<SetupAttemptPaymentMethodDetailsBoleto>,
     pub card: Option<SetupAttemptPaymentMethodDetailsCard>,
-    pub card_present: Option<SetupAttemptPaymentMethodDetailsCardPresent>,
+    pub card_present: Option<Box<SetupAttemptPaymentMethodDetailsCardPresent>>,
     pub cashapp: Option<SetupAttemptPaymentMethodDetailsCashapp>,
-    pub ideal: Option<SetupAttemptPaymentMethodDetailsIdeal>,
+    pub ideal: Option<Box<SetupAttemptPaymentMethodDetailsIdeal>>,
     pub kakao_pay: Option<SetupAttemptPaymentMethodDetailsKakaoPay>,
     pub klarna: Option<SetupAttemptPaymentMethodDetailsKlarna>,
     pub kr_card: Option<SetupAttemptPaymentMethodDetailsKrCard>,
@@ -22239,7 +22242,7 @@ pub struct SetupAttemptPaymentMethodDetails {
     pub paypal: Option<SetupAttemptPaymentMethodDetailsPaypal>,
     pub revolut_pay: Option<SetupAttemptPaymentMethodDetailsRevolutPay>,
     pub sepa_debit: Option<SetupAttemptPaymentMethodDetailsSepaDebit>,
-    pub sofort: Option<SetupAttemptPaymentMethodDetailsSofort>,
+    pub sofort: Option<Box<SetupAttemptPaymentMethodDetailsSofort>>,
     #[serde(rename = "type")]
     pub r#type: String,
     pub us_bank_account: Option<SetupAttemptPaymentMethodDetailsUsBankAccount>,
@@ -22262,8 +22265,8 @@ pub struct SetupAttemptPaymentMethodDetailsBancontact {
     pub bank_code: Option<String>,
     pub bank_name: Option<String>,
     pub bic: Option<String>,
-    pub generated_sepa_debit: Option<GeneratedSepaDebitOrRef>,
-    pub generated_sepa_debit_mandate: Option<GeneratedSepaDebitMandateOrRef>,
+    pub generated_sepa_debit: Option<Box<GeneratedSepaDebitOrRef>>,
+    pub generated_sepa_debit_mandate: Option<Box<GeneratedSepaDebitMandateOrRef>>,
     pub iban_last4: Option<String>,
     pub preferred_language: Option<String>,
     pub verified_name: Option<String>,
@@ -22296,7 +22299,7 @@ pub struct SetupAttemptPaymentMethodDetailsCardChecks {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SetupAttemptPaymentMethodDetailsCardPresent {
-    pub generated_card: Option<GeneratedCardOrRef>,
+    pub generated_card: Option<Box<GeneratedCardOrRef>>,
     pub offline: Option<PaymentMethodDetailsCardPresentOffline>,
 }
 
@@ -22315,8 +22318,8 @@ pub struct SetupAttemptPaymentMethodDetailsCashapp {}
 pub struct SetupAttemptPaymentMethodDetailsIdeal {
     pub bank: Option<String>,
     pub bic: Option<String>,
-    pub generated_sepa_debit: Option<GeneratedSepaDebitOrRef>,
-    pub generated_sepa_debit_mandate: Option<GeneratedSepaDebitMandateOrRef>,
+    pub generated_sepa_debit: Option<Box<GeneratedSepaDebitOrRef>>,
+    pub generated_sepa_debit_mandate: Option<Box<GeneratedSepaDebitMandateOrRef>>,
     pub iban_last4: Option<String>,
     pub verified_name: Option<String>,
 }
@@ -22355,8 +22358,8 @@ pub struct SetupAttemptPaymentMethodDetailsSofort {
     pub bank_code: Option<String>,
     pub bank_name: Option<String>,
     pub bic: Option<String>,
-    pub generated_sepa_debit: Option<GeneratedSepaDebitOrRef>,
-    pub generated_sepa_debit_mandate: Option<GeneratedSepaDebitMandateOrRef>,
+    pub generated_sepa_debit: Option<Box<GeneratedSepaDebitOrRef>>,
+    pub generated_sepa_debit_mandate: Option<Box<GeneratedSepaDebitMandateOrRef>>,
     pub iban_last4: Option<String>,
     pub preferred_language: Option<String>,
     pub verified_name: Option<String>,
@@ -22373,25 +22376,25 @@ pub struct SetupIntent {
     pub cancellation_reason: Option<String>,
     pub client_secret: Option<String>,
     pub created: i32,
-    pub customer: Option<CustomerUnion>,
+    pub customer: Option<Box<CustomerUnion>>,
     pub description: Option<String>,
     pub excluded_payment_method_types: Option<Vec<String>>,
     pub flow_directions: Option<Vec<String>>,
     pub id: String,
-    pub last_setup_error: Option<ApiErrors>,
-    pub latest_attempt: Option<LatestAttemptOrRef>,
+    pub last_setup_error: Option<Box<ApiErrors>>,
+    pub latest_attempt: Option<Box<LatestAttemptOrRef>>,
     pub livemode: bool,
-    pub mandate: Option<MandateOrRef>,
+    pub mandate: Option<Box<MandateOrRef>>,
     pub metadata: Option<MetadataProperty>,
     pub next_action: Option<SetupIntentNextAction>,
     pub object: String,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
-    pub payment_method: Option<PaymentMethodOrRef>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
+    pub payment_method: Option<Box<PaymentMethodOrRef>>,
     pub payment_method_configuration_details:
         Option<PaymentMethodConfigBizPaymentMethodConfigurationDetails>,
     pub payment_method_options: Option<SetupIntentPaymentMethodOptions>,
     pub payment_method_types: Vec<String>,
-    pub single_use_mandate: Option<SingleUseMandateOrRef>,
+    pub single_use_mandate: Option<Box<SingleUseMandateOrRef>>,
     pub status: String,
     pub usage: String,
 }
@@ -23007,7 +23010,7 @@ pub struct SourceTypeWechat {
 pub struct Subscription {
     pub application: Option<ApplicationUnion>,
     pub application_fee_percent: Option<f32>,
-    pub automatic_tax: SubscriptionAutomaticTax,
+    pub automatic_tax: Box<SubscriptionAutomaticTax>,
     pub billing_cycle_anchor: i32,
     pub billing_cycle_anchor_config: Option<SubscriptionsResourceBillingCycleAnchorConfig>,
     pub billing_mode: SubscriptionsResourceBillingMode,
@@ -23019,33 +23022,33 @@ pub struct Subscription {
     pub collection_method: String,
     pub created: i32,
     pub currency: String,
-    pub customer: CustomerUnion,
+    pub customer: Box<CustomerUnion>,
     pub days_until_due: Option<i32>,
-    pub default_payment_method: Option<DefaultPaymentMethodOrRef>,
-    pub default_source: Option<DefaultSourceUnion>,
+    pub default_payment_method: Option<Box<DefaultPaymentMethodOrRef>>,
+    pub default_source: Option<Box<DefaultSourceUnion>>,
     pub default_tax_rates: Option<Vec<TaxRate>>,
     pub description: Option<String>,
-    pub discounts: Vec<DiscountsItemOrRef>,
+    pub discounts: Vec<Box<DiscountsItemOrRef>>,
     pub ended_at: Option<i32>,
     pub id: String,
-    pub invoice_settings: SubscriptionsResourceSubscriptionInvoiceSettings,
-    pub items: ItemsProperty,
-    pub latest_invoice: Option<LatestInvoiceOrRef>,
+    pub invoice_settings: Box<SubscriptionsResourceSubscriptionInvoiceSettings>,
+    pub items: Box<ItemsProperty>,
+    pub latest_invoice: Option<Box<LatestInvoiceOrRef>>,
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub next_pending_invoice_item_invoice: Option<i32>,
     pub object: String,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
     pub pause_collection: Option<SubscriptionsResourcePauseCollection>,
     pub payment_settings: Option<SubscriptionsResourcePaymentSettings>,
     pub pending_invoice_item_interval: Option<SubscriptionPendingInvoiceItemInterval>,
-    pub pending_setup_intent: Option<PendingSetupIntentOrRef>,
-    pub pending_update: Option<SubscriptionsResourcePendingUpdate>,
-    pub schedule: Option<ScheduleOrRef>,
+    pub pending_setup_intent: Option<Box<PendingSetupIntentOrRef>>,
+    pub pending_update: Option<Box<SubscriptionsResourcePendingUpdate>>,
+    pub schedule: Option<Box<ScheduleOrRef>>,
     pub start_date: i32,
     pub status: String,
     pub test_clock: Option<TestClockOrRef>,
-    pub transfer_data: Option<SubscriptionTransferData>,
+    pub transfer_data: Option<Box<SubscriptionTransferData>>,
     pub trial_end: Option<i32>,
     pub trial_settings: Option<SubscriptionsTrialsResourceTrialSettings>,
     pub trial_start: Option<i32>,
@@ -23055,7 +23058,7 @@ pub struct Subscription {
 pub struct SubscriptionAutomaticTax {
     pub disabled_reason: Option<String>,
     pub enabled: bool,
-    pub liability: Option<ConnectAccountReference>,
+    pub liability: Option<Box<ConnectAccountReference>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -23070,7 +23073,7 @@ pub struct SubscriptionItem {
     pub created: i32,
     pub current_period_end: i32,
     pub current_period_start: i32,
-    pub discounts: Vec<DiscountsItemOrRef>,
+    pub discounts: Vec<Box<DiscountsItemOrRef>>,
     pub id: String,
     pub metadata: MetadataProperty,
     pub object: String,
@@ -23106,24 +23109,24 @@ pub struct SubscriptionSchedule {
     pub completed_at: Option<i32>,
     pub created: i32,
     pub current_phase: Option<SubscriptionScheduleCurrentPhase>,
-    pub customer: CustomerUnion,
-    pub default_settings: SubscriptionSchedulesResourceDefaultSettings,
+    pub customer: Box<CustomerUnion>,
+    pub default_settings: Box<SubscriptionSchedulesResourceDefaultSettings>,
     pub end_behavior: String,
     pub id: String,
     pub livemode: bool,
     pub metadata: Option<MetadataProperty>,
     pub object: String,
-    pub phases: Vec<SubscriptionSchedulePhaseConfiguration>,
+    pub phases: Vec<Box<SubscriptionSchedulePhaseConfiguration>>,
     pub released_at: Option<i32>,
     pub released_subscription: Option<String>,
     pub status: String,
-    pub subscription: Option<SubscriptionOrRef>,
+    pub subscription: Option<Box<SubscriptionOrRef>>,
     pub test_clock: Option<TestClockOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionScheduleAddInvoiceItem {
-    pub discounts: Vec<DiscountsResourceStackableDiscount>,
+    pub discounts: Vec<Box<DiscountsResourceStackableDiscount>>,
     pub metadata: Option<MetadataProperty>,
     pub period: SubscriptionScheduleAddInvoiceItemPeriod,
     pub price: PriceUnion,
@@ -23140,7 +23143,7 @@ pub struct SubscriptionScheduleAddInvoiceItemPeriod {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionScheduleConfigurationItem {
     pub billing_thresholds: Option<SubscriptionItemBillingThresholds>,
-    pub discounts: Vec<DiscountsResourceStackableDiscount>,
+    pub discounts: Vec<Box<DiscountsResourceStackableDiscount>>,
     pub metadata: Option<MetadataProperty>,
     pub price: PriceUnion,
     pub quantity: Option<i32>,
@@ -23155,47 +23158,47 @@ pub struct SubscriptionScheduleCurrentPhase {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionSchedulePhaseConfiguration {
-    pub add_invoice_items: Vec<SubscriptionScheduleAddInvoiceItem>,
+    pub add_invoice_items: Vec<Box<SubscriptionScheduleAddInvoiceItem>>,
     pub application_fee_percent: Option<f32>,
-    pub automatic_tax: Option<SchedulesPhaseAutomaticTax>,
+    pub automatic_tax: Option<Box<SchedulesPhaseAutomaticTax>>,
     pub billing_cycle_anchor: Option<String>,
     pub billing_thresholds: Option<SubscriptionBillingThresholds>,
     pub collection_method: Option<String>,
     pub currency: String,
-    pub default_payment_method: Option<DefaultPaymentMethodOrRef>,
+    pub default_payment_method: Option<Box<DefaultPaymentMethodOrRef>>,
     pub default_tax_rates: Option<Vec<TaxRate>>,
     pub description: Option<String>,
-    pub discounts: Vec<DiscountsResourceStackableDiscount>,
+    pub discounts: Vec<Box<DiscountsResourceStackableDiscount>>,
     pub end_date: i32,
-    pub invoice_settings: Option<InvoiceSettingSubscriptionSchedulePhaseSetting>,
-    pub items: Vec<SubscriptionScheduleConfigurationItem>,
+    pub invoice_settings: Option<Box<InvoiceSettingSubscriptionSchedulePhaseSetting>>,
+    pub items: Vec<Box<SubscriptionScheduleConfigurationItem>>,
     pub metadata: Option<MetadataProperty>,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
     pub proration_behavior: String,
     pub start_date: i32,
-    pub transfer_data: Option<SubscriptionTransferData>,
+    pub transfer_data: Option<Box<SubscriptionTransferData>>,
     pub trial_end: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionSchedulesResourceDefaultSettings {
     pub application_fee_percent: Option<f32>,
-    pub automatic_tax: Option<SubscriptionSchedulesResourceDefaultSettingsAutomaticTax>,
+    pub automatic_tax: Option<Box<SubscriptionSchedulesResourceDefaultSettingsAutomaticTax>>,
     pub billing_cycle_anchor: String,
     pub billing_thresholds: Option<SubscriptionBillingThresholds>,
     pub collection_method: Option<String>,
-    pub default_payment_method: Option<DefaultPaymentMethodOrRef>,
+    pub default_payment_method: Option<Box<DefaultPaymentMethodOrRef>>,
     pub description: Option<String>,
-    pub invoice_settings: InvoiceSettingSubscriptionScheduleSetting,
-    pub on_behalf_of: Option<OnBehalfOfOrRef>,
-    pub transfer_data: Option<SubscriptionTransferData>,
+    pub invoice_settings: Box<InvoiceSettingSubscriptionScheduleSetting>,
+    pub on_behalf_of: Option<Box<OnBehalfOfOrRef>>,
+    pub transfer_data: Option<Box<SubscriptionTransferData>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionSchedulesResourceDefaultSettingsAutomaticTax {
     pub disabled_reason: Option<String>,
     pub enabled: bool,
-    pub liability: Option<ConnectAccountReference>,
+    pub liability: Option<Box<ConnectAccountReference>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -23215,7 +23218,7 @@ pub struct SubscriptionSchedulesResourceInvoiceItemPeriodResourcePeriodStart {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionTransferData {
     pub amount_percent: Option<f32>,
-    pub destination: DestinationOrRef,
+    pub destination: Box<DestinationOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -23268,15 +23271,15 @@ pub struct SubscriptionsResourcePaymentSettings {
 pub struct SubscriptionsResourcePendingUpdate {
     pub billing_cycle_anchor: Option<i32>,
     pub expires_at: i32,
-    pub subscription_items: Option<Vec<SubscriptionItem>>,
+    pub subscription_items: Option<Vec<Box<SubscriptionItem>>>,
     pub trial_end: Option<i32>,
     pub trial_from_plan: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SubscriptionsResourceSubscriptionInvoiceSettings {
-    pub account_tax_ids: Option<Vec<AccountTaxIdsItemUnion>>,
-    pub issuer: ConnectAccountReference,
+    pub account_tax_ids: Option<Vec<Box<AccountTaxIdsItemUnion>>>,
+    pub issuer: Box<ConnectAccountReference>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -23414,9 +23417,9 @@ pub struct TaxDeductedAtSource {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TaxIDsOwner {
-    pub account: Option<AccountOrRef>,
+    pub account: Option<Box<AccountOrRef>>,
     pub application: Option<ApplicationOrRef>,
-    pub customer: Option<CustomerOrRef>,
+    pub customer: Option<Box<CustomerOrRef>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -23425,11 +23428,11 @@ pub struct TaxIDsOwner {
 pub struct TaxId {
     pub country: Option<String>,
     pub created: i32,
-    pub customer: Option<CustomerOrRef>,
+    pub customer: Option<Box<CustomerOrRef>>,
     pub id: String,
     pub livemode: bool,
     pub object: String,
-    pub owner: Option<TaxIDsOwner>,
+    pub owner: Option<Box<TaxIDsOwner>>,
     #[serde(rename = "type")]
     pub r#type: String,
     pub value: String,
@@ -24236,7 +24239,7 @@ pub struct TokenCardNetworks {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Topup {
     pub amount: i32,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub created: i32,
     pub currency: String,
     pub description: Option<String>,
@@ -24257,19 +24260,19 @@ pub struct Topup {
 pub struct Transfer {
     pub amount: i32,
     pub amount_reversed: i32,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub created: i32,
     pub currency: String,
     pub description: Option<String>,
-    pub destination: Option<DestinationOrRef>,
-    pub destination_payment: Option<DestinationPaymentOrRef>,
+    pub destination: Option<Box<DestinationOrRef>>,
+    pub destination_payment: Option<Box<DestinationPaymentOrRef>>,
     pub id: String,
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub reversals: ReversalsProperty,
+    pub reversals: Box<ReversalsProperty>,
     pub reversed: bool,
-    pub source_transaction: Option<SourceTransactionOrRef>,
+    pub source_transaction: Option<Box<SourceTransactionOrRef>>,
     pub source_type: Option<String>,
     pub transfer_group: Option<String>,
 }
@@ -24277,21 +24280,21 @@ pub struct Transfer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransferData {
     pub amount: Option<i32>,
-    pub destination: DestinationOrRef,
+    pub destination: Box<DestinationOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransferReversal {
     pub amount: i32,
-    pub balance_transaction: Option<BalanceTransactionOrRef>,
+    pub balance_transaction: Option<Box<BalanceTransactionOrRef>>,
     pub created: i32,
     pub currency: String,
-    pub destination_payment_refund: Option<DestinationPaymentRefundOrRef>,
+    pub destination_payment_refund: Option<Box<DestinationPaymentRefundOrRef>>,
     pub id: String,
     pub metadata: Option<MetadataProperty>,
     pub object: String,
-    pub source_refund: Option<SourceRefundOrRef>,
-    pub transfer: TransferOrRef,
+    pub source_refund: Option<Box<SourceRefundOrRef>>,
+    pub transfer: Box<TransferOrRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24331,7 +24334,7 @@ pub struct TreasuryCreditReversal {
     pub received_credit: String,
     pub status: String,
     pub status_transitions: TreasuryReceivedCreditsResourceStatusTransitions,
-    pub transaction: Option<TransactionOrRef2>,
+    pub transaction: Option<Box<TransactionOrRef2>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24350,7 +24353,7 @@ pub struct TreasuryDebitReversal {
     pub received_debit: String,
     pub status: String,
     pub status_transitions: TreasuryReceivedDebitsResourceStatusTransitions,
-    pub transaction: Option<TransactionOrRef2>,
+    pub transaction: Option<Box<TransactionOrRef2>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24409,7 +24412,7 @@ pub struct TreasuryInboundTransfer {
     pub status: String,
     pub status_transitions:
         TreasuryInboundTransfersResourceInboundTransferResourceStatusTransitions,
-    pub transaction: Option<TransactionOrRef2>,
+    pub transaction: Option<Box<TransactionOrRef2>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24431,14 +24434,14 @@ pub struct TreasuryOutboundPayment {
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub returned_details: Option<TreasuryOutboundPaymentsResourceReturnedStatus>,
+    pub returned_details: Option<Box<TreasuryOutboundPaymentsResourceReturnedStatus>>,
     pub statement_descriptor: String,
     pub status: String,
     pub status_transitions:
         TreasuryOutboundPaymentsResourceOutboundPaymentResourceStatusTransitions,
     pub tracking_details:
         Option<TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetails>,
-    pub transaction: TransactionOrRef2,
+    pub transaction: Box<TransactionOrRef2>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24457,13 +24460,13 @@ pub struct TreasuryOutboundTransfer {
     pub livemode: bool,
     pub metadata: MetadataProperty,
     pub object: String,
-    pub returned_details: Option<TreasuryOutboundTransfersResourceReturnedDetails>,
+    pub returned_details: Option<Box<TreasuryOutboundTransfersResourceReturnedDetails>>,
     pub statement_descriptor: String,
     pub status: String,
     pub status_transitions: TreasuryOutboundTransfersResourceStatusTransitions,
     pub tracking_details:
         Option<TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDetails>,
-    pub transaction: TransactionOrRef2,
+    pub transaction: Box<TransactionOrRef2>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24478,13 +24481,13 @@ pub struct TreasuryReceivedCredit {
     pub id: String,
     pub initiating_payment_method_details:
         TreasurySharedResourceInitiatingPaymentMethodDetailsInitiatingPaymentMethodDetails,
-    pub linked_flows: TreasuryReceivedCreditsResourceLinkedFlows,
+    pub linked_flows: Box<TreasuryReceivedCreditsResourceLinkedFlows>,
     pub livemode: bool,
     pub network: String,
     pub object: String,
     pub reversal_details: Option<TreasuryReceivedCreditsResourceReversalDetails>,
     pub status: String,
-    pub transaction: Option<TransactionOrRef2>,
+    pub transaction: Option<Box<TransactionOrRef2>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24505,7 +24508,7 @@ pub struct TreasuryReceivedDebit {
     pub object: String,
     pub reversal_details: Option<TreasuryReceivedDebitsResourceReversalDetails>,
     pub status: String,
-    pub transaction: Option<TransactionOrRef2>,
+    pub transaction: Option<Box<TransactionOrRef2>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24515,10 +24518,10 @@ pub struct TreasuryTransaction {
     pub created: i32,
     pub currency: String,
     pub description: String,
-    pub entries: Option<EntriesProperty>,
+    pub entries: Option<Box<EntriesProperty>>,
     pub financial_account: String,
     pub flow: Option<String>,
-    pub flow_details: Option<TreasuryTransactionsResourceFlowDetails>,
+    pub flow_details: Option<Box<TreasuryTransactionsResourceFlowDetails>>,
     pub flow_type: String,
     pub id: String,
     pub livemode: bool,
@@ -24536,12 +24539,12 @@ pub struct TreasuryTransactionEntry {
     pub effective_at: i32,
     pub financial_account: String,
     pub flow: Option<String>,
-    pub flow_details: Option<TreasuryTransactionsResourceFlowDetails>,
+    pub flow_details: Option<Box<TreasuryTransactionsResourceFlowDetails>>,
     pub flow_type: String,
     pub id: String,
     pub livemode: bool,
     pub object: String,
-    pub transaction: TransactionOrRef2,
+    pub transaction: Box<TransactionOrRef2>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
@@ -24690,7 +24693,7 @@ pub struct TreasuryOutboundPaymentsResourceOutboundPaymentResourceTrackingDetail
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TreasuryOutboundPaymentsResourceReturnedStatus {
     pub code: String,
-    pub transaction: TransactionOrRef2,
+    pub transaction: Box<TransactionOrRef2>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24716,7 +24719,7 @@ pub struct TreasuryOutboundTransfersResourceOutboundTransferResourceTrackingDeta
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TreasuryOutboundTransfersResourceReturnedDetails {
     pub code: String,
-    pub transaction: TransactionOrRef2,
+    pub transaction: Box<TransactionOrRef2>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24740,7 +24743,7 @@ pub struct TreasuryReceivedCreditsResourceLinkedFlows {
     pub issuing_authorization: Option<String>,
     pub issuing_transaction: Option<String>,
     pub source_flow: Option<String>,
-    pub source_flow_details: Option<TreasuryReceivedCreditsResourceSourceFlowsDetails>,
+    pub source_flow_details: Option<Box<TreasuryReceivedCreditsResourceSourceFlowsDetails>>,
     pub source_flow_type: Option<String>,
 }
 
@@ -24752,9 +24755,9 @@ pub struct TreasuryReceivedCreditsResourceReversalDetails {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TreasuryReceivedCreditsResourceSourceFlowsDetails {
-    pub credit_reversal: Option<TreasuryCreditReversal>,
-    pub outbound_payment: Option<TreasuryOutboundPayment>,
-    pub outbound_transfer: Option<TreasuryOutboundTransfer>,
+    pub credit_reversal: Option<Box<TreasuryCreditReversal>>,
+    pub outbound_payment: Option<Box<TreasuryOutboundPayment>>,
+    pub outbound_transfer: Option<Box<TreasuryOutboundTransfer>>,
     pub payout: Option<Payout>,
     #[serde(rename = "type")]
     pub r#type: String,
@@ -24830,14 +24833,14 @@ pub struct TreasuryTransactionsResourceBalanceImpact {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TreasuryTransactionsResourceFlowDetails {
-    pub credit_reversal: Option<TreasuryCreditReversal>,
-    pub debit_reversal: Option<TreasuryDebitReversal>,
-    pub inbound_transfer: Option<TreasuryInboundTransfer>,
+    pub credit_reversal: Option<Box<TreasuryCreditReversal>>,
+    pub debit_reversal: Option<Box<TreasuryDebitReversal>>,
+    pub inbound_transfer: Option<Box<TreasuryInboundTransfer>>,
     pub issuing_authorization: Option<IssuingAuthorization>,
-    pub outbound_payment: Option<TreasuryOutboundPayment>,
-    pub outbound_transfer: Option<TreasuryOutboundTransfer>,
-    pub received_credit: Option<TreasuryReceivedCredit>,
-    pub received_debit: Option<TreasuryReceivedDebit>,
+    pub outbound_payment: Option<Box<TreasuryOutboundPayment>>,
+    pub outbound_transfer: Option<Box<TreasuryOutboundTransfer>>,
+    pub received_credit: Option<Box<TreasuryReceivedCredit>>,
+    pub received_debit: Option<Box<TreasuryReceivedDebit>>,
     #[serde(rename = "type")]
     pub r#type: String,
 }
