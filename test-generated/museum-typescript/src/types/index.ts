@@ -1,173 +1,47 @@
 // Generated types from OpenAPI specification
 
-/**
- * Data to purchase a ticket.
- */
-export interface BuyMuseumTickets {
-  /**
-   * Email address for ticket purchaser.
-   */
-  email?: Email;
-  /**
-   * Identifier for a special event.
-   */
-  eventId?: EventId;
-  ticketDate: Date;
-  /**
-   * Unique identifier for museum ticket. Generated when purchased.
-   */
-  ticketId?: TicketId;
-  /**
-   * Type of ticket being purchased. Use `general` for regular museum entry and `event` for tickets to special events.
-   */
-  ticketType: TicketType;
-}
-
-export type Date = Date;
-
-export type Email = string;
-
-export interface Error {
-  title?: string;
-  type?: string;
-}
-
-export type EventDates = Array<Date>;
-
-export type EventDescription = string;
-
-export type EventId = string;
-
-export type EventLocation = string;
-
-export type EventName = string;
-
-export type EventPrice = number;
-
-/**
- * Daily operating hours for the museum.
- */
-export interface MuseumDailyHours {
-  date: Date;
-  /**
-   * Time the museum closes on a specific date. Uses 24 hour time format (`HH:mm`).
-   */
-  timeClose: string;
-  /**
-   * Time the museum opens on a specific date. Uses 24 hour time format (`HH:mm`).
-   */
-  timeOpen: string;
-}
-
-export type MuseumHours = Array<MuseumDailyHours>;
-
-/**
- * Details for a museum ticket after a successful purchase.
- */
-export interface MuseumTicketsConfirmation {
-  /**
-   * Unique confirmation code used to verify ticket purchase.
-   */
-  confirmationCode: TicketConfirmation;
-  /**
-   * Identifier for a special event.
-   */
-  eventId?: EventId;
-  /**
-   * Confirmation message after a ticket purchase.
-   */
-  message: TicketMessage;
-  ticketDate: Date;
-  /**
-   * Unique identifier for museum ticket. Generated when purchased.
-   */
-  ticketId?: TicketId;
-  /**
-   * Type of ticket being purchased. Use `general` for regular museum entry and `event` for tickets to special events.
-   */
-  ticketType: TicketType;
-}
-
-export interface SpecialEvent {
-  /**
-   * List of planned dates for the special event.
-   */
-  dates: EventDates;
-  /**
-   * Description of the special event.
-   */
-  eventDescription: EventDescription;
-  /**
-   * Identifier for a special event.
-   */
-  eventId?: EventId;
-  /**
-   * Location where the special event is held.
-   */
-  location: EventLocation;
-  /**
-   * Name of the special event.
-   */
-  name: EventName;
-  /**
-   * Price of a ticket for the special event.
-   */
-  price: EventPrice;
-}
-
-export type SpecialEventCollection = Array<SpecialEvent>;
-
-export interface SpecialEventFields {
-  /**
-   * List of planned dates for the special event.
-   */
-  dates?: EventDates;
-  /**
-   * Description of the special event.
-   */
-  eventDescription?: EventDescription;
-  /**
-   * Location where the special event is held.
-   */
-  location?: EventLocation;
-  /**
-   * Name of the special event.
-   */
-  name?: EventName;
-  /**
-   * Price of a ticket for the special event.
-   */
-  price?: EventPrice;
-}
-
-/**
- * Ticket for museum entry, can be general admission or special event.
- */
-export interface Ticket {
-  /**
-   * Identifier for a special event.
-   */
-  eventId?: EventId;
-  ticketDate: Date;
-  /**
-   * Unique identifier for museum ticket. Generated when purchased.
-   */
-  ticketId?: TicketId;
-  /**
-   * Type of ticket being purchased. Use `general` for regular museum entry and `event` for tickets to special events.
-   */
-  ticketType: TicketType;
-}
-
-export type TicketCodeImage = Uint8Array;
-
-export type TicketConfirmation = string;
-
-export type TicketId = string;
-
-export type TicketMessage = string;
-
-export enum TicketType {
-  EVENT = "event",
-  GENERAL = "general",
-}
+export * from './errors';
+export * from './BuyMuseumTickets';
+export { BuyMuseumTicketsSchema } from './BuyMuseumTickets';
+export * from './Date';
+export { DateSchema } from './Date';
+export * from './Email';
+export { EmailSchema } from './Email';
+export * from './Error';
+export { ErrorSchema } from './Error';
+export * from './EventDates';
+export { EventDatesSchema } from './EventDates';
+export * from './EventDescription';
+export { EventDescriptionSchema } from './EventDescription';
+export * from './EventId';
+export { EventIdSchema } from './EventId';
+export * from './EventLocation';
+export { EventLocationSchema } from './EventLocation';
+export * from './EventName';
+export { EventNameSchema } from './EventName';
+export * from './EventPrice';
+export { EventPriceSchema } from './EventPrice';
+export * from './MuseumDailyHours';
+export { MuseumDailyHoursSchema } from './MuseumDailyHours';
+export * from './MuseumHours';
+export { MuseumHoursSchema } from './MuseumHours';
+export * from './MuseumTicketsConfirmation';
+export { MuseumTicketsConfirmationSchema } from './MuseumTicketsConfirmation';
+export * from './SpecialEvent';
+export { SpecialEventSchema } from './SpecialEvent';
+export * from './SpecialEventCollection';
+export { SpecialEventCollectionSchema } from './SpecialEventCollection';
+export * from './SpecialEventFields';
+export { SpecialEventFieldsSchema } from './SpecialEventFields';
+export * from './Ticket';
+export { TicketSchema } from './Ticket';
+export * from './TicketCodeImage';
+export { TicketCodeImageSchema } from './TicketCodeImage';
+export * from './TicketConfirmation';
+export { TicketConfirmationSchema } from './TicketConfirmation';
+export * from './TicketId';
+export { TicketIdSchema } from './TicketId';
+export * from './TicketMessage';
+export { TicketMessageSchema } from './TicketMessage';
+export * from './TicketType';
+export { TicketTypeSchema } from './TicketType';

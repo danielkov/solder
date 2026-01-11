@@ -1,0 +1,7 @@
+import { TypedSchema, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObject } from './PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObject';
+import { PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObjectSchema } from './PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObject';
+export type PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval = PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObject | string;
+
+export const PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalSchema: TypedSchema<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval> = typed<PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemInterval>(union(PostCustomersCustomerSubscriptionsRequestPendingInvoiceItemIntervalObjectSchema, string()));

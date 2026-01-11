@@ -1,0 +1,9 @@
+import { TypedSchema, typed, union } from '@speakeasy-api/tonic';
+
+import type { CreateEmbeddingsRequestInputObjectContentItemObject } from './CreateEmbeddingsRequestInputObjectContentItemObject';
+import { CreateEmbeddingsRequestInputObjectContentItemObjectSchema } from './CreateEmbeddingsRequestInputObjectContentItemObject';
+import type { EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObject } from './EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObject';
+import { EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObjectSchema } from './EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObject';
+export type CreateEmbeddingsRequestInputObjectContentItem = CreateEmbeddingsRequestInputObjectContentItemObject | EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObject;
+
+export const CreateEmbeddingsRequestInputObjectContentItemSchema: TypedSchema<CreateEmbeddingsRequestInputObjectContentItem> = typed<CreateEmbeddingsRequestInputObjectContentItem>(union(CreateEmbeddingsRequestInputObjectContentItemObjectSchema, EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObjectSchema));

@@ -1,8 +1,19 @@
+{{ imports }}
 {% if let Some(summary) = docs.summary %}/**
  * {{ summary }}
 {% if let Some(description) = docs.description %} *
  * {{ description }}
 {% endif %} */
-{% endif %}export enum {{ name.pascal }} {
-{% for value in values %}  {{ value.name }} = {{ value.value }},
-{% endfor %}}
+{% endif %}export type {{ name.pascal }} = {% for value in values %}{{ value.value }}{% if !loop.last %} | {% endif %}{% endfor %};
+
+export const {{ name.pascal }}Schema: TypedSchema<{{ name.pascal }}> = typed<{{ name.pascal }}>(union(
+{% for value in values %}  literal({{ value.value }}),
+{% endfor %}));
+
+/**
+ * Enum values for {{ name.pascal }}.
+ * Use these constants for type-safe comparisons.
+ */
+export const {{ name.pascal }} = {
+{% for value in values %}  {{ value.name }}: {{ value.value }} as const,
+{% endfor %}} as const;

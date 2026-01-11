@@ -1,0 +1,37 @@
+import { TypedSchema, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { ApplicationFee } from './ApplicationFee';
+import { ApplicationFeeSchema } from './ApplicationFee';
+import type { Charge } from './Charge';
+import { ChargeSchema } from './Charge';
+import type { ConnectCollectionTransfer } from './ConnectCollectionTransfer';
+import { ConnectCollectionTransferSchema } from './ConnectCollectionTransfer';
+import type { CustomerCashBalanceTransaction } from './CustomerCashBalanceTransaction';
+import { CustomerCashBalanceTransactionSchema } from './CustomerCashBalanceTransaction';
+import type { Dispute } from './Dispute';
+import { DisputeSchema } from './Dispute';
+import type { FeeRefund } from './FeeRefund';
+import { FeeRefundSchema } from './FeeRefund';
+import type { IssuingAuthorization } from './IssuingAuthorization';
+import { IssuingAuthorizationSchema } from './IssuingAuthorization';
+import type { IssuingDispute } from './IssuingDispute';
+import { IssuingDisputeSchema } from './IssuingDispute';
+import type { IssuingTransaction } from './IssuingTransaction';
+import { IssuingTransactionSchema } from './IssuingTransaction';
+import type { Payout } from './Payout';
+import { PayoutSchema } from './Payout';
+import type { Refund } from './Refund';
+import { RefundSchema } from './Refund';
+import type { ReserveTransaction } from './ReserveTransaction';
+import { ReserveTransactionSchema } from './ReserveTransaction';
+import type { TaxDeductedAtSource } from './TaxDeductedAtSource';
+import { TaxDeductedAtSourceSchema } from './TaxDeductedAtSource';
+import type { Topup } from './Topup';
+import { TopupSchema } from './Topup';
+import type { Transfer } from './Transfer';
+import { TransferSchema } from './Transfer';
+import type { TransferReversal } from './TransferReversal';
+import { TransferReversalSchema } from './TransferReversal';
+export type SourceUnion2 = string | ApplicationFee | Charge | ConnectCollectionTransfer | CustomerCashBalanceTransaction | Dispute | FeeRefund | IssuingAuthorization | IssuingDispute | IssuingTransaction | Payout | Refund | ReserveTransaction | TaxDeductedAtSource | Topup | Transfer | TransferReversal;
+
+export const SourceUnion2Schema: TypedSchema<SourceUnion2> = typed<SourceUnion2>(union(string(), ApplicationFeeSchema, ChargeSchema, ConnectCollectionTransferSchema, CustomerCashBalanceTransactionSchema, DisputeSchema, FeeRefundSchema, IssuingAuthorizationSchema, IssuingDisputeSchema, IssuingTransactionSchema, PayoutSchema, RefundSchema, ReserveTransactionSchema, TaxDeductedAtSourceSchema, TopupSchema, TransferSchema, TransferReversalSchema));

@@ -6,7 +6,125 @@
 use askama::Template;
 use codegen::{Config, Error, GenIr, Generator, Result, VirtualFS};
 use ir::gen_ir::{TypeDecl, TypeKind};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
+
+/// Registry for tracking and rendering imports.
+///
+/// Collects imports via `register()` and renders them sorted:
+/// - Third-party imports first (alphabetically by source)
+/// - Empty line
+/// - Local imports (alphabetically by source)
+#[derive(Default)]
+struct ImportRegistry {
+    /// source -> (type_only_names, value_names)
+    imports: BTreeMap<String, (Vec<String>, Vec<String>)>,
+}
+
+impl ImportRegistry {
+    fn new() -> Self {
+        Self::default()
+    }
+
+    /// Register an import.
+    ///
+    /// For local imports (starting with `./`), this registers both the type
+    /// and its schema. For third-party imports, just the name is registered.
+    fn register(&mut self, name: &str, source: &str) {
+        let entry = self.imports.entry(source.to_string()).or_default();
+
+        if source.starts_with("./") || source.starts_with("../") {
+            // Local import - add type and schema
+            if !entry.0.contains(&name.to_string()) {
+                entry.0.push(name.to_string());
+            }
+            let schema_name = format!("{}Schema", name);
+            if !entry.1.contains(&schema_name) {
+                entry.1.push(schema_name);
+            }
+        } else {
+            // Third-party - just value import
+            if !entry.1.contains(&name.to_string()) {
+                entry.1.push(name.to_string());
+            }
+        }
+    }
+
+    /// Render all imports as a string.
+    ///
+    /// Output is sorted: third-party first (alphabetically), empty line,
+    /// then local imports (alphabetically).
+    fn render(&self) -> String {
+        let mut lines = Vec::new();
+
+        // Separate third-party from local
+        let mut third_party: Vec<_> = self
+            .imports
+            .iter()
+            .filter(|(source, _)| !source.starts_with("./") && !source.starts_with("../"))
+            .collect();
+        let mut local: Vec<_> = self
+            .imports
+            .iter()
+            .filter(|(source, _)| source.starts_with("./") || source.starts_with("../"))
+            .collect();
+
+        // Sort by source
+        third_party.sort_by_key(|(source, _)| *source);
+        local.sort_by_key(|(source, _)| *source);
+
+        // Third-party imports
+        for (source, (type_names, value_names)) in &third_party {
+            if !value_names.is_empty() {
+                let mut sorted_names = value_names.clone();
+                sorted_names.sort();
+                lines.push(format!(
+                    "import {{ {} }} from '{}';",
+                    sorted_names.join(", "),
+                    source
+                ));
+            }
+            if !type_names.is_empty() {
+                let mut sorted_names = type_names.clone();
+                sorted_names.sort();
+                lines.push(format!(
+                    "import type {{ {} }} from '{}';",
+                    sorted_names.join(", "),
+                    source
+                ));
+            }
+        }
+
+        // Empty line between sections
+        if !third_party.is_empty() && !local.is_empty() {
+            lines.push(String::new());
+        }
+
+        // Local imports
+        for (source, (type_names, value_names)) in &local {
+            if !type_names.is_empty() {
+                let mut sorted_names = type_names.clone();
+                sorted_names.sort();
+                lines.push(format!(
+                    "import type {{ {} }} from '{}';",
+                    sorted_names.join(", "),
+                    source
+                ));
+            }
+            if !value_names.is_empty() {
+                let mut sorted_names = value_names.clone();
+                sorted_names.sort();
+                lines.push(format!(
+                    "import {{ {} }} from '{}';",
+                    sorted_names.join(", "),
+                    source
+                ));
+            }
+        }
+
+        lines.join("\n")
+    }
+}
 
 /// TypeScript SDK generator.
 pub struct TypeScriptGenerator;
@@ -21,20 +139,36 @@ impl TypeScriptGenerator {
     fn generate_types(&self, ir: &GenIr, _config: &Config, vfs: &mut VirtualFS) -> Result<()> {
         let types_dir = PathBuf::from("src").join("types");
 
-        // Group types into a single index file for simplicity
-        let mut type_declarations = Vec::new();
+        // Generate individual type files
+        let mut type_names = Vec::new();
 
         for type_decl in ir.types.values() {
             let rendered = self.render_type(type_decl, ir)?;
-            type_declarations.push(rendered);
+            let file_name = format!("{}.ts", type_decl.name.pascal);
+            vfs.add_file(types_dir.join(&file_name), rendered);
+            type_names.push(type_decl.name.pascal.clone());
         }
 
-        let types_content = format!(
-            "// Generated types from OpenAPI specification\n\n{}",
-            type_declarations.join("\n\n")
+        // Sort for deterministic output
+        type_names.sort();
+
+        // Generate index.ts that re-exports all types
+        let exports: Vec<String> = type_names
+            .iter()
+            .map(|name| {
+                format!(
+                    "export * from './{}';\nexport {{ {}Schema }} from './{}';",
+                    name, name, name
+                )
+            })
+            .collect();
+
+        let index_content = format!(
+            "// Generated types from OpenAPI specification\n\nexport * from './errors';\n{}\n",
+            exports.join("\n")
         );
 
-        vfs.add_file(types_dir.join("index.ts"), types_content);
+        vfs.add_file(types_dir.join("index.ts"), index_content);
 
         // Generate error classes
         self.generate_errors(ir, vfs)?;
@@ -59,31 +193,67 @@ impl TypeScriptGenerator {
     fn render_type(&self, type_decl: &TypeDecl, ir: &GenIr) -> Result<String> {
         match &type_decl.kind {
             TypeKind::Struct { fields, .. } => {
+                let mut imports = ImportRegistry::new();
+
+                // Register base imports needed for all structs
+                imports.register("object", "@speakeasy-api/tonic");
+                imports.register("typed", "@speakeasy-api/tonic");
+                imports.register("TypedSchema", "@speakeasy-api/tonic");
+
+                // Track if we need optional
+                let has_optional_fields = fields.iter().any(|f| f.ty.optional);
+                if has_optional_fields {
+                    imports.register("optional", "@speakeasy-api/tonic");
+                }
+
+                let field_data: Vec<FieldData> = fields
+                    .iter()
+                    .map(|f| {
+                        // If there's a const value, use it as a literal type
+                        let type_str = if let Some(const_val) = &f.const_value {
+                            self.render_literal(const_val)
+                        } else {
+                            self.render_type_ref(&f.ty, ir)
+                        };
+
+                        // Generate schema expression
+                        let schema_expr = if let Some(const_val) = &f.const_value {
+                            self.render_literal_schema(const_val, &mut imports)
+                        } else {
+                            self.render_schema_for_type_ref(&f.ty, ir, &mut imports)
+                        };
+
+                        // Use getter for fields that reference other types AND are optional
+                        // This is needed because tonic's .optional() doesn't work on imported schema refs
+                        let references_other_type = self.field_references_custom_type(&f.ty, ir);
+                        let use_getter = references_other_type && f.ty.optional;
+
+                        FieldData {
+                            name: &f.name.camel,
+                            optional: f.ty.optional,
+                            type_str,
+                            schema_expr,
+                            use_getter,
+                            docs: &f.docs,
+                        }
+                    })
+                    .collect();
+
                 let data = InterfaceTemplate {
                     name: &type_decl.name,
                     docs: &type_decl.docs,
-                    fields: fields
-                        .iter()
-                        .map(|f| {
-                            // If there's a const value, use it as a literal type
-                            let type_str = if let Some(const_val) = &f.const_value {
-                                self.render_literal(const_val)
-                            } else {
-                                self.render_type_ref(&f.ty, ir)
-                            };
-
-                            FieldData {
-                                name: &f.name.camel,
-                                optional: f.ty.optional,
-                                type_str,
-                                docs: &f.docs,
-                            }
-                        })
-                        .collect(),
+                    fields: field_data,
+                    imports: imports.render(),
                 };
                 data.render().map_err(|e| Error::TemplateError(Box::new(e)))
             }
             TypeKind::Enum { values, base: _ } => {
+                let mut imports = ImportRegistry::new();
+                imports.register("typed", "@speakeasy-api/tonic");
+                imports.register("TypedSchema", "@speakeasy-api/tonic");
+                imports.register("literal", "@speakeasy-api/tonic");
+                imports.register("union", "@speakeasy-api/tonic");
+
                 let data = EnumTemplate {
                     name: &type_decl.name,
                     docs: &type_decl.docs,
@@ -94,28 +264,57 @@ impl TypeScriptGenerator {
                             value: self.render_literal(&v.wire),
                         })
                         .collect(),
+                    imports: imports.render(),
                 };
                 data.render().map_err(|e| Error::TemplateError(Box::new(e)))
             }
             TypeKind::Union { variants, .. } => {
-                // For simplicity, render unions as type aliases with union types
+                let mut imports = ImportRegistry::new();
+
+                // Always use typed<T> pattern
+                imports.register("typed", "@speakeasy-api/tonic");
+                imports.register("TypedSchema", "@speakeasy-api/tonic");
+                imports.register("union", "@speakeasy-api/tonic");
+
+                // Render union as type alias with union types
                 let type_names: Vec<String> = variants
                     .iter()
                     .map(|v| self.render_type_ref(&v.ty, ir))
                     .collect();
+
+                // Generate schema expressions for each variant
+                let schema_variants: Vec<String> = variants
+                    .iter()
+                    .map(|v| self.render_schema_for_type_ref(&v.ty, ir, &mut imports))
+                    .collect();
+
+                let schema_target = format!("union({})", schema_variants.join(", "));
+
                 let data = TypeAliasTemplate {
                     name: &type_decl.name,
                     docs: &type_decl.docs,
                     target: type_names.join(" | "),
+                    schema_target,
+                    imports: imports.render(),
                 };
                 data.render().map_err(|e| Error::TemplateError(Box::new(e)))
             }
             TypeKind::Alias { aliased } => {
+                let mut imports = ImportRegistry::new();
+
+                // Always use typed<T> pattern
+                imports.register("typed", "@speakeasy-api/tonic");
+                imports.register("TypedSchema", "@speakeasy-api/tonic");
+
                 let target = self.render_alias_target(aliased, ir);
+                let schema_target = self.render_alias_schema(aliased, ir, &mut imports);
+
                 let data = TypeAliasTemplate {
                     name: &type_decl.name,
                     docs: &type_decl.docs,
                     target,
+                    schema_target,
+                    imports: imports.render(),
                 };
                 data.render().map_err(|e| Error::TemplateError(Box::new(e)))
             }
@@ -162,6 +361,63 @@ impl TypeScriptGenerator {
             AliasTarget::Primitive(p) => self.render_primitive(*p),
             AliasTarget::Composite(c) => self.render_composite(c, ir),
             AliasTarget::Reference(type_ref) => self.render_type_ref(type_ref, ir),
+        }
+    }
+
+    /// Render an alias target as a tonic schema expression.
+    fn render_alias_schema(
+        &self,
+        target: &ir::gen_ir::AliasTarget,
+        ir: &GenIr,
+        imports: &mut ImportRegistry,
+    ) -> String {
+        use ir::gen_ir::AliasTarget;
+        match target {
+            AliasTarget::Primitive(p) => {
+                let (schema, import) = self.render_primitive_schema(*p);
+                if let Some(import) = import {
+                    imports.register(&import, "@speakeasy-api/tonic");
+                }
+                schema
+            }
+            AliasTarget::Composite(c) => self.render_composite_schema(c, ir, imports),
+            AliasTarget::Reference(type_ref) => {
+                self.render_schema_for_type_ref(type_ref, ir, imports)
+            }
+        }
+    }
+
+    /// Render a composite type as a tonic schema expression.
+    fn render_composite_schema(
+        &self,
+        composite: &ir::gen_ir::Composite,
+        ir: &GenIr,
+        imports: &mut ImportRegistry,
+    ) -> String {
+        use ir::gen_ir::Composite;
+        match composite {
+            Composite::List(inner) => {
+                imports.register("array", "@speakeasy-api/tonic");
+                format!(
+                    "array({})",
+                    self.render_schema_for_type_ref(inner, ir, imports)
+                )
+            }
+            Composite::Map { value, .. } => {
+                imports.register("record", "@speakeasy-api/tonic");
+                format!(
+                    "record({})",
+                    self.render_schema_for_type_ref(value, ir, imports)
+                )
+            }
+            Composite::Tuple(types) => {
+                imports.register("tuple", "@speakeasy-api/tonic");
+                let rendered: Vec<String> = types
+                    .iter()
+                    .map(|t| self.render_schema_for_type_ref(t, ir, imports))
+                    .collect();
+                format!("tuple([{}])", rendered.join(", "))
+            }
         }
     }
 
@@ -237,6 +493,150 @@ impl TypeScriptGenerator {
         // e.g., `field?: string` instead of `field: string | undefined`
 
         result
+    }
+
+    /// Render a primitive as a tonic schema expression.
+    /// Returns (schema_expr, Option<tonic_import>)
+    fn render_primitive_schema(
+        &self,
+        primitive: ir::gen_ir::Primitive,
+    ) -> (String, Option<String>) {
+        use ir::gen_ir::Primitive;
+        match primitive {
+            // unknown() is provided by tonic
+            Primitive::Any => ("unknown()".to_string(), Some("unknown".to_string())),
+            Primitive::Bool => ("boolean()".to_string(), Some("boolean".to_string())),
+            Primitive::I32
+            | Primitive::I64
+            | Primitive::F32
+            | Primitive::F64
+            | Primitive::Decimal => ("number()".to_string(), Some("number".to_string())),
+            Primitive::String | Primitive::Uuid | Primitive::Date | Primitive::DateTime => {
+                ("string()".to_string(), Some("string".to_string()))
+            }
+            Primitive::Bytes => ("string()".to_string(), Some("string".to_string())),
+        }
+    }
+
+    /// Render a schema expression for a type reference.
+    fn render_schema_for_type_ref(
+        &self,
+        type_ref: &ir::gen_ir::TypeRef,
+        ir: &GenIr,
+        imports: &mut ImportRegistry,
+    ) -> String {
+        // Get the base schema
+        let base = if let Some(type_decl) = ir.types.get(&type_ref.target) {
+            // Reference to another type - use its schema
+            let type_name = type_decl.name.pascal.clone();
+            // Add to imports
+            imports.register(&type_name, &format!("./{}", type_name));
+            format!("{}Schema", type_name)
+        } else {
+            match &type_ref.target {
+                ir::gen_ir::StableId::Primitive(p) => {
+                    let (schema, import) = self.render_primitive_schema(*p);
+                    if let Some(import) = import {
+                        imports.register(&import, "@speakeasy-api/tonic");
+                    }
+                    schema
+                }
+                ir::gen_ir::StableId::Named(_) => {
+                    // unknown() is provided by tonic
+                    imports.register("unknown", "@speakeasy-api/tonic");
+                    "unknown()".to_string()
+                }
+            }
+        };
+
+        let mut result = base;
+
+        // Apply type modifiers
+        for modifier in &type_ref.modifiers {
+            result = match modifier {
+                ir::gen_ir::TypeMod::List => {
+                    imports.register("array", "@speakeasy-api/tonic");
+                    format!("array({})", result)
+                }
+                ir::gen_ir::TypeMod::Set => {
+                    imports.register("array", "@speakeasy-api/tonic");
+                    format!("array({})", result)
+                }
+                ir::gen_ir::TypeMod::Map(value_type) => {
+                    imports.register("record", "@speakeasy-api/tonic");
+                    let value_schema = self.render_schema_for_type_ref(value_type, ir, imports);
+                    format!("record({})", value_schema)
+                }
+                _ => result,
+            };
+        }
+
+        // Add nullable wrapper
+        if type_ref.nullable {
+            imports.register("nullable", "@speakeasy-api/tonic");
+            result = format!("nullable({})", result);
+        }
+
+        // Note: We don't add .optional() here anymore.
+        // The calling code handles optional by:
+        // - For getters (cyclic types): schema.optional() works
+        // - For non-getters: use optional(schema) wrapper function
+
+        result
+    }
+
+    /// Check if a field references any custom type (not a primitive).
+    fn field_references_custom_type(&self, type_ref: &ir::gen_ir::TypeRef, ir: &GenIr) -> bool {
+        // Check if the target is a custom type (not a primitive)
+        if ir.types.contains_key(&type_ref.target) {
+            return true;
+        }
+
+        // Check modifiers for nested custom type references
+        for modifier in &type_ref.modifiers {
+            if let ir::gen_ir::TypeMod::Map(value_type) = modifier {
+                if self.field_references_custom_type(value_type, ir) {
+                    return true;
+                }
+            }
+        }
+
+        false
+    }
+
+    /// Render a literal as a tonic schema expression.
+    fn render_literal_schema(
+        &self,
+        literal: &ir::gen_ir::Literal,
+        imports: &mut ImportRegistry,
+    ) -> String {
+        use ir::gen_ir::Literal;
+        match literal {
+            Literal::Null => {
+                imports.register("nullType", "@speakeasy-api/tonic");
+                "nullType()".to_string()
+            }
+            Literal::Bool(b) => {
+                imports.register("literal", "@speakeasy-api/tonic");
+                format!("literal({})", b)
+            }
+            Literal::I64(i) => {
+                imports.register("literal", "@speakeasy-api/tonic");
+                format!("literal({})", i)
+            }
+            Literal::F64(f) => {
+                imports.register("literal", "@speakeasy-api/tonic");
+                format!("literal({})", f)
+            }
+            Literal::String(s) => {
+                imports.register("literal", "@speakeasy-api/tonic");
+                format!("literal(\"{}\")", s.replace('\"', "\\\""))
+            }
+            Literal::Array(_) | Literal::Object(_) => {
+                imports.register("any", "@speakeasy-api/tonic");
+                "any()".to_string()
+            }
+        }
     }
 
     /// Generate service files.
@@ -542,6 +942,9 @@ impl TypeScriptGenerator {
                 "build": "tsc",
                 "test": "jest"
             },
+            "dependencies": {
+                "@speakeasy-api/tonic": "0.1.0"
+            },
             "devDependencies": {
                 "typescript": "^5.0.0",
                 "@types/web": "^0.0.294"
@@ -692,12 +1095,15 @@ struct InterfaceTemplate<'a> {
     name: &'a ir::gen_ir::CanonicalName,
     docs: &'a ir::gen_ir::Docs,
     fields: Vec<FieldData<'a>>,
+    imports: String,
 }
 
 struct FieldData<'a> {
     name: &'a str,
     optional: bool,
     type_str: String,
+    schema_expr: String,
+    use_getter: bool,
     docs: &'a ir::gen_ir::Docs,
 }
 
@@ -707,6 +1113,7 @@ struct EnumTemplate<'a> {
     name: &'a ir::gen_ir::CanonicalName,
     docs: &'a ir::gen_ir::Docs,
     values: Vec<EnumValueData>,
+    imports: String,
 }
 
 struct EnumValueData {
@@ -720,6 +1127,8 @@ struct TypeAliasTemplate<'a> {
     name: &'a ir::gen_ir::CanonicalName,
     docs: &'a ir::gen_ir::Docs,
     target: String,
+    schema_target: String,
+    imports: String,
 }
 
 #[derive(Template)]

@@ -1,0 +1,7 @@
+import { TypedSchema, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { DefaultPostCheckoutSessionsRequestTransferData } from './DefaultPostCheckoutSessionsRequestTransferData';
+import { DefaultPostCheckoutSessionsRequestTransferDataSchema } from './DefaultPostCheckoutSessionsRequestTransferData';
+export type PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData = DefaultPostCheckoutSessionsRequestTransferData | string;
+
+export const PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferDataSchema: TypedSchema<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData> = typed<PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequestTransferData>(union(DefaultPostCheckoutSessionsRequestTransferDataSchema, string()));

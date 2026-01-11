@@ -1,0 +1,7 @@
+import { TypedSchema, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { PostTerminalConfigurationsConfigurationRequestBbposWiseposEObject } from './PostTerminalConfigurationsConfigurationRequestBbposWiseposEObject';
+import { PostTerminalConfigurationsConfigurationRequestBbposWiseposEObjectSchema } from './PostTerminalConfigurationsConfigurationRequestBbposWiseposEObject';
+export type PostTerminalConfigurationsConfigurationRequestBbposWiseposE = PostTerminalConfigurationsConfigurationRequestBbposWiseposEObject | string;
+
+export const PostTerminalConfigurationsConfigurationRequestBbposWiseposESchema: TypedSchema<PostTerminalConfigurationsConfigurationRequestBbposWiseposE> = typed<PostTerminalConfigurationsConfigurationRequestBbposWiseposE>(union(PostTerminalConfigurationsConfigurationRequestBbposWiseposEObjectSchema, string()));

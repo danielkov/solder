@@ -1,0 +1,7 @@
+import { TypedSchema, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObject } from './PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObject';
+import { PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObjectSchema } from './PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObject';
+export type PostPaymentLinksPaymentLinkRequestShippingAddressCollection = PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObject | string;
+
+export const PostPaymentLinksPaymentLinkRequestShippingAddressCollectionSchema: TypedSchema<PostPaymentLinksPaymentLinkRequestShippingAddressCollection> = typed<PostPaymentLinksPaymentLinkRequestShippingAddressCollection>(union(PostPaymentLinksPaymentLinkRequestShippingAddressCollectionObjectSchema, string()));

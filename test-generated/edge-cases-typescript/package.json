@@ -1,4 +1,7 @@
 {
+  "dependencies": {
+    "@speakeasy-api/tonic": "0.1.0"
+  },
   "description": "Generated SDK",
   "devDependencies": {
     "@types/web": "^0.0.294",

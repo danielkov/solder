@@ -1,0 +1,7 @@
+import { TypedSchema, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { PostTerminalConfigurationsConfigurationRequestRebootWindowObject } from './PostTerminalConfigurationsConfigurationRequestRebootWindowObject';
+import { PostTerminalConfigurationsConfigurationRequestRebootWindowObjectSchema } from './PostTerminalConfigurationsConfigurationRequestRebootWindowObject';
+export type PostTerminalConfigurationsConfigurationRequestRebootWindow = PostTerminalConfigurationsConfigurationRequestRebootWindowObject | string;
+
+export const PostTerminalConfigurationsConfigurationRequestRebootWindowSchema: TypedSchema<PostTerminalConfigurationsConfigurationRequestRebootWindow> = typed<PostTerminalConfigurationsConfigurationRequestRebootWindow>(union(PostTerminalConfigurationsConfigurationRequestRebootWindowObjectSchema, string()));

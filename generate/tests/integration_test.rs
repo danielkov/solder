@@ -326,18 +326,35 @@ fn test_typescript_generation() {
     assert!(package_json.contains("test-api"));
     assert!(package_json.contains("1.0.0"));
 
-    // Check types are generated
-    let types_content = vfs
+    // Check types are generated in separate files
+    assert!(vfs.contains(Path::new("src/types/User.ts")));
+    assert!(vfs.contains(Path::new("src/types/Status.ts")));
+
+    // Check User type
+    let user_content = vfs
+        .get_file_str(Path::new("src/types/User.ts"))
+        .unwrap()
+        .unwrap();
+    assert!(user_content.contains("interface User"));
+    assert!(user_content.contains("id: "));
+    assert!(user_content.contains("name: "));
+    assert!(user_content.contains("email?: "));
+
+    // Check Status enum
+    let status_content = vfs
+        .get_file_str(Path::new("src/types/Status.ts"))
+        .unwrap()
+        .unwrap();
+    assert!(status_content.contains("ACTIVE"));
+    assert!(status_content.contains("INACTIVE"));
+
+    // Check index re-exports types
+    let index_content = vfs
         .get_file_str(Path::new("src/types/index.ts"))
         .unwrap()
         .unwrap();
-    assert!(types_content.contains("interface User"));
-    assert!(types_content.contains("enum Status"));
-    assert!(types_content.contains("id: "));
-    assert!(types_content.contains("name: "));
-    assert!(types_content.contains("email?: "));
-    assert!(types_content.contains("ACTIVE"));
-    assert!(types_content.contains("INACTIVE"));
+    assert!(index_content.contains("export * from './User'"));
+    assert!(index_content.contains("export * from './Status'"));
 }
 
 #[test]

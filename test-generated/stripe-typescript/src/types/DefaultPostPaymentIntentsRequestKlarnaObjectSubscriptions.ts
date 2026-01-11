@@ -1,0 +1,7 @@
+import { TypedSchema, array, string, typed, union } from '@speakeasy-api/tonic';
+
+import type { DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsObject } from './DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsObject';
+import { DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsObjectSchema } from './DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsObject';
+export type DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptions = Array<DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsObject> | string;
+
+export const DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsSchema: TypedSchema<DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptions> = typed<DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptions>(union(array(DefaultPostPaymentIntentsRequestKlarnaObjectSubscriptionsObjectSchema), string()));

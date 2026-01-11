@@ -1,0 +1,34 @@
+import { TypedSchema, array, number, object, optional, string, typed } from '@speakeasy-api/tonic';
+
+import type { PostBillingMeterEventsRequestPayload } from './PostBillingMeterEventsRequestPayload';
+import { PostBillingMeterEventsRequestPayloadSchema } from './PostBillingMeterEventsRequestPayload';
+export interface PostBillingMeterEventsRequest {
+  /**
+   * The name of the meter event. Corresponds with the `event_name` field on a meter.
+   */
+  eventName: string;
+  /**
+   * Specifies which fields in the response should be expanded.
+   */
+  expand?: Array<string>;
+  /**
+   * A unique identifier for the event. If not provided, one is generated. We recommend using UUID-like identifiers. We will enforce uniqueness within a rolling period of at least 24 hours. The enforcement of uniqueness primarily addresses issues arising from accidental retries or other problems occurring within extremely brief time intervals. This approach helps prevent duplicate entries and ensures data integrity in high-frequency operations.
+   */
+  identifier?: string;
+  /**
+   * The payload of the event. This must contain the fields corresponding to a meter's `customer_mapping.event_payload_key` (default is `stripe_customer_id`) and `value_settings.event_payload_key` (default is `value`). Read more about the [payload](https://docs.stripe.com/billing/subscriptions/usage-based/recording-usage#payload-key-overrides).
+   */
+  payload: PostBillingMeterEventsRequestPayload;
+  /**
+   * The time of the event. Measured in seconds since the Unix epoch. Must be within the past 35 calendar days or up to 5 minutes in the future. Defaults to current timestamp if not specified.
+   */
+  timestamp?: number;
+}
+
+export const PostBillingMeterEventsRequestSchema: TypedSchema<PostBillingMeterEventsRequest> = typed<PostBillingMeterEventsRequest>(object({
+  eventName: string(),
+  expand: optional(array(string())),
+  identifier: optional(string()),
+  payload: PostBillingMeterEventsRequestPayloadSchema,
+  timestamp: optional(number()),
+}));
