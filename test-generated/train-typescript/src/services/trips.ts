@@ -1,6 +1,6 @@
 import type { GetTripsUnion, Problem } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -75,7 +75,12 @@ export class GetTripsInternalServerErrorError extends globalThis.Error {
 }
 
 export class TripsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Get available train trips
@@ -129,9 +134,24 @@ export class TripsService {
     
     const headers: Record<string, string> = {};
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -139,50 +159,50 @@ export class TripsService {
         case 400: {
           try {
             const body = await response.json() as Problem;
-            throw new GetTripsBadRequestError(body);
+            await this.raise(new GetTripsBadRequestError(body));
           } catch (e) {
             if (e instanceof GetTripsBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Problem;
-            throw new GetTripsUnauthorizedError(body);
+            await this.raise(new GetTripsUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetTripsUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as Problem;
-            throw new GetTripsForbiddenError(body);
+            await this.raise(new GetTripsForbiddenError(body));
           } catch (e) {
             if (e instanceof GetTripsForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as Problem;
-            throw new GetTripsTooManyRequestsError(body);
+            await this.raise(new GetTripsTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof GetTripsTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as Problem;
-            throw new GetTripsInternalServerErrorError(body);
+            await this.raise(new GetTripsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetTripsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

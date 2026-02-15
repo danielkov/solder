@@ -1,6 +1,6 @@
 import type { BadGatewayResponse, BadRequestResponse, EdgeNetworkTimeoutResponse, InternalServerResponse, NotFoundResponse, OpenResponsesNonStreamingResponse, OpenResponsesRequest, PayloadTooLargeResponse, PaymentRequiredResponse, ProviderOverloadedResponse, RequestTimeoutResponse, ServiceUnavailableResponse, TooManyRequestsResponse, UnauthorizedResponse, UnprocessableEntityResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -187,7 +187,12 @@ export class CreateResponsesStatus529Error extends globalThis.Error {
 }
 
 export class BetaResponsesService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Create a response
@@ -209,10 +214,25 @@ export class BetaResponsesService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -220,122 +240,122 @@ export class BetaResponsesService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new CreateResponsesBadRequestError(body);
+            await this.raise(new CreateResponsesBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateResponsesBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new CreateResponsesUnauthorizedError(body);
+            await this.raise(new CreateResponsesUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateResponsesUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 402: {
           try {
             const body = await response.json() as PaymentRequiredResponse;
-            throw new CreateResponsesStatus402Error(body);
+            await this.raise(new CreateResponsesStatus402Error(body));
           } catch (e) {
             if (e instanceof CreateResponsesStatus402Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as NotFoundResponse;
-            throw new CreateResponsesNotFoundError(body);
+            await this.raise(new CreateResponsesNotFoundError(body));
           } catch (e) {
             if (e instanceof CreateResponsesNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 408: {
           try {
             const body = await response.json() as RequestTimeoutResponse;
-            throw new CreateResponsesStatus408Error(body);
+            await this.raise(new CreateResponsesStatus408Error(body));
           } catch (e) {
             if (e instanceof CreateResponsesStatus408Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 413: {
           try {
             const body = await response.json() as PayloadTooLargeResponse;
-            throw new CreateResponsesStatus413Error(body);
+            await this.raise(new CreateResponsesStatus413Error(body));
           } catch (e) {
             if (e instanceof CreateResponsesStatus413Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 422: {
           try {
             const body = await response.json() as UnprocessableEntityResponse;
-            throw new CreateResponsesUnprocessableEntityError(body);
+            await this.raise(new CreateResponsesUnprocessableEntityError(body));
           } catch (e) {
             if (e instanceof CreateResponsesUnprocessableEntityError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new CreateResponsesTooManyRequestsError(body);
+            await this.raise(new CreateResponsesTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof CreateResponsesTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new CreateResponsesInternalServerErrorError(body);
+            await this.raise(new CreateResponsesInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof CreateResponsesInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 502: {
           try {
             const body = await response.json() as BadGatewayResponse;
-            throw new CreateResponsesBadGatewayError(body);
+            await this.raise(new CreateResponsesBadGatewayError(body));
           } catch (e) {
             if (e instanceof CreateResponsesBadGatewayError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 503: {
           try {
             const body = await response.json() as ServiceUnavailableResponse;
-            throw new CreateResponsesServiceUnavailableError(body);
+            await this.raise(new CreateResponsesServiceUnavailableError(body));
           } catch (e) {
             if (e instanceof CreateResponsesServiceUnavailableError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 524: {
           try {
             const body = await response.json() as EdgeNetworkTimeoutResponse;
-            throw new CreateResponsesStatus524Error(body);
+            await this.raise(new CreateResponsesStatus524Error(body));
           } catch (e) {
             if (e instanceof CreateResponsesStatus524Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 529: {
           try {
             const body = await response.json() as ProviderOverloadedResponse;
-            throw new CreateResponsesStatus529Error(body);
+            await this.raise(new CreateResponsesStatus529Error(body));
           } catch (e) {
             if (e instanceof CreateResponsesStatus529Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

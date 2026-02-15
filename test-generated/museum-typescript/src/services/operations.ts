@@ -1,6 +1,6 @@
 import type { Error, MuseumHours } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -33,7 +33,12 @@ export class GetMuseumHoursNotFoundError extends globalThis.Error {
 }
 
 export class OperationsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Get museum hours
@@ -66,9 +71,24 @@ export class OperationsService {
     
     const headers: Record<string, string> = {};
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -76,23 +96,23 @@ export class OperationsService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new GetMuseumHoursBadRequestError(body);
+            await this.raise(new GetMuseumHoursBadRequestError(body));
           } catch (e) {
             if (e instanceof GetMuseumHoursBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new GetMuseumHoursNotFoundError(body);
+            await this.raise(new GetMuseumHoursNotFoundError(body));
           } catch (e) {
             if (e instanceof GetMuseumHoursNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

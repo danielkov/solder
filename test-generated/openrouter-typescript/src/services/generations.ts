@@ -1,6 +1,6 @@
 import type { BadGatewayResponse, EdgeNetworkTimeoutResponse, GetGenerationResponse, InternalServerResponse, NotFoundResponse, PaymentRequiredResponse, ProviderOverloadedResponse, TooManyRequestsResponse, UnauthorizedResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -117,7 +117,12 @@ export class GetGenerationStatus529Error extends globalThis.Error {
 }
 
 export class GenerationsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Get request & usage metadata for a generation
@@ -141,9 +146,24 @@ export class GenerationsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -151,77 +171,77 @@ export class GenerationsService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new GetGenerationUnauthorizedError(body);
+            await this.raise(new GetGenerationUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetGenerationUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 402: {
           try {
             const body = await response.json() as PaymentRequiredResponse;
-            throw new GetGenerationStatus402Error(body);
+            await this.raise(new GetGenerationStatus402Error(body));
           } catch (e) {
             if (e instanceof GetGenerationStatus402Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as NotFoundResponse;
-            throw new GetGenerationNotFoundError(body);
+            await this.raise(new GetGenerationNotFoundError(body));
           } catch (e) {
             if (e instanceof GetGenerationNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new GetGenerationTooManyRequestsError(body);
+            await this.raise(new GetGenerationTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof GetGenerationTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new GetGenerationInternalServerErrorError(body);
+            await this.raise(new GetGenerationInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetGenerationInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 502: {
           try {
             const body = await response.json() as BadGatewayResponse;
-            throw new GetGenerationBadGatewayError(body);
+            await this.raise(new GetGenerationBadGatewayError(body));
           } catch (e) {
             if (e instanceof GetGenerationBadGatewayError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 524: {
           try {
             const body = await response.json() as EdgeNetworkTimeoutResponse;
-            throw new GetGenerationStatus524Error(body);
+            await this.raise(new GetGenerationStatus524Error(body));
           } catch (e) {
             if (e instanceof GetGenerationStatus524Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 529: {
           try {
             const body = await response.json() as ProviderOverloadedResponse;
-            throw new GetGenerationStatus529Error(body);
+            await this.raise(new GetGenerationStatus529Error(body));
           } catch (e) {
             if (e instanceof GetGenerationStatus529Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

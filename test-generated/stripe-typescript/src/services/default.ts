@@ -1,11 +1,16 @@
 import type { Account, AccountLink, AccountSession, ApplePayDomain, ApplicationFee, AppsSecret, Balance, BalanceSettings, BalanceTransaction, BankAccount, BillingAlert, BillingCreditBalanceSummary, BillingCreditBalanceTransaction, BillingCreditGrant, BillingMeter, BillingMeterEvent, BillingMeterEventAdjustment, BillingPortalConfiguration, BillingPortalSession, Capability, Card, CashBalance, Charge, CheckoutSession, ClimateOrder, ClimateProduct, ClimateSupplier, ConfirmationToken, CountrySpec, Coupon, CreditNote, Customer, CustomerBalanceTransaction, CustomerCashBalanceTransaction, CustomerSession, DeleteCustomersCustomerBankAccountsIdUnion, DeleteCustomersCustomerSubscriptionsSubscriptionExposedIdRequest, DeleteSubscriptionItemsItemRequest, DeleteSubscriptionsSubscriptionExposedIdRequest, DeletedAccount, DeletedApplePayDomain, DeletedCoupon, DeletedCustomer, DeletedDiscount, DeletedExternalAccount, DeletedInvoice, DeletedInvoiceitem, DeletedPerson, DeletedPlan, DeletedProduct, DeletedProductFeature, DeletedRadarValueList, DeletedRadarValueListItem, DeletedSubscriptionItem, DeletedTaxId, DeletedTerminalConfiguration, DeletedTerminalLocation, DeletedTerminalReader, DeletedTestHelpersTestClock, DeletedWebhookEndpoint, Discount, Dispute, EntitlementsActiveEntitlement, EntitlementsFeature, EphemeralKey, Event, ExchangeRate, ExternalAccount, FeeRefund, File, FileLink, FinancialConnectionsAccount, FinancialConnectionsSession, FinancialConnectionsTransaction, ForwardingRequest, FundingInstructions, GetAccountRequest, GetAccountsAccountCapabilitiesResponse, GetAccountsAccountExternalAccountsResponse, GetAccountsAccountPeopleObject, GetAccountsAccountPeopleResponse, GetAccountsResponse, GetAccountsUnion, GetApplePayDomainsResponse, GetApplicationFeesIdRefundsResponse, GetApplicationFeesResponse, GetAppsSecretsObject, GetAppsSecretsResponse, GetBalanceHistoryResponse, GetBillingAlertsResponse, GetBillingCreditBalanceSummaryObject, GetBillingCreditBalanceTransactionsResponse, GetBillingCreditGrantsResponse, GetBillingMetersIdEventSummariesResponse, GetBillingMetersResponse, GetBillingPortalConfigurationsResponse, GetChargesChargeRefundsResponse, GetChargesResponse, GetChargesSearchResponse, GetCheckoutSessionsObject, GetCheckoutSessionsResponse, GetCheckoutSessionsSessionLineItemsResponse, GetClimateOrdersResponse, GetClimateProductsResponse, GetClimateSuppliersResponse, GetCountrySpecsResponse, GetCouponsResponse, GetCreditNotesPreviewLinesResponse, GetCreditNotesPreviewObject, GetCreditNotesResponse, GetCustomersCustomerBalanceTransactionsResponse, GetCustomersCustomerBankAccountsResponse, GetCustomersCustomerCardsResponse, GetCustomersCustomerCashBalanceTransactionsResponse, GetCustomersCustomerPaymentMethodsResponse, GetCustomersCustomerSourcesResponse, GetCustomersCustomerSubscriptionsResponse, GetCustomersCustomerTaxIdsResponse, GetCustomersCustomerUnion, GetCustomersResponse, GetCustomersSearchResponse, GetDisputesResponse, GetEntitlementsActiveEntitlementsResponse, GetEntitlementsFeaturesResponse, GetEventsResponse, GetExchangeRatesResponse, GetFileLinksResponse, GetFilesResponse, GetFinancialConnectionsAccountsAccountOwnersResponse, GetFinancialConnectionsAccountsObject, GetFinancialConnectionsAccountsResponse, GetFinancialConnectionsTransactionsObject, GetFinancialConnectionsTransactionsResponse, GetForwardingRequestsObject, GetForwardingRequestsResponse, GetIdentityVerificationReportsResponse, GetIdentityVerificationSessionsResponse, GetInvoicePaymentsObject, GetInvoicePaymentsResponse, GetInvoiceRenderingTemplatesResponse, GetInvoiceitemsResponse, GetInvoicesInvoiceLinesResponse, GetInvoicesResponse, GetInvoicesSearchResponse, GetIssuingAuthorizationsResponse, GetIssuingCardholdersResponse, GetIssuingCardsResponse, GetIssuingDisputesResponse, GetIssuingPersonalizationDesignsObject, GetIssuingPersonalizationDesignsResponse, GetIssuingPhysicalBundlesResponse, GetIssuingTokensResponse, GetIssuingTransactionsResponse, GetPaymentAttemptRecordsResponse, GetPaymentIntentsIntentAmountDetailsLineItemsResponse, GetPaymentIntentsResponse, GetPaymentIntentsSearchResponse, GetPaymentLinksPaymentLinkLineItemsResponse, GetPaymentLinksResponse, GetPaymentMethodConfigurationsResponse, GetPaymentMethodConfigurationsUnion, GetPaymentMethodDomainsResponse, GetPaymentMethodsResponse, GetPayoutsResponse, GetPlansResponse, GetPricesObject, GetPricesResponse, GetPricesSearchResponse, GetProductsProductFeaturesResponse, GetProductsResponse, GetProductsSearchResponse, GetPromotionCodesResponse, GetQuotesQuoteComputedUpfrontLineItemsResponse, GetQuotesResponse, GetRadarEarlyFraudWarningsResponse, GetRadarValueListItemsResponse, GetRadarValueListsResponse, GetRefundsResponse, GetReportingReportRunsResponse, GetReportingReportTypesResponse, GetReviewsResponse, GetSetupAttemptsResponse, GetSetupIntentsResponse, GetShippingRatesResponse, GetSigmaScheduledQueryRunsResponse, GetSourcesSourceSourceTransactionsResponse, GetSubscriptionItemsResponse, GetSubscriptionSchedulesResponse, GetSubscriptionsObject, GetSubscriptionsResponse, GetSubscriptionsSearchResponse, GetTaxCalculationsCalculationLineItemsResponse, GetTaxCodesResponse, GetTaxIdsObject, GetTaxRatesResponse, GetTaxRegistrationsResponse, GetTaxTransactionsTransactionLineItemsResponse, GetTerminalConfigurationsConfigurationUnion, GetTerminalConfigurationsResponse, GetTerminalLocationsLocationUnion, GetTerminalLocationsResponse, GetTerminalReadersReaderUnion, GetTerminalReadersResponse, GetTestHelpersTestClocksResponse, GetTopupsResponse, GetTransfersIdReversalsResponse, GetTransfersResponse, GetTreasuryCreditReversalsResponse, GetTreasuryDebitReversalsResponse, GetTreasuryFinancialAccountsResponse, GetTreasuryInboundTransfersResponse, GetTreasuryOutboundPaymentsResponse, GetTreasuryOutboundTransfersResponse, GetTreasuryReceivedCreditsObject, GetTreasuryReceivedCreditsResponse, GetTreasuryReceivedDebitsResponse, GetTreasuryTransactionEntriesResponse, GetTreasuryTransactionsObject, GetTreasuryTransactionsResponse, GetWebhookEndpointsResponse, IdentityVerificationReport, IdentityVerificationSession, Invoice, InvoicePayment, InvoiceRenderingTemplate, Invoiceitem, IssuingAuthorization, IssuingCard, IssuingCardholder, IssuingDispute, IssuingPersonalizationDesign, IssuingPhysicalBundle, IssuingSettlement, IssuingToken, IssuingTransaction, LineItem, LoginLink, Mandate, PaymentAttemptRecord, PaymentIntent, PaymentLink, PaymentMethod, PaymentMethodConfiguration, PaymentMethodDomain, PaymentRecord, PaymentSource, Payout, Person, Plan, PostAccountLinksRequest, PostAccountSessionsRequest, PostAccountsAccountBankAccountsIdRequest, PostAccountsAccountBankAccountsRequest, PostAccountsAccountCapabilitiesCapabilityRequest, PostAccountsAccountLoginLinksRequest, PostAccountsAccountPeopleRequest, PostAccountsAccountRejectRequest, PostAccountsAccountRequest, PostAccountsRequest, PostAccountsRequestMetadataObject, PostApplePayDomainsRequest, PostApplicationFeesFeeRefundsIdRequest, PostApplicationFeesIdRefundRequest, PostApplicationFeesIdRefundsRequest, PostAppsSecretsDeleteRequest, PostAppsSecretsRequest, PostBalanceSettingsRequest, PostBillingAlertsRequest, PostBillingCreditGrantsIdRequest, PostBillingCreditGrantsRequest, PostBillingMeterEventAdjustmentsRequest, PostBillingMeterEventsRequest, PostBillingMetersIdRequest, PostBillingMetersRequest, PostBillingPortalConfigurationsConfigurationRequest, PostBillingPortalConfigurationsRequest, PostBillingPortalSessionsRequest, PostChargesChargeCaptureRequest, PostChargesChargeDisputeRequest, PostChargesChargeRefundRequest, PostChargesChargeRefundsRefundRequest, PostChargesChargeRefundsRequest, PostChargesChargeRequest, PostChargesRequest, PostCheckoutSessionsRequest, PostCheckoutSessionsSessionRequest, PostClimateOrdersOrderRequest, PostClimateOrdersRequest, PostCouponsCouponRequest, PostCouponsRequest, PostCreditNotesIdRequest, PostCreditNotesRequest, PostCreditNotesRequestLinesItem, PostCreditNotesRequestRefundsItem, PostCustomerSessionsRequest, PostCustomersCustomerBalanceTransactionsRequest, PostCustomersCustomerBalanceTransactionsTransactionRequest, PostCustomersCustomerBankAccountsIdRequest, PostCustomersCustomerBankAccountsIdUnion, PostCustomersCustomerBankAccountsIdVerifyRequest, PostCustomersCustomerBankAccountsRequest, PostCustomersCustomerCashBalanceRequest, PostCustomersCustomerFundingInstructionsRequest, PostCustomersCustomerRequest, PostCustomersCustomerSubscriptionsRequest, PostCustomersCustomerSubscriptionsSubscriptionExposedIdRequest, PostCustomersCustomerTaxIdsRequest, PostCustomersRequest, PostEntitlementsFeaturesIdRequest, PostEntitlementsFeaturesRequest, PostEphemeralKeysRequest, PostFileLinksLinkRequest, PostFileLinksRequest, PostFilesRequest, PostFinancialConnectionsAccountsAccountRefreshRequest, PostFinancialConnectionsAccountsAccountSubscribeRequest, PostFinancialConnectionsAccountsAccountUnsubscribeRequest, PostFinancialConnectionsSessionsRequest, PostForwardingRequestsRequest, PostIdentityVerificationSessionsRequest, PostIdentityVerificationSessionsSessionRequest, PostInvoiceitemsInvoiceitemRequest, PostInvoiceitemsRequest, PostInvoicesCreatePreviewRequest, PostInvoicesInvoiceAddLinesRequest, PostInvoicesInvoiceAttachPaymentRequest, PostInvoicesInvoiceFinalizeRequest, PostInvoicesInvoiceLinesLineItemIdRequest, PostInvoicesInvoicePayRequest, PostInvoicesInvoiceRemoveLinesRequest, PostInvoicesInvoiceRequest, PostInvoicesInvoiceUpdateLinesRequest, PostInvoicesRequest, PostIssuingAuthorizationsAuthorizationApproveRequest, PostIssuingCardholdersCardholderRequest, PostIssuingCardholdersRequest, PostIssuingCardsCardRequest, PostIssuingCardsRequest, PostIssuingDisputesDisputeRequest, PostIssuingDisputesRequest, PostIssuingPersonalizationDesignsPersonalizationDesignRequest, PostIssuingPersonalizationDesignsRequest, PostIssuingSettlementsSettlementRequest, PostIssuingTokensTokenRequest, PostPaymentIntentsIntentApplyCustomerBalanceRequest, PostPaymentIntentsIntentCancelRequest, PostPaymentIntentsIntentCaptureRequest, PostPaymentIntentsIntentConfirmRequest, PostPaymentIntentsIntentIncrementAuthorizationRequest, PostPaymentIntentsIntentRequest, PostPaymentIntentsIntentVerifyMicrodepositsRequest, PostPaymentIntentsRequest, PostPaymentLinksPaymentLinkRequest, PostPaymentLinksRequest, PostPaymentMethodConfigurationsConfigurationRequest, PostPaymentMethodConfigurationsRequest, PostPaymentMethodDomainsPaymentMethodDomainRequest, PostPaymentMethodDomainsRequest, PostPaymentMethodsPaymentMethodAttachRequest, PostPaymentMethodsPaymentMethodRequest, PostPaymentMethodsRequest, PostPaymentRecordsIdReportPaymentAttemptCanceledRequest, PostPaymentRecordsIdReportPaymentAttemptFailedRequest, PostPaymentRecordsIdReportPaymentAttemptGuaranteedRequest, PostPaymentRecordsIdReportPaymentAttemptInformationalRequest, PostPaymentRecordsIdReportPaymentAttemptRequest, PostPaymentRecordsIdReportRefundRequest, PostPaymentRecordsReportPaymentRequest, PostPayoutsRequest, PostPlansPlanRequest, PostPlansRequest, PostPricesPriceRequest, PostPricesRequest, PostProductsIdRequest, PostProductsProductFeaturesRequest, PostProductsRequest, PostPromotionCodesPromotionCodeRequest, PostPromotionCodesRequest, PostQuotesQuoteFinalizeRequest, PostQuotesQuoteRequest, PostQuotesRequest, PostRadarValueListItemsRequest, PostRadarValueListsRequest, PostRadarValueListsValueListRequest, PostRefundsRequest, PostReportingReportRunsRequest, PostSetupIntentsIntentCancelRequest, PostSetupIntentsIntentConfirmRequest, PostSetupIntentsIntentRequest, PostSetupIntentsIntentVerifyMicrodepositsRequest, PostSetupIntentsRequest, PostShippingRatesRequest, PostShippingRatesShippingRateTokenRequest, PostSigmaSavedQueriesIdRequest, PostSourcesRequest, PostSourcesSourceRequest, PostSourcesSourceVerifyRequest, PostSubscriptionItemsItemRequest, PostSubscriptionItemsRequest, PostSubscriptionSchedulesRequest, PostSubscriptionSchedulesScheduleCancelRequest, PostSubscriptionSchedulesScheduleReleaseRequest, PostSubscriptionSchedulesScheduleRequest, PostSubscriptionsRequest, PostSubscriptionsSubscriptionExposedIdRequest, PostSubscriptionsSubscriptionMigrateRequest, PostSubscriptionsSubscriptionResumeRequest, PostTaxCalculationsRequest, PostTaxIdsRequest, PostTaxRatesRequest, PostTaxRatesTaxRateRequest, PostTaxRegistrationsIdRequest, PostTaxRegistrationsRequest, PostTaxSettingsRequest, PostTaxTransactionsCreateFromCalculationRequest, PostTaxTransactionsCreateReversalRequest, PostTerminalConfigurationsConfigurationRequest, PostTerminalConfigurationsRequest, PostTerminalConnectionTokensRequest, PostTerminalLocationsLocationRequest, PostTerminalLocationsRequest, PostTerminalOnboardingLinksRequest, PostTerminalReadersReaderCollectInputsRequest, PostTerminalReadersReaderCollectPaymentMethodRequest, PostTerminalReadersReaderConfirmPaymentIntentRequest, PostTerminalReadersReaderProcessPaymentIntentRequest, PostTerminalReadersReaderProcessSetupIntentRequest, PostTerminalReadersReaderRefundPaymentRequest, PostTerminalReadersReaderRequest, PostTerminalReadersReaderSetReaderDisplayRequest, PostTerminalReadersRequest, PostTestHelpersConfirmationTokensRequest, PostTestHelpersCustomersCustomerFundCashBalanceRequest, PostTestHelpersIssuingAuthorizationsAuthorizationCaptureRequest, PostTestHelpersIssuingAuthorizationsAuthorizationFinalizeAmountRequest, PostTestHelpersIssuingAuthorizationsAuthorizationFraudChallengesRespondRequest, PostTestHelpersIssuingAuthorizationsAuthorizationIncrementRequest, PostTestHelpersIssuingAuthorizationsAuthorizationReverseRequest, PostTestHelpersIssuingAuthorizationsRequest, PostTestHelpersIssuingPersonalizationDesignsPersonalizationDesignRejectRequest, PostTestHelpersIssuingSettlementsRequest, PostTestHelpersIssuingTransactionsCreateForceCaptureRequest, PostTestHelpersIssuingTransactionsCreateUnlinkedRefundRequest, PostTestHelpersIssuingTransactionsTransactionRefundRequest, PostTestHelpersTerminalReadersReaderPresentPaymentMethodRequest, PostTestHelpersTerminalReadersReaderSucceedInputCollectionRequest, PostTestHelpersTestClocksRequest, PostTestHelpersTestClocksTestClockAdvanceRequest, PostTestHelpersTreasuryInboundTransfersIdFailRequest, PostTestHelpersTreasuryOutboundPaymentsIdRequest, PostTestHelpersTreasuryOutboundPaymentsIdReturnRequest, PostTestHelpersTreasuryOutboundTransfersOutboundTransferReturnRequest, PostTestHelpersTreasuryReceivedCreditsRequest, PostTestHelpersTreasuryReceivedDebitsRequest, PostTokensRequest, PostTopupsRequest, PostTopupsTopupRequest, PostTransfersIdReversalsRequest, PostTransfersRequest, PostTreasuryCreditReversalsRequest, PostTreasuryDebitReversalsRequest, PostTreasuryFinancialAccountsFinancialAccountCloseRequest, PostTreasuryFinancialAccountsFinancialAccountFeaturesRequest, PostTreasuryFinancialAccountsFinancialAccountRequest, PostTreasuryFinancialAccountsRequest, PostTreasuryInboundTransfersRequest, PostTreasuryOutboundPaymentsRequest, PostTreasuryOutboundTransfersRequest, PostWebhookEndpointsRequest, PostWebhookEndpointsWebhookEndpointRequest, Price, Product, ProductFeature, PromotionCode, Quote, RadarEarlyFraudWarning, RadarValueList, RadarValueListItem, Refund, ReportingReportRun, ReportingReportType, Review, ScheduledQueryRun, SetupIntent, ShippingRate, SigmaSigmaApiQuery, Source, SourceMandateNotification, SourceTransaction, Subscription, SubscriptionItem, SubscriptionSchedule, TaxAssociation, TaxCalculation, TaxCode, TaxId, TaxRate, TaxRegistration, TaxSettings, TaxTransaction, TerminalConfiguration, TerminalConnectionToken, TerminalLocation, TerminalOnboardingLink, TerminalReader, TestHelpersTestClock, Token, Topup, Transfer, TransferReversal, TreasuryCreditReversal, TreasuryDebitReversal, TreasuryFinancialAccount, TreasuryFinancialAccountFeatures, TreasuryInboundTransfer, TreasuryOutboundPayment, TreasuryOutboundTransfer, TreasuryReceivedCredit, TreasuryReceivedDebit, TreasuryTransaction, TreasuryTransactionEntry, WebhookEndpoint } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
 export class DefaultService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Retrieve account
@@ -33,14 +38,29 @@ export class DefaultService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -65,14 +85,29 @@ export class DefaultService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -97,14 +132,29 @@ export class DefaultService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -156,14 +206,29 @@ export class DefaultService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -181,14 +246,29 @@ export class DefaultService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -222,14 +302,29 @@ export class DefaultService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -268,14 +363,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -308,14 +418,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -342,14 +467,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -385,14 +525,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -412,14 +567,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -448,14 +618,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -489,14 +674,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -532,14 +732,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -568,14 +783,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -629,14 +859,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -663,14 +908,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -706,14 +966,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -733,14 +1008,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -769,14 +1059,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -805,14 +1110,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -866,14 +1186,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -900,14 +1235,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -943,14 +1293,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -979,14 +1344,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1015,14 +1395,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1076,14 +1471,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1110,14 +1520,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1153,14 +1578,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1189,14 +1629,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1225,14 +1680,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1261,14 +1731,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1308,14 +1793,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1333,14 +1833,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1365,14 +1880,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1391,14 +1921,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1455,14 +2000,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1498,14 +2058,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1536,14 +2111,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1577,14 +2167,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1603,14 +2208,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1659,14 +2279,29 @@ after which some properties can no longer be updated.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1701,14 +2336,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1760,14 +2410,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1792,14 +2457,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1824,14 +2504,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1873,14 +2568,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1913,14 +2623,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -1994,14 +2719,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2037,14 +2777,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2077,14 +2832,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2110,14 +2880,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2191,14 +2976,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2234,14 +3034,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2298,14 +3113,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2330,14 +3160,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2371,14 +3216,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2405,14 +3265,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2439,14 +3314,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2473,14 +3363,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2522,14 +3427,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2586,14 +3506,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2627,14 +3562,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2686,14 +3636,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2718,14 +3683,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2759,14 +3739,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2793,14 +3788,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2827,14 +3837,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2861,14 +3886,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2893,14 +3933,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2925,14 +3980,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -2984,14 +4054,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3016,14 +4101,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3057,14 +4157,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3091,14 +4206,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3125,14 +4255,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3201,14 +4346,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3235,14 +4395,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3299,14 +4474,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3331,14 +4521,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3372,14 +4577,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3406,14 +4626,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3438,14 +4673,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3512,14 +4762,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3537,14 +4802,29 @@ or when trying to refund more money than is left on an application fee.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3594,14 +4874,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3635,14 +4930,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3669,14 +4979,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3707,14 +5032,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3739,14 +5079,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3765,14 +5120,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3791,14 +5161,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3835,14 +5220,29 @@ or when you attempt to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3891,14 +5291,29 @@ or when you attempt to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3935,14 +5350,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3968,14 +5398,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -3995,14 +5440,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4084,14 +5544,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4116,14 +5591,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4157,14 +5647,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4193,14 +5698,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4229,14 +5749,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4285,14 +5820,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4340,14 +5890,29 @@ most recently created orders appearing first.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4373,14 +5938,29 @@ after creation and payment will be deducted your Stripe balance.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4414,14 +5994,29 @@ after creation and payment will be deducted your Stripe balance.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4448,14 +6043,29 @@ after creation and payment will be deducted your Stripe balance.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4485,14 +6095,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4539,14 +6164,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4580,14 +6220,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4634,14 +6289,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4675,14 +6345,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4716,14 +6401,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4770,14 +6470,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4811,14 +6526,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4870,14 +6600,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4904,14 +6649,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4945,14 +6705,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -4979,14 +6754,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5013,14 +6803,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5082,14 +6887,29 @@ provides 90 days advance notice and refunds the <code>amount_total</code>.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5126,14 +6946,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5230,14 +7065,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5349,14 +7199,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5405,14 +7270,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5446,14 +7326,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5480,14 +7375,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5514,14 +7424,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5546,14 +7471,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5615,14 +7555,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5647,14 +7602,29 @@ This amount is indicated by the credit note’s <code>pre_payment_amount</code>.
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5704,14 +7674,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5745,14 +7730,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5781,14 +7781,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5815,14 +7830,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5876,14 +7906,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5910,14 +7955,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5953,14 +8013,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -5989,14 +8064,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6045,14 +8135,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6083,14 +8188,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6126,14 +8246,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6153,14 +8288,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6189,14 +8339,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6225,14 +8390,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6283,14 +8463,29 @@ If you need more than those 10, you can use this API method and the <code>limit<
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6321,14 +8516,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6364,14 +8574,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6391,14 +8616,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6427,14 +8667,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6468,14 +8723,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6502,14 +8772,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6558,14 +8843,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6601,14 +8901,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6633,14 +8948,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6667,14 +8997,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6703,14 +9048,29 @@ funding instructions will be retrieved. In other words, we will return the same 
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6769,14 +9129,29 @@ funding instructions will be retrieved. In other words, we will return the same 
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6812,14 +9187,29 @@ funding instructions will be retrieved. In other words, we will return the same 
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6860,14 +9250,29 @@ funding instructions will be retrieved. In other words, we will return the same 
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6898,14 +9303,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6931,14 +9351,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6958,14 +9393,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -6994,14 +9444,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7030,14 +9495,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7086,14 +9566,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7120,14 +9615,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7163,14 +9673,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7199,14 +9724,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7239,14 +9779,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7272,14 +9827,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7308,14 +9878,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7364,14 +9949,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7398,14 +9998,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7441,14 +10056,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7477,14 +10107,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7546,14 +10191,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7587,14 +10247,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7623,14 +10298,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7659,14 +10349,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7718,14 +10423,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7759,14 +10479,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7823,14 +10558,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7855,14 +10605,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7896,14 +10661,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7930,14 +10710,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7962,14 +10757,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -7996,14 +10806,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8070,14 +10895,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8111,14 +10951,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8167,14 +11022,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8210,14 +11080,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8236,14 +11121,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8305,14 +11205,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8337,14 +11252,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8378,14 +11308,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8412,14 +11357,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8476,14 +11436,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8510,14 +11485,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8551,14 +11541,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8615,14 +11620,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8656,14 +11676,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8690,14 +11725,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8751,14 +11801,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8785,14 +11850,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8819,14 +11899,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8853,14 +11948,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8885,14 +11995,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8926,14 +12051,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -8995,14 +12135,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9036,14 +12191,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9095,14 +12265,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9127,14 +12312,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9168,14 +12368,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9242,14 +12457,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9283,14 +12513,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9357,14 +12602,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9395,14 +12655,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9439,14 +12714,29 @@ To change the default, you should <a href="/docs/api#update_customer">update the
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9476,14 +12766,29 @@ verification check and options.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9512,14 +12817,29 @@ verification check and options.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9564,14 +12884,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9638,14 +12973,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9679,14 +13029,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9738,14 +13103,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9784,14 +13164,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9818,14 +13213,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9852,14 +13262,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9926,14 +13351,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9958,14 +13398,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -9999,14 +13454,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10033,14 +13503,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10067,14 +13552,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10151,14 +13651,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10183,14 +13698,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10223,14 +13753,29 @@ used for any purpose.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10280,14 +13825,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10321,14 +13881,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10360,14 +13935,29 @@ sending reminders for, or <a href="/docs/billing/invoices/reconciliation">automa
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10394,14 +13984,29 @@ sending reminders for, or <a href="/docs/billing/invoices/reconciliation">automa
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10428,14 +14033,29 @@ sending reminders for, or <a href="/docs/billing/invoices/reconciliation">automa
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10471,14 +14091,29 @@ credited to the invoice immediately.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10505,14 +14140,29 @@ credited to the invoice immediately.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10561,14 +14211,29 @@ credited to the invoice immediately.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10600,14 +14265,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10634,14 +14314,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10668,14 +14363,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10702,14 +14412,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10738,14 +14463,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10772,14 +14512,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10808,14 +14563,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10882,14 +14652,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10923,14 +14708,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10957,14 +14757,29 @@ Updating an invoice’s line item is only possible before the invoice is finaliz
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -10992,14 +14807,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11027,14 +14857,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11106,14 +14951,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11138,14 +14998,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11179,14 +15054,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11213,14 +15103,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11307,14 +15212,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11339,14 +15259,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11380,14 +15315,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11414,14 +15364,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11483,14 +15448,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11515,14 +15495,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11556,14 +15551,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11590,14 +15600,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11624,14 +15649,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11693,14 +15733,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11725,14 +15780,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11766,14 +15836,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11800,14 +15885,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11864,14 +15964,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11905,14 +16020,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11946,14 +16076,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -11980,14 +16125,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12049,14 +16209,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12090,14 +16265,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12124,14 +16314,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12198,14 +16403,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12239,14 +16459,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12273,14 +16508,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12305,14 +16555,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12346,14 +16611,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12410,14 +16690,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12451,14 +16746,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12485,14 +16795,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12546,14 +16871,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12580,14 +16920,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12621,14 +16976,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12675,14 +17045,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12716,14 +17101,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12780,14 +17180,29 @@ This method is deprecated. Instead, <a href="/docs/issuing/controls/real-time-au
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12821,14 +17236,29 @@ available in the <a href="/docs/api/payment_intents/confirm">confirm API</a> whe
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12878,14 +17308,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12928,14 +17373,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -12968,14 +17428,29 @@ the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13024,14 +17499,29 @@ the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13058,14 +17548,29 @@ the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13096,14 +17601,29 @@ the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13134,14 +17654,29 @@ the <a href="/docs/api/payment_intents/confirm">confirm API</a> instead.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13197,14 +17732,29 @@ transition the PaymentIntent to the <code>canceled</code> state.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13254,14 +17804,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13288,14 +17853,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13347,14 +17927,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13379,14 +17974,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13420,14 +18030,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13454,14 +18079,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13510,14 +18150,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13569,14 +18224,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13601,14 +18271,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13642,14 +18327,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13676,14 +18376,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13740,14 +18455,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13772,14 +18502,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13813,14 +18558,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13847,14 +18607,29 @@ After it’s captured, a PaymentIntent can no longer be incremented.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13886,14 +18661,29 @@ The payment method doesn’t appear in Elements or Embedded Checkout for this do
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13950,14 +18740,29 @@ The payment method doesn’t appear in Elements or Embedded Checkout for this do
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -13984,14 +18789,29 @@ The payment method doesn’t appear in Elements or Embedded Checkout for this do
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14025,14 +18845,29 @@ The payment method doesn’t appear in Elements or Embedded Checkout for this do
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14059,14 +18894,29 @@ The payment method doesn’t appear in Elements or Embedded Checkout for this do
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14105,14 +18955,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14139,14 +19004,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14173,14 +19053,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14214,14 +19109,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14249,14 +19159,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14284,14 +19209,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14319,14 +19259,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14354,14 +19309,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14388,14 +19358,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14423,14 +19408,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14497,14 +19497,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14533,14 +19548,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14574,14 +19604,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14608,14 +19653,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14642,14 +19702,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14678,14 +19753,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14747,14 +19837,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14779,14 +19884,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14820,14 +19940,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14854,14 +19989,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14888,14 +20038,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -14977,14 +20142,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15009,14 +20189,29 @@ on the Customer to the PaymentMethod’s ID.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15066,14 +20261,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15107,14 +20317,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15141,14 +20366,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15220,14 +20460,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15252,14 +20507,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15309,14 +20579,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15350,14 +20635,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15384,14 +20684,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15418,14 +20733,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15474,14 +20804,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15508,14 +20853,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15551,14 +20911,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15587,14 +20962,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15666,14 +21056,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15698,14 +21103,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15739,14 +21159,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15773,14 +21208,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15842,14 +21292,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15874,14 +21339,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15915,14 +21395,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15949,14 +21444,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -15983,14 +21493,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16017,14 +21542,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16073,14 +21613,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16107,14 +21662,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16163,14 +21733,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16204,14 +21789,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16273,14 +21873,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16316,14 +21931,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16385,14 +22015,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16417,14 +22062,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16458,14 +22118,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16492,14 +22167,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16561,14 +22251,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16593,14 +22298,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16634,14 +22354,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16668,14 +22403,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16702,14 +22452,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16771,14 +22536,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16813,14 +22593,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16854,14 +22649,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16890,14 +22700,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16926,14 +22751,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -16985,14 +22825,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17017,14 +22872,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17058,14 +22928,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17097,14 +22982,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17138,14 +23038,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17197,14 +23112,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17238,14 +23168,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17272,14 +23217,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17336,14 +23296,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17410,14 +23385,29 @@ or when trying to refund more money than is left on a charge.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17445,14 +23435,29 @@ it to collect any required permissions to charge the payment method later.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17495,14 +23500,29 @@ it to collect any required permissions to charge the payment method later.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17529,14 +23549,29 @@ it to collect any required permissions to charge the payment method later.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17565,14 +23600,29 @@ it to collect any required permissions to charge the payment method later.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17612,14 +23662,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17646,14 +23711,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17715,14 +23795,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17747,14 +23842,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17788,14 +23898,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17822,14 +23947,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17856,14 +23996,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17910,14 +24065,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17951,14 +24121,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -17983,14 +24168,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18029,14 +24229,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18065,14 +24280,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18108,14 +24338,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18152,14 +24397,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18195,14 +24455,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18221,14 +24496,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18280,14 +24570,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18312,14 +24617,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18353,14 +24673,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18387,14 +24722,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18421,14 +24771,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18505,14 +24870,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18537,14 +24917,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18578,14 +24973,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18612,14 +25022,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18646,14 +25071,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18680,14 +25120,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18779,14 +25234,29 @@ confirmation limit is reached.</p>
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18817,14 +25287,29 @@ Schedules provide the flexibility to model more complex billing configurations t
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18874,14 +25359,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18915,14 +25415,29 @@ to an hour behind during outages. Search functionality is not available to merch
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -18969,14 +25484,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19007,14 +25537,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19041,14 +25586,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19075,14 +25635,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19109,14 +25684,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19153,14 +25743,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19185,14 +25790,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19226,14 +25846,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19282,14 +25917,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19341,14 +25991,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19373,14 +26038,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19414,14 +26094,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19450,14 +26145,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19489,14 +26199,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19521,14 +26246,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19553,14 +26293,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19585,14 +26340,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19626,14 +26396,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19682,14 +26467,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19736,14 +26536,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19777,14 +26592,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19836,14 +26666,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19868,14 +26713,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19909,14 +26769,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -19943,14 +26818,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20012,14 +26902,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20044,14 +26949,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20085,14 +27005,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20119,14 +27054,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20178,14 +27128,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20210,14 +27175,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20251,14 +27231,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20285,14 +27280,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20319,14 +27329,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20351,14 +27376,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20405,14 +27445,29 @@ To preview how the proration is calculated, use the <a href="/docs/api/invoices/
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20438,14 +27493,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20479,14 +27549,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20513,14 +27598,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20547,14 +27647,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20579,14 +27694,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20653,14 +27783,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20685,14 +27830,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20726,14 +27886,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20760,14 +27935,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20794,14 +27984,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20828,14 +28033,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20862,14 +28082,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20896,14 +28131,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20930,14 +28180,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20964,14 +28229,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -20998,14 +28278,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21032,14 +28327,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21066,14 +28376,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21098,14 +28423,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21132,14 +28472,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21164,14 +28519,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21198,14 +28568,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21232,14 +28617,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21266,14 +28666,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21300,14 +28715,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21334,14 +28764,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21368,14 +28813,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21402,14 +28862,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21436,14 +28911,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21470,14 +28960,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21504,14 +29009,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21538,14 +29058,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21572,14 +29107,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21606,14 +29156,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21640,14 +29205,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21672,14 +29252,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21706,14 +29301,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21738,14 +29348,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21770,14 +29395,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21804,14 +29444,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21838,14 +29493,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21872,14 +29542,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21906,14 +29591,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21940,14 +29640,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -21994,14 +29709,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22026,14 +29756,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22067,14 +29812,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22101,14 +29861,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22135,14 +29910,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22169,14 +29959,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22203,14 +30008,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22237,14 +30057,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22271,14 +30106,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22305,14 +30155,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22339,14 +30204,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22373,14 +30253,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22407,14 +30302,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22441,14 +30351,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22475,14 +30400,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22509,14 +30449,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22541,14 +30496,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22573,14 +30543,29 @@ For further details, including which address fields are required in each country
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22606,14 +30591,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22647,14 +30647,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22716,14 +30731,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22748,14 +30778,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22789,14 +30834,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22823,14 +30883,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22857,14 +30932,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22926,14 +31016,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -22958,14 +31063,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23014,14 +31134,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23052,14 +31187,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23093,14 +31243,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23129,14 +31294,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23172,14 +31352,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23210,14 +31405,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23279,14 +31489,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23311,14 +31536,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23352,14 +31592,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23426,14 +31681,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23458,14 +31728,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23499,14 +31784,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23563,14 +31863,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23595,14 +31910,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23636,14 +31966,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23670,14 +32015,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23704,14 +32064,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23745,14 +32120,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23779,14 +32169,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23843,14 +32248,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23875,14 +32295,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23916,14 +32351,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -23950,14 +32400,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24024,14 +32489,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24056,14 +32536,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24097,14 +32592,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24131,14 +32641,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24195,14 +32720,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24227,14 +32767,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24268,14 +32823,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24302,14 +32872,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24371,14 +32956,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24412,14 +33012,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24476,14 +33091,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24517,14 +33147,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24596,14 +33241,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24637,14 +33297,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24716,14 +33391,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24757,14 +33447,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24811,14 +33516,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24843,14 +33563,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24884,14 +33619,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24918,14 +33668,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -24952,14 +33717,29 @@ You can use this token with any v1 API method in place of a bank account diction
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();

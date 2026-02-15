@@ -1,6 +1,6 @@
 import type { BadRequestResponse, ForbiddenResponse, GetUserActivityResponse, InternalServerResponse, UnauthorizedResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -61,7 +61,12 @@ export class GetUserActivityInternalServerErrorError extends globalThis.Error {
 }
 
 export class AnalyticsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Get user activity grouped by endpoint
@@ -87,9 +92,24 @@ export class AnalyticsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -97,41 +117,41 @@ export class AnalyticsService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new GetUserActivityBadRequestError(body);
+            await this.raise(new GetUserActivityBadRequestError(body));
           } catch (e) {
             if (e instanceof GetUserActivityBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new GetUserActivityUnauthorizedError(body);
+            await this.raise(new GetUserActivityUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetUserActivityUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as ForbiddenResponse;
-            throw new GetUserActivityForbiddenError(body);
+            await this.raise(new GetUserActivityForbiddenError(body));
           } catch (e) {
             if (e instanceof GetUserActivityForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new GetUserActivityInternalServerErrorError(body);
+            await this.raise(new GetUserActivityInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetUserActivityInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

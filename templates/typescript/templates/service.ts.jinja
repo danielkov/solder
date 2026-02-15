@@ -1,6 +1,6 @@
 {% if !type_imports.is_empty() %}import type { {% for type_import in type_imports %}{{ type_import }}{% if !loop.last %}, {% endif %}{% endfor %} } from '../types';
 {% endif %}import { UnexpectedError } from '../types/errors';
-{% if !auth_schemes.is_empty() %}import { SecurityConfig } from './client';{% endif %}
+import type { SDKHooks, SDKRequestInit{% if !auth_schemes.is_empty() %}, SecurityConfig{% endif %} } from './client';
 
 // Operation-specific error classes
 {% for operation in operations %}{% for error in operation.error_variants %}
@@ -29,7 +29,12 @@ export class {{ error.class_name }} extends globalThis.Error {
  * {{ description }}
 {% endif %} */
 {% endif %}export class {{ name.pascal }}Service {
-  constructor(private baseUrl: string, {% if !auth_schemes.is_empty() %}private security: SecurityConfig{% endif %}) {}
+  constructor(private baseUrl: string, {% if !auth_schemes.is_empty() %}private security: SecurityConfig, {% endif %}private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
 {% for operation in operations %}  {% if let Some(summary) = operation.docs.summary %}/**
    * {{ summary }}
@@ -52,7 +57,7 @@ export class {{ error.class_name }} extends globalThis.Error {
     const url = queryString ? `${this.baseUrl}${path}?${queryString}` : `${this.baseUrl}${path}`;
     {% else %}const url = `${this.baseUrl}${path}`;
     {% endif %}
-    {% if operation.has_body || !operation.header_params.is_empty() || !operation.auth_schemes.is_empty() %}const headers: Record<string, string> = {};
+    const headers: Record<string, string> = {};
     {% if operation.has_body %}headers['Content-Type'] = 'application/json';
     {% endif %}{% for header_param in operation.header_params %}headers['{{ header_param.wire }}'] = String(params.{{ header_param.name }});
     {% endfor %}{% for auth in operation.auth_schemes %}{% if auth.kind == "bearer_bearer" %}if (this.security.{{ auth.name_camel }}) {
@@ -62,10 +67,25 @@ export class {{ error.class_name }} extends globalThis.Error {
       headers['{{ param }}'] = this.security.{{ auth.name_camel }};
     }
     {% endif %}{% endif %}{% endfor %}
-    {% endif %}const response = await fetch(url, {
-      method: '{{ operation.http_method }}',{% if operation.has_body || !operation.header_params.is_empty() || !operation.auth_schemes.is_empty() %}
-      headers,{% endif %}{% if operation.has_body %}
+    const request: SDKRequestInit = {
+      method: '{{ operation.http_method }}',
+      url,
+      headers,{% if operation.has_body %}
       body: JSON.stringify(params.body),{% endif %}
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -73,17 +93,17 @@ export class {{ error.class_name }} extends globalThis.Error {
 {% for error in operation.error_variants %}        case {{ error.status_code }}: {
 {% if error.has_body %}          try {
             const body = await response.json() as {{ error.body_type }};
-            throw new {{ error.class_name }}(body);
+            await this.raise(new {{ error.class_name }}(body));
           } catch (e) {
             if (e instanceof {{ error.class_name }}) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
-{% else %}          throw new {{ error.class_name }}();
+{% else %}          await this.raise(new {{ error.class_name }}());
 {% endif %}        }
 {% endfor %}        default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
-{% else %}      throw new UnexpectedError(response.status, await response.text());
+{% else %}      await this.raise(new UnexpectedError(response.status, await response.text()));
 {% endif %}    }
 
     {% if operation.has_return %}return response.json();{% else %}return;{% endif %}

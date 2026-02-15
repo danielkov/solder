@@ -1,6 +1,6 @@
 import type { Booking, CreateBookingUnion, GetBookingsUnion, Problem } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -327,7 +327,12 @@ export class DeleteBookingInternalServerErrorError extends globalThis.Error {
 }
 
 export class BookingsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * List existing bookings
@@ -355,9 +360,24 @@ export class BookingsService {
     
     const headers: Record<string, string> = {};
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -365,50 +385,50 @@ export class BookingsService {
         case 400: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingsBadRequestError(body);
+            await this.raise(new GetBookingsBadRequestError(body));
           } catch (e) {
             if (e instanceof GetBookingsBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingsUnauthorizedError(body);
+            await this.raise(new GetBookingsUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetBookingsUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingsForbiddenError(body);
+            await this.raise(new GetBookingsForbiddenError(body));
           } catch (e) {
             if (e instanceof GetBookingsForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingsTooManyRequestsError(body);
+            await this.raise(new GetBookingsTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof GetBookingsTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingsInternalServerErrorError(body);
+            await this.raise(new GetBookingsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetBookingsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -432,10 +452,25 @@ export class BookingsService {
     const headers: Record<string, string> = {};
     headers['Content-Type'] = 'application/json';
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -443,59 +478,59 @@ export class BookingsService {
         case 400: {
           try {
             const body = await response.json() as Problem;
-            throw new CreateBookingBadRequestError(body);
+            await this.raise(new CreateBookingBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateBookingBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Problem;
-            throw new CreateBookingUnauthorizedError(body);
+            await this.raise(new CreateBookingUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateBookingUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Problem;
-            throw new CreateBookingNotFoundError(body);
+            await this.raise(new CreateBookingNotFoundError(body));
           } catch (e) {
             if (e instanceof CreateBookingNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 409: {
           try {
             const body = await response.json() as Problem;
-            throw new CreateBookingConflictError(body);
+            await this.raise(new CreateBookingConflictError(body));
           } catch (e) {
             if (e instanceof CreateBookingConflictError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as Problem;
-            throw new CreateBookingTooManyRequestsError(body);
+            await this.raise(new CreateBookingTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof CreateBookingTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as Problem;
-            throw new CreateBookingInternalServerErrorError(body);
+            await this.raise(new CreateBookingInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof CreateBookingInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -514,9 +549,24 @@ export class BookingsService {
     
     const headers: Record<string, string> = {};
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -524,59 +574,59 @@ export class BookingsService {
         case 400: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingBadRequestError(body);
+            await this.raise(new GetBookingBadRequestError(body));
           } catch (e) {
             if (e instanceof GetBookingBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingUnauthorizedError(body);
+            await this.raise(new GetBookingUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetBookingUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingForbiddenError(body);
+            await this.raise(new GetBookingForbiddenError(body));
           } catch (e) {
             if (e instanceof GetBookingForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingNotFoundError(body);
+            await this.raise(new GetBookingNotFoundError(body));
           } catch (e) {
             if (e instanceof GetBookingNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingTooManyRequestsError(body);
+            await this.raise(new GetBookingTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof GetBookingTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as Problem;
-            throw new GetBookingInternalServerErrorError(body);
+            await this.raise(new GetBookingInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetBookingInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -595,9 +645,24 @@ export class BookingsService {
     
     const headers: Record<string, string> = {};
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -605,59 +670,59 @@ export class BookingsService {
         case 400: {
           try {
             const body = await response.json() as Problem;
-            throw new DeleteBookingBadRequestError(body);
+            await this.raise(new DeleteBookingBadRequestError(body));
           } catch (e) {
             if (e instanceof DeleteBookingBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Problem;
-            throw new DeleteBookingUnauthorizedError(body);
+            await this.raise(new DeleteBookingUnauthorizedError(body));
           } catch (e) {
             if (e instanceof DeleteBookingUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as Problem;
-            throw new DeleteBookingForbiddenError(body);
+            await this.raise(new DeleteBookingForbiddenError(body));
           } catch (e) {
             if (e instanceof DeleteBookingForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Problem;
-            throw new DeleteBookingNotFoundError(body);
+            await this.raise(new DeleteBookingNotFoundError(body));
           } catch (e) {
             if (e instanceof DeleteBookingNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as Problem;
-            throw new DeleteBookingTooManyRequestsError(body);
+            await this.raise(new DeleteBookingTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof DeleteBookingTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as Problem;
-            throw new DeleteBookingInternalServerErrorError(body);
+            await this.raise(new DeleteBookingInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof DeleteBookingInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

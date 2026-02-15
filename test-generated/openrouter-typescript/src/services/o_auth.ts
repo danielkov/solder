@@ -1,6 +1,6 @@
 import type { BadRequestResponse, CreateAuthKeysCodeRequest, CreateAuthKeysCodeResponse, ExchangeAuthCodeForApiKeyRequest, ExchangeAuthCodeForApiKeyResponse, ForbiddenResponse, InternalServerResponse, UnauthorizedResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -89,7 +89,12 @@ export class CreateAuthKeysCodeInternalServerErrorError extends globalThis.Error
 }
 
 export class OAuthService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Exchange authorization code for API key
@@ -111,10 +116,25 @@ export class OAuthService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -122,32 +142,32 @@ export class OAuthService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new ExchangeAuthCodeForApiKeyBadRequestError(body);
+            await this.raise(new ExchangeAuthCodeForApiKeyBadRequestError(body));
           } catch (e) {
             if (e instanceof ExchangeAuthCodeForApiKeyBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as ForbiddenResponse;
-            throw new ExchangeAuthCodeForApiKeyForbiddenError(body);
+            await this.raise(new ExchangeAuthCodeForApiKeyForbiddenError(body));
           } catch (e) {
             if (e instanceof ExchangeAuthCodeForApiKeyForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new ExchangeAuthCodeForApiKeyInternalServerErrorError(body);
+            await this.raise(new ExchangeAuthCodeForApiKeyInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof ExchangeAuthCodeForApiKeyInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -174,10 +194,25 @@ export class OAuthService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -185,32 +220,32 @@ export class OAuthService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new CreateAuthKeysCodeBadRequestError(body);
+            await this.raise(new CreateAuthKeysCodeBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateAuthKeysCodeBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new CreateAuthKeysCodeUnauthorizedError(body);
+            await this.raise(new CreateAuthKeysCodeUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateAuthKeysCodeUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new CreateAuthKeysCodeInternalServerErrorError(body);
+            await this.raise(new CreateAuthKeysCodeInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof CreateAuthKeysCodeInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

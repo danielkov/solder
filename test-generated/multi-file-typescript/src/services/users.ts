@@ -1,6 +1,6 @@
 import type { Error, User, UserCreate, UserList, UserUpdate } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -173,7 +173,12 @@ export class DeleteUserNotFoundError extends globalThis.Error {
 }
 
 export class UsersService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * List all users
@@ -219,9 +224,24 @@ export class UsersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -229,23 +249,23 @@ export class UsersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new ListUsersBadRequestError(body);
+            await this.raise(new ListUsersBadRequestError(body));
           } catch (e) {
             if (e instanceof ListUsersBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new ListUsersUnauthorizedError(body);
+            await this.raise(new ListUsersUnauthorizedError(body));
           } catch (e) {
             if (e instanceof ListUsersUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -272,10 +292,25 @@ export class UsersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -283,32 +318,32 @@ export class UsersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new CreateUserBadRequestError(body);
+            await this.raise(new CreateUserBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateUserBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new CreateUserUnauthorizedError(body);
+            await this.raise(new CreateUserUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateUserUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 409: {
           try {
             const body = await response.json() as Error;
-            throw new CreateUserConflictError(body);
+            await this.raise(new CreateUserConflictError(body));
           } catch (e) {
             if (e instanceof CreateUserConflictError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -330,9 +365,24 @@ export class UsersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -340,23 +390,23 @@ export class UsersService {
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new GetUserByIdUnauthorizedError(body);
+            await this.raise(new GetUserByIdUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetUserByIdUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new GetUserByIdNotFoundError(body);
+            await this.raise(new GetUserByIdNotFoundError(body));
           } catch (e) {
             if (e instanceof GetUserByIdNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -383,10 +433,25 @@ export class UsersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'PUT',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -394,32 +459,32 @@ export class UsersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new UpdateUserBadRequestError(body);
+            await this.raise(new UpdateUserBadRequestError(body));
           } catch (e) {
             if (e instanceof UpdateUserBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new UpdateUserUnauthorizedError(body);
+            await this.raise(new UpdateUserUnauthorizedError(body));
           } catch (e) {
             if (e instanceof UpdateUserUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new UpdateUserNotFoundError(body);
+            await this.raise(new UpdateUserNotFoundError(body));
           } catch (e) {
             if (e instanceof UpdateUserNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -441,9 +506,24 @@ export class UsersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -451,23 +531,23 @@ export class UsersService {
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new DeleteUserUnauthorizedError(body);
+            await this.raise(new DeleteUserUnauthorizedError(body));
           } catch (e) {
             if (e instanceof DeleteUserUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new DeleteUserNotFoundError(body);
+            await this.raise(new DeleteUserNotFoundError(body));
           } catch (e) {
             if (e instanceof DeleteUserNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

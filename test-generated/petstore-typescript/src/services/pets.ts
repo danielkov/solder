@@ -1,6 +1,6 @@
 import type { Error, NewPet, Pet, PetList, UpdatePet } from '../types';
 import { UnexpectedError } from '../types/errors';
-
+import type { SDKHooks, SDKRequestInit } from './client';
 
 // Operation-specific error classes
 
@@ -113,7 +113,12 @@ export class GetPetPhotoNotFoundError extends globalThis.Error {
 }
 
 export class PetsService {
-  constructor(private baseUrl: string, ) {}
+  constructor(private baseUrl: string, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * List all pets
@@ -144,8 +149,26 @@ export class PetsService {
     const queryString = queryParams.toString();
     const url = queryString ? `${this.baseUrl}${path}?${queryString}` : `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -153,23 +176,23 @@ export class PetsService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new ListPetsBadRequestError(body);
+            await this.raise(new ListPetsBadRequestError(body));
           } catch (e) {
             if (e instanceof ListPetsBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as Error;
-            throw new ListPetsInternalServerErrorError(body);
+            await this.raise(new ListPetsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof ListPetsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -193,10 +216,25 @@ export class PetsService {
     const headers: Record<string, string> = {};
     headers['Content-Type'] = 'application/json';
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -204,14 +242,14 @@ export class PetsService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new CreatePetBadRequestError(body);
+            await this.raise(new CreatePetBadRequestError(body));
           } catch (e) {
             if (e instanceof CreatePetBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -227,12 +265,30 @@ export class PetsService {
     const path = '/pets/export';
     const url = `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -247,12 +303,30 @@ export class PetsService {
     const path = '/pets/export/csv';
     const url = `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
-      throw new UnexpectedError(response.status, await response.text());
+      await this.raise(new UnexpectedError(response.status, await response.text()));
     }
 
     return response.json();
@@ -272,8 +346,26 @@ export class PetsService {
     const path = `/pets/{petId}`.replace('{petId}', String(params.petId));
     const url = `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -281,14 +373,14 @@ export class PetsService {
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new GetPetByIdNotFoundError(body);
+            await this.raise(new GetPetByIdNotFoundError(body));
           } catch (e) {
             if (e instanceof GetPetByIdNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -314,10 +406,25 @@ export class PetsService {
     const headers: Record<string, string> = {};
     headers['Content-Type'] = 'application/json';
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'PUT',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -325,14 +432,14 @@ export class PetsService {
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new UpdatePetNotFoundError(body);
+            await this.raise(new UpdatePetNotFoundError(body));
           } catch (e) {
             if (e instanceof UpdatePetNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -353,8 +460,26 @@ export class PetsService {
     const path = `/pets/{petId}`.replace('{petId}', String(params.petId));
     const url = `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -362,14 +487,14 @@ export class PetsService {
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new DeletePetNotFoundError(body);
+            await this.raise(new DeletePetNotFoundError(body));
           } catch (e) {
             if (e instanceof DeletePetNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -397,17 +522,35 @@ export class PetsService {
     const queryString = queryParams.toString();
     const url = queryString ? `${this.baseUrl}${path}?${queryString}` : `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          throw new GetPetDocumentsNotFoundError();
+          await this.raise(new GetPetDocumentsNotFoundError());
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -428,17 +571,35 @@ export class PetsService {
     const path = `/pets/{petId}/photo`.replace('{petId}', String(params.petId));
     const url = `${this.baseUrl}${path}`;
     
-    const response = await fetch(url, {
+    const headers: Record<string, string> = {};
+    
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
+      headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          throw new GetPetPhotoNotFoundError();
+          await this.raise(new GetPetPhotoNotFoundError());
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

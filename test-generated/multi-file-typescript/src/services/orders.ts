@@ -1,6 +1,6 @@
 import type { CancelOrderRequest, Error, Order, OrderCreate, OrderList } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -173,7 +173,12 @@ export class CancelOrderNotFoundError extends globalThis.Error {
 }
 
 export class OrdersService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * List all orders
@@ -229,9 +234,24 @@ export class OrdersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -239,23 +259,23 @@ export class OrdersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new ListOrdersBadRequestError(body);
+            await this.raise(new ListOrdersBadRequestError(body));
           } catch (e) {
             if (e instanceof ListOrdersBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new ListOrdersUnauthorizedError(body);
+            await this.raise(new ListOrdersUnauthorizedError(body));
           } catch (e) {
             if (e instanceof ListOrdersUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -282,10 +302,25 @@ export class OrdersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -293,23 +328,23 @@ export class OrdersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new CreateOrderBadRequestError(body);
+            await this.raise(new CreateOrderBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateOrderBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new CreateOrderUnauthorizedError(body);
+            await this.raise(new CreateOrderUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateOrderUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -331,9 +366,24 @@ export class OrdersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -341,23 +391,23 @@ export class OrdersService {
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new GetOrderByIdUnauthorizedError(body);
+            await this.raise(new GetOrderByIdUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetOrderByIdUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new GetOrderByIdNotFoundError(body);
+            await this.raise(new GetOrderByIdNotFoundError(body));
           } catch (e) {
             if (e instanceof GetOrderByIdNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -379,9 +429,24 @@ export class OrdersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -389,32 +454,32 @@ export class OrdersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new DeleteOrderBadRequestError(body);
+            await this.raise(new DeleteOrderBadRequestError(body));
           } catch (e) {
             if (e instanceof DeleteOrderBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new DeleteOrderUnauthorizedError(body);
+            await this.raise(new DeleteOrderUnauthorizedError(body));
           } catch (e) {
             if (e instanceof DeleteOrderUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new DeleteOrderNotFoundError(body);
+            await this.raise(new DeleteOrderNotFoundError(body));
           } catch (e) {
             if (e instanceof DeleteOrderNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -441,10 +506,25 @@ export class OrdersService {
       headers['Authorization'] = `Bearer ${this.security.bearerAuth}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -452,32 +532,32 @@ export class OrdersService {
         case 400: {
           try {
             const body = await response.json() as Error;
-            throw new CancelOrderBadRequestError(body);
+            await this.raise(new CancelOrderBadRequestError(body));
           } catch (e) {
             if (e instanceof CancelOrderBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as Error;
-            throw new CancelOrderUnauthorizedError(body);
+            await this.raise(new CancelOrderUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CancelOrderUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as Error;
-            throw new CancelOrderNotFoundError(body);
+            await this.raise(new CancelOrderNotFoundError(body));
           } catch (e) {
             if (e instanceof CancelOrderNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

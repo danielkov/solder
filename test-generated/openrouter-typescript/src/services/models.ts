@@ -1,6 +1,6 @@
 import type { BadRequestResponse, InternalServerResponse, ModelsCountResponse, ModelsListResponse, UnauthorizedResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -75,7 +75,12 @@ export class ListModelsUserInternalServerErrorError extends globalThis.Error {
 }
 
 export class ModelsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * List all models and their properties
@@ -104,9 +109,24 @@ export class ModelsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -114,23 +134,23 @@ export class ModelsService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new GetModelsBadRequestError(body);
+            await this.raise(new GetModelsBadRequestError(body));
           } catch (e) {
             if (e instanceof GetModelsBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new GetModelsInternalServerErrorError(body);
+            await this.raise(new GetModelsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetModelsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -150,9 +170,24 @@ export class ModelsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -160,14 +195,14 @@ export class ModelsService {
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new ListModelsCountInternalServerErrorError(body);
+            await this.raise(new ListModelsCountInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof ListModelsCountInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -187,9 +222,24 @@ export class ModelsService {
       headers['Authorization'] = `Bearer ${this.security.bearer}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -197,23 +247,23 @@ export class ModelsService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new ListModelsUserUnauthorizedError(body);
+            await this.raise(new ListModelsUserUnauthorizedError(body));
           } catch (e) {
             if (e instanceof ListModelsUserUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new ListModelsUserInternalServerErrorError(body);
+            await this.raise(new ListModelsUserInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof ListModelsUserInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

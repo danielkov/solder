@@ -1,6 +1,6 @@
 import type { BadRequestResponse, CreateKeysRequest, CreateKeysResponse, DeleteKeysResponse, GetCurrentKeyResponse, GetKeyResponse, InternalServerResponse, ListResponse, NotFoundResponse, TooManyRequestsResponse, UnauthorizedResponse, UpdateKeysRequest, UpdateKeysResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -313,7 +313,12 @@ export class UpdateKeysInternalServerErrorError extends globalThis.Error {
 }
 
 export class ApiKeysService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Get current API key
@@ -330,9 +335,24 @@ export class ApiKeysService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -340,23 +360,23 @@ export class ApiKeysService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new GetCurrentKeyUnauthorizedError(body);
+            await this.raise(new GetCurrentKeyUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetCurrentKeyUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new GetCurrentKeyInternalServerErrorError(body);
+            await this.raise(new GetCurrentKeyInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetCurrentKeyInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -390,9 +410,24 @@ export class ApiKeysService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -400,32 +435,32 @@ export class ApiKeysService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new ListUnauthorizedError(body);
+            await this.raise(new ListUnauthorizedError(body));
           } catch (e) {
             if (e instanceof ListUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new ListTooManyRequestsError(body);
+            await this.raise(new ListTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof ListTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new ListInternalServerErrorError(body);
+            await this.raise(new ListInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof ListInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -450,10 +485,25 @@ export class ApiKeysService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -461,41 +511,41 @@ export class ApiKeysService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new CreateKeysBadRequestError(body);
+            await this.raise(new CreateKeysBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateKeysBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new CreateKeysUnauthorizedError(body);
+            await this.raise(new CreateKeysUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateKeysUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new CreateKeysTooManyRequestsError(body);
+            await this.raise(new CreateKeysTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof CreateKeysTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new CreateKeysInternalServerErrorError(body);
+            await this.raise(new CreateKeysInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof CreateKeysInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -519,9 +569,24 @@ export class ApiKeysService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -529,41 +594,41 @@ export class ApiKeysService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new GetKeyUnauthorizedError(body);
+            await this.raise(new GetKeyUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetKeyUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as NotFoundResponse;
-            throw new GetKeyNotFoundError(body);
+            await this.raise(new GetKeyNotFoundError(body));
           } catch (e) {
             if (e instanceof GetKeyNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new GetKeyTooManyRequestsError(body);
+            await this.raise(new GetKeyTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof GetKeyTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new GetKeyInternalServerErrorError(body);
+            await this.raise(new GetKeyInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetKeyInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -587,9 +652,24 @@ export class ApiKeysService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'DELETE',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -597,41 +677,41 @@ export class ApiKeysService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new DeleteKeysUnauthorizedError(body);
+            await this.raise(new DeleteKeysUnauthorizedError(body));
           } catch (e) {
             if (e instanceof DeleteKeysUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as NotFoundResponse;
-            throw new DeleteKeysNotFoundError(body);
+            await this.raise(new DeleteKeysNotFoundError(body));
           } catch (e) {
             if (e instanceof DeleteKeysNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new DeleteKeysTooManyRequestsError(body);
+            await this.raise(new DeleteKeysTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof DeleteKeysTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new DeleteKeysInternalServerErrorError(body);
+            await this.raise(new DeleteKeysInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof DeleteKeysInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -658,10 +738,25 @@ export class ApiKeysService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'PATCH',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -669,50 +764,50 @@ export class ApiKeysService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new UpdateKeysBadRequestError(body);
+            await this.raise(new UpdateKeysBadRequestError(body));
           } catch (e) {
             if (e instanceof UpdateKeysBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new UpdateKeysUnauthorizedError(body);
+            await this.raise(new UpdateKeysUnauthorizedError(body));
           } catch (e) {
             if (e instanceof UpdateKeysUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as NotFoundResponse;
-            throw new UpdateKeysNotFoundError(body);
+            await this.raise(new UpdateKeysNotFoundError(body));
           } catch (e) {
             if (e instanceof UpdateKeysNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new UpdateKeysTooManyRequestsError(body);
+            await this.raise(new UpdateKeysTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof UpdateKeysTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new UpdateKeysInternalServerErrorError(body);
+            await this.raise(new UpdateKeysInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof UpdateKeysInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

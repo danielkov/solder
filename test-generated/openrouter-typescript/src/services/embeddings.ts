@@ -1,6 +1,6 @@
 import type { BadGatewayResponse, BadRequestResponse, CreateEmbeddingsRequest, CreateEmbeddingsResponse, EdgeNetworkTimeoutResponse, InternalServerResponse, ModelsListResponse, NotFoundResponse, PaymentRequiredResponse, ProviderOverloadedResponse, ServiceUnavailableResponse, TooManyRequestsResponse, UnauthorizedResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -173,7 +173,12 @@ export class ListEmbeddingsModelsInternalServerErrorError extends globalThis.Err
 }
 
 export class EmbeddingsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Submit an embedding request
@@ -195,10 +200,25 @@ export class EmbeddingsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -206,95 +226,95 @@ export class EmbeddingsService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new CreateEmbeddingsBadRequestError(body);
+            await this.raise(new CreateEmbeddingsBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new CreateEmbeddingsUnauthorizedError(body);
+            await this.raise(new CreateEmbeddingsUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 402: {
           try {
             const body = await response.json() as PaymentRequiredResponse;
-            throw new CreateEmbeddingsStatus402Error(body);
+            await this.raise(new CreateEmbeddingsStatus402Error(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsStatus402Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 404: {
           try {
             const body = await response.json() as NotFoundResponse;
-            throw new CreateEmbeddingsNotFoundError(body);
+            await this.raise(new CreateEmbeddingsNotFoundError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsNotFoundError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new CreateEmbeddingsTooManyRequestsError(body);
+            await this.raise(new CreateEmbeddingsTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new CreateEmbeddingsInternalServerErrorError(body);
+            await this.raise(new CreateEmbeddingsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 502: {
           try {
             const body = await response.json() as BadGatewayResponse;
-            throw new CreateEmbeddingsBadGatewayError(body);
+            await this.raise(new CreateEmbeddingsBadGatewayError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsBadGatewayError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 503: {
           try {
             const body = await response.json() as ServiceUnavailableResponse;
-            throw new CreateEmbeddingsServiceUnavailableError(body);
+            await this.raise(new CreateEmbeddingsServiceUnavailableError(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsServiceUnavailableError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 524: {
           try {
             const body = await response.json() as EdgeNetworkTimeoutResponse;
-            throw new CreateEmbeddingsStatus524Error(body);
+            await this.raise(new CreateEmbeddingsStatus524Error(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsStatus524Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 529: {
           try {
             const body = await response.json() as ProviderOverloadedResponse;
-            throw new CreateEmbeddingsStatus529Error(body);
+            await this.raise(new CreateEmbeddingsStatus529Error(body));
           } catch (e) {
             if (e instanceof CreateEmbeddingsStatus529Error) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -316,9 +336,24 @@ export class EmbeddingsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -326,23 +361,23 @@ export class EmbeddingsService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new ListEmbeddingsModelsBadRequestError(body);
+            await this.raise(new ListEmbeddingsModelsBadRequestError(body));
           } catch (e) {
             if (e instanceof ListEmbeddingsModelsBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new ListEmbeddingsModelsInternalServerErrorError(body);
+            await this.raise(new ListEmbeddingsModelsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof ListEmbeddingsModelsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 

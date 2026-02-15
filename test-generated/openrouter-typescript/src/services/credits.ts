@@ -1,6 +1,6 @@
 import type { BadRequestResponse, CreateChargeRequest, CreateCoinbaseChargeResponse, ForbiddenResponse, InternalServerResponse, TooManyRequestsResponse, UnauthorizedResponse } from '../types';
 import { UnexpectedError } from '../types/errors';
-import { SecurityConfig } from './client';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
 
 // Operation-specific error classes
 
@@ -103,7 +103,12 @@ export class CreateCoinbaseChargeInternalServerErrorError extends globalThis.Err
 }
 
 export class CreditsService {
-  constructor(private baseUrl: string, private security: SecurityConfig) {}
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {}
+
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
 
   /**
    * Get remaining credits
@@ -120,9 +125,24 @@ export class CreditsService {
       headers['Authorization'] = `Bearer ${this.security.apiKey}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'GET',
+      url,
       headers,
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -130,32 +150,32 @@ export class CreditsService {
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new GetCreditsUnauthorizedError(body);
+            await this.raise(new GetCreditsUnauthorizedError(body));
           } catch (e) {
             if (e instanceof GetCreditsUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 403: {
           try {
             const body = await response.json() as ForbiddenResponse;
-            throw new GetCreditsForbiddenError(body);
+            await this.raise(new GetCreditsForbiddenError(body));
           } catch (e) {
             if (e instanceof GetCreditsForbiddenError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new GetCreditsInternalServerErrorError(body);
+            await this.raise(new GetCreditsInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof GetCreditsInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
@@ -182,10 +202,25 @@ export class CreditsService {
       headers['Authorization'] = `Bearer ${this.security.bearer}`;
     }
     
-    const response = await fetch(url, {
+    const request: SDKRequestInit = {
       method: 'POST',
+      url,
       headers,
       body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
     });
 
     if (!response.ok) {
@@ -193,41 +228,41 @@ export class CreditsService {
         case 400: {
           try {
             const body = await response.json() as BadRequestResponse;
-            throw new CreateCoinbaseChargeBadRequestError(body);
+            await this.raise(new CreateCoinbaseChargeBadRequestError(body));
           } catch (e) {
             if (e instanceof CreateCoinbaseChargeBadRequestError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 401: {
           try {
             const body = await response.json() as UnauthorizedResponse;
-            throw new CreateCoinbaseChargeUnauthorizedError(body);
+            await this.raise(new CreateCoinbaseChargeUnauthorizedError(body));
           } catch (e) {
             if (e instanceof CreateCoinbaseChargeUnauthorizedError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 429: {
           try {
             const body = await response.json() as TooManyRequestsResponse;
-            throw new CreateCoinbaseChargeTooManyRequestsError(body);
+            await this.raise(new CreateCoinbaseChargeTooManyRequestsError(body));
           } catch (e) {
             if (e instanceof CreateCoinbaseChargeTooManyRequestsError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         case 500: {
           try {
             const body = await response.json() as InternalServerResponse;
-            throw new CreateCoinbaseChargeInternalServerErrorError(body);
+            await this.raise(new CreateCoinbaseChargeInternalServerErrorError(body));
           } catch (e) {
             if (e instanceof CreateCoinbaseChargeInternalServerErrorError) throw e;
-            throw new UnexpectedError(response.status, await response.text());
+            await this.raise(new UnexpectedError(response.status, await response.text()));
           }
         }
         default:
-          throw new UnexpectedError(response.status, await response.text());
+          await this.raise(new UnexpectedError(response.status, await response.text()));
       }
     }
 
