@@ -13,8 +13,8 @@ mod service_codegen;
 use askama::Template;
 use codegen::{Config, Error, GenIr, Generator, Result, VirtualFS};
 use ir::gen_ir::{
-    Additional, AliasTarget, CanonicalName, Composite, ErrorUse, Service, StableId, TypeDecl,
-    TypeKind, TypeMod, TypeRef,
+    Additional, AliasTarget, CanonicalName, Composite, ErrorUse, Literal, Service, StableId,
+    TypeDecl, TypeKind, TypeMod, TypeRef,
 };
 use service_codegen::ServiceModuleGenerator;
 use std::borrow::Cow;
@@ -775,7 +775,21 @@ impl RustAxumGenerator {
                     .iter()
                     .map(|v| {
                         let variant_name = Self::escape_rust_keyword(&v.name.pascal);
-                        format!("    {},", variant_name)
+                        let wire_value = match &v.wire {
+                            Literal::String(s) => s.clone(),
+                            Literal::I64(n) => n.to_string(),
+                            Literal::F64(n) => n.to_string(),
+                            Literal::Bool(b) => b.to_string(),
+                            other => format!("{other:?}"),
+                        };
+                        if wire_value == variant_name {
+                            format!("    {},", variant_name)
+                        } else {
+                            format!(
+                                "    #[serde(rename = \"{}\")]\n    {},",
+                                wire_value, variant_name
+                            )
+                        }
                     })
                     .collect();
 

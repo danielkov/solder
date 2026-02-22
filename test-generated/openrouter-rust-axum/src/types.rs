@@ -127,10 +127,15 @@ pub enum BytesUnion {
 #[cfg(feature = "chat")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ChatCompletionFinishReason {
+    #[serde(rename = "tool_calls")]
     ToolCalls,
+    #[serde(rename = "stop")]
     Stop,
+    #[serde(rename = "length")]
     Length,
+    #[serde(rename = "content_filter")]
     ContentFilter,
+    #[serde(rename = "error")]
     Error,
 }
 
@@ -632,7 +637,9 @@ pub struct CreateKeysResponseData {
 #[cfg(any(feature = "beta_responses", feature = "embeddings"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum DataCollection {
+    #[serde(rename = "deny")]
     Deny,
+    #[serde(rename = "allow")]
     Allow,
 }
 
@@ -698,11 +705,17 @@ pub struct EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObject {
 #[cfg(feature = "endpoints")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EndpointStatus {
+    #[serde(rename = "0")]
     Value0,
+    #[serde(rename = "-1")]
     Value1,
+    #[serde(rename = "-2")]
     Value2,
+    #[serde(rename = "-3")]
     Value3,
+    #[serde(rename = "-5")]
     Value4,
+    #[serde(rename = "-10")]
     Value5,
 }
 
@@ -946,9 +959,13 @@ pub enum IgnoreItemOrRef {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ImageGenerationStatus {
+    #[serde(rename = "in_progress")]
     InProgress,
+    #[serde(rename = "completed")]
     Completed,
+    #[serde(rename = "generating")]
     Generating,
+    #[serde(rename = "failed")]
     Failed,
 }
 
@@ -1147,10 +1164,15 @@ pub struct InputAudioProperty {
 #[cfg(any(feature = "embeddings", feature = "endpoints", feature = "models"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum InputModality {
+    #[serde(rename = "text")]
     Text,
+    #[serde(rename = "image")]
     Image,
+    #[serde(rename = "file")]
     File,
+    #[serde(rename = "audio")]
     Audio,
+    #[serde(rename = "video")]
     Video,
 }
 
@@ -1412,6 +1434,7 @@ pub enum ModelGroup {
     Router,
     Media,
     Other,
+    #[serde(rename = "GPT")]
     Gpt,
     Claude,
     Gemini,
@@ -1425,7 +1448,9 @@ pub enum ModelGroup {
     Llama2,
     Llama3,
     Llama4,
+    #[serde(rename = "PaLM")]
     PaLm,
+    #[serde(rename = "RWKV")]
     Rwkv,
     Qwen3,
 }
@@ -1505,10 +1530,15 @@ pub enum OpenAiResponsesAnnotation {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenAiResponsesIncludable {
+    #[serde(rename = "file_search_call.results")]
     FileSearchCallResults,
+    #[serde(rename = "message.input_image.image_url")]
     MessageInputImageImageUrl,
+    #[serde(rename = "computer_call_output.output.image_url")]
     ComputerCallOutputOutputImageUrl,
+    #[serde(rename = "reasoning.encrypted_content")]
     ReasoningEncryptedContent,
+    #[serde(rename = "code_interpreter_call.outputs")]
     CodeInterpreterCallOutputs,
 }
 
@@ -1544,10 +1574,15 @@ pub struct OpenAiResponsesReasoningConfig {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenAiResponsesReasoningEffort {
+    #[serde(rename = "high")]
     High,
+    #[serde(rename = "medium")]
     Medium,
+    #[serde(rename = "low")]
     Low,
+    #[serde(rename = "minimal")]
     Minimal,
+    #[serde(rename = "none")]
     None,
 }
 
@@ -1562,21 +1597,32 @@ pub struct OpenAiResponsesRefusalContent {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenAiResponsesResponseStatus {
+    #[serde(rename = "completed")]
     Completed,
+    #[serde(rename = "incomplete")]
     Incomplete,
+    #[serde(rename = "in_progress")]
     InProgress,
+    #[serde(rename = "failed")]
     Failed,
+    #[serde(rename = "cancelled")]
     Cancelled,
+    #[serde(rename = "queued")]
     Queued,
 }
 
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenAiResponsesServiceTier {
+    #[serde(rename = "auto")]
     Auto,
+    #[serde(rename = "default")]
     Default,
+    #[serde(rename = "flex")]
     Flex,
+    #[serde(rename = "priority")]
     Priority,
+    #[serde(rename = "scale")]
     Scale,
 }
 
@@ -1594,7 +1640,9 @@ pub enum OpenAiResponsesToolChoice {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OpenAiResponsesTruncation {
+    #[serde(rename = "auto")]
     Auto,
+    #[serde(rename = "disabled")]
     Disabled,
 }
 
@@ -1877,8 +1925,11 @@ pub struct OutputMessage {
 #[cfg(any(feature = "embeddings", feature = "endpoints", feature = "models"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OutputModality {
+    #[serde(rename = "text")]
     Text,
+    #[serde(rename = "image")]
     Image,
+    #[serde(rename = "embeddings")]
     Embeddings,
 }
 
@@ -1891,28 +1942,51 @@ pub struct OutputTokensDetailsProperty {
 #[cfg(any(feature = "embeddings", feature = "endpoints", feature = "models"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Parameter {
+    #[serde(rename = "temperature")]
     Temperature,
+    #[serde(rename = "top_p")]
     TopP,
+    #[serde(rename = "top_k")]
     TopK,
+    #[serde(rename = "min_p")]
     MinP,
+    #[serde(rename = "top_a")]
     TopA,
+    #[serde(rename = "frequency_penalty")]
     FrequencyPenalty,
+    #[serde(rename = "presence_penalty")]
     PresencePenalty,
+    #[serde(rename = "repetition_penalty")]
     RepetitionPenalty,
+    #[serde(rename = "max_tokens")]
     MaxTokens,
+    #[serde(rename = "logit_bias")]
     LogitBias,
+    #[serde(rename = "logprobs")]
     Logprobs,
+    #[serde(rename = "top_logprobs")]
     TopLogprobs,
+    #[serde(rename = "seed")]
     Seed,
+    #[serde(rename = "response_format")]
     ResponseFormat,
+    #[serde(rename = "structured_outputs")]
     StructuredOutputs,
+    #[serde(rename = "stop")]
     Stop,
+    #[serde(rename = "tools")]
     Tools,
+    #[serde(rename = "tool_choice")]
     ToolChoice,
+    #[serde(rename = "parallel_tool_calls")]
     ParallelToolCalls,
+    #[serde(rename = "include_reasoning")]
     IncludeReasoning,
+    #[serde(rename = "reasoning")]
     Reasoning,
+    #[serde(rename = "web_search_options")]
     WebSearchOptions,
+    #[serde(rename = "verbosity")]
     Verbosity,
 }
 
@@ -2058,9 +2132,11 @@ pub enum PromptUnion {
 ))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ProviderName {
+    #[serde(rename = "AI21")]
     Ai21,
     AionLabs,
     Alibaba,
+    #[serde(rename = "Amazon Bedrock")]
     AmazonBedrock,
     Anthropic,
     Arcee,
@@ -2068,6 +2144,7 @@ pub enum ProviderName {
     Avian,
     Azure,
     BaseTen,
+    #[serde(rename = "Black Forest Labs")]
     BlackForestLabs,
     Cerebras,
     Chutes,
@@ -2081,8 +2158,10 @@ pub enum ProviderName {
     Featherless,
     Fireworks,
     Friendli,
+    #[serde(rename = "GMICloud")]
     GmiCloud,
     Google,
+    #[serde(rename = "Google AI Studio")]
     GoogleAiStudio,
     Groq,
     Hyperbolic,
@@ -2091,11 +2170,13 @@ pub enum ProviderName {
     Infermatic,
     Inflection,
     Liquid,
+    #[serde(rename = "Mancer 2")]
     Mancer2,
     Minimax,
     ModelRun,
     Mistral,
     Modular,
+    #[serde(rename = "Moonshot AI")]
     MoonshotAi,
     Morph,
     NCompass,
@@ -2103,6 +2184,7 @@ pub enum ProviderName {
     NextBit,
     Novita,
     Nvidia,
+    #[serde(rename = "OpenAI")]
     OpenAi,
     OpenInference,
     Parasail,
@@ -2117,7 +2199,9 @@ pub enum ProviderName {
     Together,
     Venice,
     WandB,
+    #[serde(rename = "xAI")]
     XAi,
+    #[serde(rename = "Z.AI")]
     ZAi,
     FakeProvider,
 }
@@ -2164,8 +2248,11 @@ pub struct ProviderProperty {
 #[cfg(any(feature = "beta_responses", feature = "embeddings"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ProviderSort {
+    #[serde(rename = "price")]
     Price,
+    #[serde(rename = "throughput")]
     Throughput,
+    #[serde(rename = "latency")]
     Latency,
 }
 
@@ -2208,14 +2295,23 @@ pub struct PublicPricing {
 #[cfg(any(feature = "beta_responses", feature = "embeddings"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Quantization {
+    #[serde(rename = "int4")]
     Int4,
+    #[serde(rename = "int8")]
     Int8,
+    #[serde(rename = "fp4")]
     Fp4,
+    #[serde(rename = "fp6")]
     Fp6,
+    #[serde(rename = "fp8")]
     Fp8,
+    #[serde(rename = "fp16")]
     Fp16,
+    #[serde(rename = "bf16")]
     Bf16,
+    #[serde(rename = "fp32")]
     Fp32,
+    #[serde(rename = "unknown")]
     Unknown,
 }
 
@@ -2241,8 +2337,11 @@ pub struct ReasoningSummaryText {
 #[cfg(any(feature = "beta_responses", feature = "chat"))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ReasoningSummaryVerbosity {
+    #[serde(rename = "auto")]
     Auto,
+    #[serde(rename = "concise")]
     Concise,
+    #[serde(rename = "detailed")]
     Detailed,
 }
 
@@ -2484,8 +2583,11 @@ pub struct ResponsesOutputMessage {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ResponsesSearchContextSize {
+    #[serde(rename = "low")]
     Low,
+    #[serde(rename = "medium")]
     Medium,
+    #[serde(rename = "high")]
     High,
 }
 
@@ -2644,8 +2746,11 @@ pub struct TooManyRequestsResponseErrorData {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ToolCallStatus {
+    #[serde(rename = "in_progress")]
     InProgress,
+    #[serde(rename = "completed")]
     Completed,
+    #[serde(rename = "incomplete")]
     Incomplete,
 }
 
@@ -2868,9 +2973,13 @@ pub struct WebSearchPreviewToolUserLocation {
 #[cfg(feature = "beta_responses")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum WebSearchStatus {
+    #[serde(rename = "completed")]
     Completed,
+    #[serde(rename = "searching")]
     Searching,
+    #[serde(rename = "in_progress")]
     InProgress,
+    #[serde(rename = "failed")]
     Failed,
 }
 

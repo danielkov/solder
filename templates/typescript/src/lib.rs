@@ -586,6 +586,7 @@ impl TypeScriptGenerator {
     }
 
     /// Check if a field references any custom type (not a primitive).
+    #[allow(clippy::only_used_in_recursion)]
     fn field_references_custom_type(&self, type_ref: &ir::gen_ir::TypeRef, ir: &GenIr) -> bool {
         // Check if the target is a custom type (not a primitive)
         if ir.types.contains_key(&type_ref.target) {
@@ -594,10 +595,10 @@ impl TypeScriptGenerator {
 
         // Check modifiers for nested custom type references
         for modifier in &type_ref.modifiers {
-            if let ir::gen_ir::TypeMod::Map(value_type) = modifier {
-                if self.field_references_custom_type(value_type, ir) {
-                    return true;
-                }
+            if let ir::gen_ir::TypeMod::Map(value_type) = modifier
+                && self.field_references_custom_type(value_type, ir)
+            {
+                return true;
             }
         }
 

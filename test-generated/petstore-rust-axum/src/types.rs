@@ -30,10 +30,15 @@ pub struct Error {
 #[cfg(feature = "faq")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum FaqCategory {
+    #[serde(rename = "general")]
     General,
+    #[serde(rename = "orders")]
     Orders,
+    #[serde(rename = "shipping")]
     Shipping,
+    #[serde(rename = "returns")]
     Returns,
+    #[serde(rename = "pets")]
     Pets,
 }
 
@@ -117,9 +122,13 @@ pub struct Order {
 #[cfg(feature = "orders")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum OrderStatus {
+    #[serde(rename = "pending")]
     Pending,
+    #[serde(rename = "approved")]
     Approved,
+    #[serde(rename = "completed")]
     Completed,
+    #[serde(rename = "cancelled")]
     Cancelled,
 }
 
@@ -170,23 +179,36 @@ pub struct PetList {
 #[cfg(feature = "pets")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum PetStatus {
+    #[serde(rename = "available")]
     Available,
+    #[serde(rename = "pending")]
     Pending,
+    #[serde(rename = "adopted")]
     Adopted,
+    #[serde(rename = "not_available")]
     NotAvailable,
 }
 
 #[cfg(feature = "pets")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Species {
+    #[serde(rename = "dog")]
     Dog,
+    #[serde(rename = "cat")]
     Cat,
+    #[serde(rename = "bird")]
     Bird,
+    #[serde(rename = "rabbit")]
     Rabbit,
+    #[serde(rename = "hamster")]
     Hamster,
+    #[serde(rename = "guinea_pig")]
     GuineaPig,
+    #[serde(rename = "fish")]
     Fish,
+    #[serde(rename = "reptile")]
     Reptile,
+    #[serde(rename = "other")]
     Other,
 }
 

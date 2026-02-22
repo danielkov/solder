@@ -23,7 +23,7 @@ TEMPLATE ?= typescript
 # ============================================================================
 
 help:
-	@echo "OAS-Gen2 Development Commands"
+	@echo "solder2 Development Commands"
 	@echo "=============================="
 	@echo ""
 	@echo "Build & Test:"
@@ -103,7 +103,7 @@ run:
 	fi; \
 	OUTPUT_DIR="$(OUTPUT_BASE)/$(SPEC)-$(TEMPLATE)"; \
 	echo "Generating $(SPEC) with $(TEMPLATE) -> $$OUTPUT_DIR"; \
-	cargo run --bin oas-gen -- generate $$SPEC_FILE -t $(TEMPLATE) -v -o $$OUTPUT_DIR $$RECURSIVE_FLAG
+	cargo run --bin solder -- generate $$SPEC_FILE -t $(TEMPLATE) -v -o $$OUTPUT_DIR $$RECURSIVE_FLAG
 
 # Generate all combinations
 run-all:
@@ -126,7 +126,7 @@ build:
 
 release:
 	cargo build --release
-	@echo "Binary at: target/release/oas-gen"
+	@echo "Binary at: target/release/solder"
 
 install:
 	cargo install --path cli
@@ -204,13 +204,13 @@ clean-generated:
 # ============================================================================
 
 demo-per-service:
-	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript --service-style per-service -o demo-per-service
+	cargo run --bin solder -- generate examples/petstore.json -t typescript --service-style per-service -o demo-per-service
 
 demo-single-client:
-	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript --service-style single-client -o demo-single-client
+	cargo run --bin solder -- generate examples/petstore.json -t typescript --service-style single-client -o demo-single-client
 
 demo-by-tag:
-	cargo run --bin oas-gen -- generate examples/petstore.json -t typescript --service-style by-tag -o demo-by-tag
+	cargo run --bin solder -- generate examples/petstore.json -t typescript --service-style by-tag -o demo-by-tag
 
 clean-demo:
 	rm -rf demo-per-service demo-single-client demo-by-tag
@@ -245,7 +245,7 @@ profile:
 	cargo build --release --timings
 
 debug-run:
-	RUST_BACKTRACE=1 cargo run --bin oas-gen -- generate examples/petstore.json -t typescript -v
+	RUST_BACKTRACE=1 cargo run --bin solder -- generate examples/petstore.json -t typescript -v
 
 outdated:
 	cargo outdated

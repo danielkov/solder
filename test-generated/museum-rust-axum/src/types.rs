@@ -120,6 +120,8 @@ pub type TicketMessage = String;
 #[cfg(feature = "tickets")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TicketType {
+    #[serde(rename = "event")]
     Event,
+    #[serde(rename = "general")]
     General,
 }
