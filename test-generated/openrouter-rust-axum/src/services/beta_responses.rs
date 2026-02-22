@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // CreateResponses types
@@ -143,6 +146,7 @@ impl IntoResponse for CreateResponsesError {
 ///     async fn create_responses(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: open_router_api::types::OpenResponsesRequest,
 ///     ) -> CreateResponsesResult {
 ///         // Implement your business logic here
@@ -170,6 +174,7 @@ where
     fn create_responses(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::OpenResponsesRequest,
     ) -> impl std::future::Future<Output = CreateResponsesResult> + Send;
 
@@ -179,7 +184,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::OpenResponsesRequest>| async move {
-                match service.create_responses(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_responses(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

@@ -1,0 +1,11 @@
+import { array, string, typed, union } from '@speakeasy-api/tonic';
+import type { TypedSchema } from '@speakeasy-api/tonic';
+
+import type { PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem } from './PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem';
+import { PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItemSchema } from './PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem';
+/**
+ * The discounts applied to the quote.
+ */
+export type PostQuotesRequestDiscounts = Array<PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItem> | string;
+
+export const PostQuotesRequestDiscountsSchema: TypedSchema<PostQuotesRequestDiscounts> = typed<PostQuotesRequestDiscounts>(union(array(PostCustomersCustomerSubscriptionsRequestAddInvoiceItemsItemDiscountsItemSchema), string()));

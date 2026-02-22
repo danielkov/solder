@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // CreateEmbeddings types
@@ -152,6 +155,7 @@ impl IntoResponse for ListEmbeddingsModelsError {
 ///     async fn create_embeddings(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: open_router_api::types::CreateEmbeddingsRequest,
 ///     ) -> CreateEmbeddingsResult {
 ///         // Implement your business logic here
@@ -162,6 +166,7 @@ impl IntoResponse for ListEmbeddingsModelsError {
 ///     async fn list_embeddings_models(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> ListEmbeddingsModelsResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_modelslistresponse) or Err(error)
@@ -188,6 +193,7 @@ where
     fn create_embeddings(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::CreateEmbeddingsRequest,
     ) -> impl std::future::Future<Output = CreateEmbeddingsResult> + Send;
 
@@ -195,6 +201,7 @@ where
     fn list_embeddings_models(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = ListEmbeddingsModelsResult> + Send;
 
     /// Create a router for this service
@@ -203,7 +210,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::CreateEmbeddingsRequest>| async move {
-                match service.create_embeddings(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_embeddings(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -214,7 +233,19 @@ where
 
         let list_embeddings_models_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.list_embeddings_models(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list_embeddings_models(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

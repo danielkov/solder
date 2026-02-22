@@ -9,6 +9,8 @@ use std::path::{Path, PathBuf};
 pub use ir::gen_ir::GenIr;
 use serde::Serialize;
 
+pub mod pretty;
+
 mod error;
 pub use error::{Error, Result};
 

@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // GetParameters types
@@ -81,6 +84,7 @@ impl IntoResponse for GetParametersError {
 ///     async fn get_parameters(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         author: String,
 ///         slug: String,
 ///         query: GetParametersQuery,
@@ -110,6 +114,7 @@ where
     fn get_parameters(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         author: String,
         slug: String,
         query: GetParametersQuery,
@@ -122,8 +127,20 @@ where
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<(String, String)>,
              axum::extract::Query(query): axum::extract::Query<GetParametersQuery>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let (author, slug) = path_params;
-                match service.get_parameters(ctx, author, slug, query).await {
+                match service.get_parameters(ctx, auth, author, slug, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

@@ -8,13 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
-
-/// API Key authentication
-#[derive(Clone, Debug)]
-pub struct AuthApiKey(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // ListProducts types
@@ -227,6 +226,7 @@ impl IntoResponse for UpdateProductInventoryError {
 ///     async fn list_products(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: ListProductsQuery,
 ///     ) -> ListProductsResult {
 ///         // Implement your business logic here
@@ -237,6 +237,7 @@ impl IntoResponse for UpdateProductInventoryError {
 ///     async fn create_product(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: multi_file_reference_api::types::ProductCreate,
 ///     ) -> CreateProductResult {
 ///         // Implement your business logic here
@@ -247,6 +248,7 @@ impl IntoResponse for UpdateProductInventoryError {
 ///     async fn get_product_by_id(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> GetProductByIdResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_product) or Err(error)
@@ -256,6 +258,7 @@ impl IntoResponse for UpdateProductInventoryError {
 ///     async fn update_product(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: multi_file_reference_api::types::ProductUpdate,
 ///     ) -> UpdateProductResult {
 ///         // Implement your business logic here
@@ -266,6 +269,7 @@ impl IntoResponse for UpdateProductInventoryError {
 ///     async fn delete_product(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> DeleteProductResult {
 ///         // Implement your business logic here
 ///         Ok(())
@@ -274,6 +278,7 @@ impl IntoResponse for UpdateProductInventoryError {
 ///     async fn update_product_inventory(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: multi_file_reference_api::types::InventoryUpdate,
 ///     ) -> UpdateProductInventoryResult {
 ///         // Implement your business logic here
@@ -301,6 +306,7 @@ where
     fn list_products(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: ListProductsQuery,
     ) -> impl std::future::Future<Output = ListProductsResult> + Send;
 
@@ -308,6 +314,7 @@ where
     fn create_product(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::ProductCreate,
     ) -> impl std::future::Future<Output = CreateProductResult> + Send;
 
@@ -315,12 +322,14 @@ where
     fn get_product_by_id(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = GetProductByIdResult> + Send;
 
     /// Put /products/{productId}
     fn update_product(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::ProductUpdate,
     ) -> impl std::future::Future<Output = UpdateProductResult> + Send;
 
@@ -328,12 +337,14 @@ where
     fn delete_product(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = DeleteProductResult> + Send;
 
     /// Put /products/{productId}/inventory
     fn update_product_inventory(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::InventoryUpdate,
     ) -> impl std::future::Future<Output = UpdateProductInventoryResult> + Send;
 
@@ -343,7 +354,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<ListProductsQuery>| async move {
-                match service.list_products(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list_products(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -356,7 +379,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::ProductCreate>| async move {
-                match service.create_product(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_product(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::CREATED;
                         (status, Json(result)).into_response()
@@ -367,7 +402,19 @@ where
 
         let get_product_by_id_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.get_product_by_id(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_product_by_id(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -380,7 +427,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::ProductUpdate>| async move {
-                match service.update_product(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.update_product(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -391,7 +450,19 @@ where
 
         let delete_product_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.delete_product(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.delete_product(ctx, auth).await {
                     Ok(_) => {
                         let status = StatusCode::NO_CONTENT;
                         status.into_response()
@@ -404,7 +475,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::InventoryUpdate>| async move {
-                match service.update_product_inventory(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.update_product_inventory(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

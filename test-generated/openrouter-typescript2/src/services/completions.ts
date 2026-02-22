@@ -1,0 +1,154 @@
+import type { ChatError, CompletionCreateParams, CompletionResponse } from '../types';
+import { UnexpectedError } from '../types/errors';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
+
+/**
+ * Error thrown when createCompletions returns status 400.
+ */
+export class CreateCompletionsBadRequestError extends globalThis.Error {
+  readonly status = 400;
+  readonly body: ChatError;
+  constructor(body: ChatError) {
+    super(`CreateCompletionsBadRequestError`);
+    this.name = 'CreateCompletionsBadRequestError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createCompletions returns status 401.
+ */
+export class CreateCompletionsUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: ChatError;
+  constructor(body: ChatError) {
+    super(`CreateCompletionsUnauthorizedError`);
+    this.name = 'CreateCompletionsUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createCompletions returns status 429.
+ */
+export class CreateCompletionsTooManyRequestsError extends globalThis.Error {
+  readonly status = 429;
+  readonly body: ChatError;
+  constructor(body: ChatError) {
+    super(`CreateCompletionsTooManyRequestsError`);
+    this.name = 'CreateCompletionsTooManyRequestsError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createCompletions returns status 500.
+ */
+export class CreateCompletionsInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: ChatError;
+  constructor(body: ChatError) {
+    super(`CreateCompletionsInternalServerErrorError`);
+    this.name = 'CreateCompletionsInternalServerErrorError';
+    this.body = body;
+  }
+}
+export class CompletionsService {
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {
+  }
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
+  /**
+   * Create a completion
+   * 
+   * Creates a completion for the provided prompt and parameters. Supports both streaming and non-streaming modes.
+   * 
+   * @throws {CreateCompletionsBadRequestError | CreateCompletionsUnauthorizedError | CreateCompletionsTooManyRequestsError | CreateCompletionsInternalServerErrorError | UnexpectedError}
+   */
+  async createCompletions(params: { body: CompletionCreateParams }): Promise<CompletionResponse> {
+    const path = '/completions';
+    const url = `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    headers['Content-Type'] = 'application/json';
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = {
+      method: 'POST',
+      url,
+      headers,
+      body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 400: {
+          try {
+            const body = await response.json() as ChatError;
+            await this.raise(new CreateCompletionsBadRequestError(body));
+          } catch (e) {
+            if (e instanceof CreateCompletionsBadRequestError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 401: {
+          try {
+            const body = await response.json() as ChatError;
+            await this.raise(new CreateCompletionsUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof CreateCompletionsUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 429: {
+          try {
+            const body = await response.json() as ChatError;
+            await this.raise(new CreateCompletionsTooManyRequestsError(body));
+          } catch (e) {
+            if (e instanceof CreateCompletionsTooManyRequestsError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as ChatError;
+            await this.raise(new CreateCompletionsInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof CreateCompletionsInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+}

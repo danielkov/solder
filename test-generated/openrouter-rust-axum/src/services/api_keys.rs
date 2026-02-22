@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // GetCurrentKey types
@@ -265,6 +268,7 @@ impl IntoResponse for UpdateKeysError {
 ///     async fn get_current_key(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> GetCurrentKeyResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_getcurrentkeyresponse) or Err(error)
@@ -274,6 +278,7 @@ impl IntoResponse for UpdateKeysError {
 ///     async fn list(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: ListQuery,
 ///     ) -> ListResult {
 ///         // Implement your business logic here
@@ -284,6 +289,7 @@ impl IntoResponse for UpdateKeysError {
 ///     async fn create_keys(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: open_router_api::types::CreateKeysRequest,
 ///     ) -> CreateKeysResult {
 ///         // Implement your business logic here
@@ -294,6 +300,7 @@ impl IntoResponse for UpdateKeysError {
 ///     async fn get_key(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         hash: String,
 ///     ) -> GetKeyResult {
 ///         // Implement your business logic here
@@ -304,6 +311,7 @@ impl IntoResponse for UpdateKeysError {
 ///     async fn delete_keys(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         hash: String,
 ///     ) -> DeleteKeysResult {
 ///         // Implement your business logic here
@@ -314,6 +322,7 @@ impl IntoResponse for UpdateKeysError {
 ///     async fn update_keys(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         hash: String,
 ///         body: open_router_api::types::UpdateKeysRequest,
 ///     ) -> UpdateKeysResult {
@@ -342,12 +351,14 @@ where
     fn get_current_key(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = GetCurrentKeyResult> + Send;
 
     /// Get /keys
     fn list(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: ListQuery,
     ) -> impl std::future::Future<Output = ListResult> + Send;
 
@@ -355,6 +366,7 @@ where
     fn create_keys(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::CreateKeysRequest,
     ) -> impl std::future::Future<Output = CreateKeysResult> + Send;
 
@@ -362,6 +374,7 @@ where
     fn get_key(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         hash: String,
     ) -> impl std::future::Future<Output = GetKeyResult> + Send;
 
@@ -369,6 +382,7 @@ where
     fn delete_keys(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         hash: String,
     ) -> impl std::future::Future<Output = DeleteKeysResult> + Send;
 
@@ -376,6 +390,7 @@ where
     fn update_keys(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         hash: String,
         body: crate::types::UpdateKeysRequest,
     ) -> impl std::future::Future<Output = UpdateKeysResult> + Send;
@@ -384,7 +399,19 @@ where
     fn router(self) -> Router<S> {
         let get_current_key_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.get_current_key(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_current_key(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -397,7 +424,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<ListQuery>| async move {
-                match service.list(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -410,7 +449,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::CreateKeysRequest>| async move {
-                match service.create_keys(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_keys(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::CREATED;
                         (status, Json(result)).into_response()
@@ -423,8 +474,20 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let hash = path_params;
-                match service.get_key(ctx, hash).await {
+                match service.get_key(ctx, auth, hash).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -437,8 +500,20 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let hash = path_params;
-                match service.delete_keys(ctx, hash).await {
+                match service.delete_keys(ctx, auth, hash).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -452,8 +527,20 @@ where
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>,
              Json(body): Json<crate::types::UpdateKeysRequest>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let hash = path_params;
-                match service.update_keys(ctx, hash, body).await {
+                match service.update_keys(ctx, auth, hash, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // GetCredits types
@@ -119,6 +122,7 @@ impl IntoResponse for CreateCoinbaseChargeError {
 ///     async fn get_credits(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> GetCreditsResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_primitive_any) or Err(error)
@@ -128,6 +132,7 @@ impl IntoResponse for CreateCoinbaseChargeError {
 ///     async fn create_coinbase_charge(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: open_router_api::types::CreateChargeRequest,
 ///     ) -> CreateCoinbaseChargeResult {
 ///         // Implement your business logic here
@@ -155,19 +160,33 @@ where
     fn get_credits(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = GetCreditsResult> + Send;
 
     /// Post /credits/coinbase
     fn create_coinbase_charge(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::CreateChargeRequest,
     ) -> impl std::future::Future<Output = CreateCoinbaseChargeResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
         let get_credits_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-            match service.get_credits(ctx).await {
+            let auth = 'auth: {
+                if let Some(v) = ctx
+                    .headers
+                    .get(axum::http::header::AUTHORIZATION)
+                    .and_then(|v| v.to_str().ok())
+                {
+                    if let Some(token) = v.strip_prefix("Bearer ") {
+                        break 'auth Auth::Bearer(token.to_string());
+                    }
+                }
+                return StatusCode::UNAUTHORIZED.into_response();
+            };
+            match service.get_credits(ctx, auth).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
@@ -180,7 +199,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::CreateChargeRequest>| async move {
-                match service.create_coinbase_charge(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_coinbase_charge(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

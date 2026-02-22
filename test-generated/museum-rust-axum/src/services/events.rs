@@ -8,6 +8,13 @@ use axum::{
 
 use crate::shared::RequestContext;
 
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
+
 // Per-operation result and error types
 // ListSpecialEvents types
 pub type ListSpecialEventsResult =
@@ -182,6 +189,7 @@ impl IntoResponse for UpdateSpecialEventError {
 ///     async fn list_special_events(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: ListSpecialEventsQuery,
 ///     ) -> ListSpecialEventsResult {
 ///         // Implement your business logic here
@@ -192,6 +200,7 @@ impl IntoResponse for UpdateSpecialEventError {
 ///     async fn create_special_event(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: redocly_museum_api::types::SpecialEvent,
 ///     ) -> CreateSpecialEventResult {
 ///         // Implement your business logic here
@@ -202,6 +211,7 @@ impl IntoResponse for UpdateSpecialEventError {
 ///     async fn get_special_event(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         event_id: String,
 ///     ) -> GetSpecialEventResult {
 ///         // Implement your business logic here
@@ -212,6 +222,7 @@ impl IntoResponse for UpdateSpecialEventError {
 ///     async fn delete_special_event(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         event_id: String,
 ///     ) -> DeleteSpecialEventResult {
 ///         // Implement your business logic here
@@ -221,6 +232,7 @@ impl IntoResponse for UpdateSpecialEventError {
 ///     async fn update_special_event(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         event_id: String,
 ///         body: redocly_museum_api::types::SpecialEventFields,
 ///     ) -> UpdateSpecialEventResult {
@@ -249,6 +261,7 @@ where
     fn list_special_events(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: ListSpecialEventsQuery,
     ) -> impl std::future::Future<Output = ListSpecialEventsResult> + Send;
 
@@ -256,6 +269,7 @@ where
     fn create_special_event(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::SpecialEvent,
     ) -> impl std::future::Future<Output = CreateSpecialEventResult> + Send;
 
@@ -263,6 +277,7 @@ where
     fn get_special_event(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         event_id: String,
     ) -> impl std::future::Future<Output = GetSpecialEventResult> + Send;
 
@@ -270,6 +285,7 @@ where
     fn delete_special_event(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         event_id: String,
     ) -> impl std::future::Future<Output = DeleteSpecialEventResult> + Send;
 
@@ -277,6 +293,7 @@ where
     fn update_special_event(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         event_id: String,
         body: crate::types::SpecialEventFields,
     ) -> impl std::future::Future<Output = UpdateSpecialEventResult> + Send;
@@ -288,7 +305,19 @@ where
                                            axum::extract::Query(query): axum::extract::Query<
             ListSpecialEventsQuery,
         >| async move {
-            match service.list_special_events(ctx, query).await {
+            let auth = 'auth: {
+                if let Some(v) = ctx
+                    .headers
+                    .get(axum::http::header::AUTHORIZATION)
+                    .and_then(|v| v.to_str().ok())
+                {
+                    if let Some(token) = v.strip_prefix("Bearer ") {
+                        break 'auth Auth::Bearer(token.to_string());
+                    }
+                }
+                return StatusCode::UNAUTHORIZED.into_response();
+            };
+            match service.list_special_events(ctx, auth, query).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
@@ -301,7 +330,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::SpecialEvent>| async move {
-                match service.create_special_event(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_special_event(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::CREATED;
                         (status, Json(result)).into_response()
@@ -314,8 +355,20 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let event_id = path_params;
-                match service.get_special_event(ctx, event_id).await {
+                match service.get_special_event(ctx, auth, event_id).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -328,8 +381,20 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let event_id = path_params;
-                match service.delete_special_event(ctx, event_id).await {
+                match service.delete_special_event(ctx, auth, event_id).await {
                     Ok(_) => {
                         let status = StatusCode::NO_CONTENT;
                         status.into_response()
@@ -343,8 +408,23 @@ where
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>,
              Json(body): Json<crate::types::SpecialEventFields>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let event_id = path_params;
-                match service.update_special_event(ctx, event_id, body).await {
+                match service
+                    .update_special_event(ctx, auth, event_id, body)
+                    .await
+                {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

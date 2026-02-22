@@ -9,7 +9,7 @@ SPEC_FILES := $(wildcard examples/*.json examples/*.yaml examples/*.yml)
 SPEC_NAMES := $(basename $(notdir $(SPEC_FILES)))
 
 # Available templates
-TEMPLATES := typescript rust-axum
+TEMPLATES := typescript typescript2 rust-axum
 
 # Output directory base
 OUTPUT_BASE := test-generated

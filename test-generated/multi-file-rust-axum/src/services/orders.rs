@@ -8,13 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
-
-/// API Key authentication
-#[derive(Clone, Debug)]
-pub struct AuthApiKey(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // ListOrders types
@@ -195,6 +194,7 @@ impl IntoResponse for CancelOrderError {
 ///     async fn list_orders(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: ListOrdersQuery,
 ///     ) -> ListOrdersResult {
 ///         // Implement your business logic here
@@ -205,6 +205,7 @@ impl IntoResponse for CancelOrderError {
 ///     async fn create_order(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: multi_file_reference_api::types::OrderCreate,
 ///     ) -> CreateOrderResult {
 ///         // Implement your business logic here
@@ -215,6 +216,7 @@ impl IntoResponse for CancelOrderError {
 ///     async fn get_order_by_id(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> GetOrderByIdResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_order) or Err(error)
@@ -224,6 +226,7 @@ impl IntoResponse for CancelOrderError {
 ///     async fn delete_order(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> DeleteOrderResult {
 ///         // Implement your business logic here
 ///         Ok(())
@@ -232,6 +235,7 @@ impl IntoResponse for CancelOrderError {
 ///     async fn cancel_order(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: multi_file_reference_api::types::CancelOrderRequest,
 ///     ) -> CancelOrderResult {
 ///         // Implement your business logic here
@@ -259,6 +263,7 @@ where
     fn list_orders(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: ListOrdersQuery,
     ) -> impl std::future::Future<Output = ListOrdersResult> + Send;
 
@@ -266,6 +271,7 @@ where
     fn create_order(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::OrderCreate,
     ) -> impl std::future::Future<Output = CreateOrderResult> + Send;
 
@@ -273,18 +279,21 @@ where
     fn get_order_by_id(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = GetOrderByIdResult> + Send;
 
     /// Delete /orders/{orderId}
     fn delete_order(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = DeleteOrderResult> + Send;
 
     /// Post /orders/{orderId}/cancel
     fn cancel_order(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::CancelOrderRequest,
     ) -> impl std::future::Future<Output = CancelOrderResult> + Send;
 
@@ -294,7 +303,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<ListOrdersQuery>| async move {
-                match service.list_orders(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list_orders(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -307,7 +328,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::OrderCreate>| async move {
-                match service.create_order(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_order(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::CREATED;
                         (status, Json(result)).into_response()
@@ -318,7 +351,19 @@ where
 
         let get_order_by_id_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.get_order_by_id(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_order_by_id(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -328,7 +373,19 @@ where
             };
 
         let delete_order_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-            match service.delete_order(ctx).await {
+            let auth = 'auth: {
+                if let Some(v) = ctx
+                    .headers
+                    .get(axum::http::header::AUTHORIZATION)
+                    .and_then(|v| v.to_str().ok())
+                {
+                    if let Some(token) = v.strip_prefix("Bearer ") {
+                        break 'auth Auth::Bearer(token.to_string());
+                    }
+                }
+                return StatusCode::UNAUTHORIZED.into_response();
+            };
+            match service.delete_order(ctx, auth).await {
                 Ok(_) => {
                     let status = StatusCode::NO_CONTENT;
                     status.into_response()
@@ -341,7 +398,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::CancelOrderRequest>| async move {
-                match service.cancel_order(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.cancel_order(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

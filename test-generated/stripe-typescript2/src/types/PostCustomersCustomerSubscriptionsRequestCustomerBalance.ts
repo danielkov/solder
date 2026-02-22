@@ -1,0 +1,8 @@
+import { string, typed, union } from '@speakeasy-api/tonic';
+import type { TypedSchema } from '@speakeasy-api/tonic';
+
+import type { PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject } from './PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject';
+import { PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectSchema } from './PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject';
+export type PostCustomersCustomerSubscriptionsRequestCustomerBalance = PostCustomersCustomerSubscriptionsRequestCustomerBalanceObject | string;
+
+export const PostCustomersCustomerSubscriptionsRequestCustomerBalanceSchema: TypedSchema<PostCustomersCustomerSubscriptionsRequestCustomerBalance> = typed<PostCustomersCustomerSubscriptionsRequestCustomerBalance>(union(PostCustomersCustomerSubscriptionsRequestCustomerBalanceObjectSchema, string()));

@@ -741,6 +741,7 @@ dependencies = [
  "libloading",
  "rust-axum",
  "typescript",
+ "typescript2",
 ]
 
 [[package]]
@@ -2263,6 +2264,16 @@ name = "typescript"
 version = "0.1.0"
 dependencies = [
  "askama",
+ "codegen",
+ "ir",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "typescript2"
+version = "0.1.0"
+dependencies = [
  "codegen",
  "ir",
  "serde",

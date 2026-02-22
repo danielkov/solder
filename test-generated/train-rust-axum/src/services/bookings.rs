@@ -8,6 +8,13 @@ use axum::{
 
 use crate::shared::RequestContext;
 
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
+
 // Per-operation result and error types
 // GetBookings types
 pub type GetBookingsResult = Result<crate::types::GetBookingsUnion, GetBookingsError>;
@@ -239,6 +246,7 @@ impl IntoResponse for DeleteBookingError {
 ///     async fn get_bookings(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: GetBookingsQuery,
 ///     ) -> GetBookingsResult {
 ///         // Implement your business logic here
@@ -249,6 +257,7 @@ impl IntoResponse for DeleteBookingError {
 ///     async fn create_booking(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: train_travel_api::types::Booking,
 ///     ) -> CreateBookingResult {
 ///         // Implement your business logic here
@@ -259,6 +268,7 @@ impl IntoResponse for DeleteBookingError {
 ///     async fn get_booking(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> GetBookingResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_createbookingunion) or Err(error)
@@ -268,6 +278,7 @@ impl IntoResponse for DeleteBookingError {
 ///     async fn delete_booking(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> DeleteBookingResult {
 ///         // Implement your business logic here
 ///         Ok(())
@@ -293,6 +304,7 @@ where
     fn get_bookings(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: GetBookingsQuery,
     ) -> impl std::future::Future<Output = GetBookingsResult> + Send;
 
@@ -300,6 +312,7 @@ where
     fn create_booking(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::Booking,
     ) -> impl std::future::Future<Output = CreateBookingResult> + Send;
 
@@ -307,12 +320,14 @@ where
     fn get_booking(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = GetBookingResult> + Send;
 
     /// Delete /bookings/{bookingId}
     fn delete_booking(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = DeleteBookingResult> + Send;
 
     /// Create a router for this service
@@ -321,7 +336,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<GetBookingsQuery>| async move {
-                match service.get_bookings(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_bookings(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -334,7 +361,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::Booking>| async move {
-                match service.create_booking(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_booking(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::CREATED;
                         (status, Json(result)).into_response()
@@ -344,7 +383,19 @@ where
             };
 
         let get_booking_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-            match service.get_booking(ctx).await {
+            let auth = 'auth: {
+                if let Some(v) = ctx
+                    .headers
+                    .get(axum::http::header::AUTHORIZATION)
+                    .and_then(|v| v.to_str().ok())
+                {
+                    if let Some(token) = v.strip_prefix("Bearer ") {
+                        break 'auth Auth::Bearer(token.to_string());
+                    }
+                }
+                return StatusCode::UNAUTHORIZED.into_response();
+            };
+            match service.get_booking(ctx, auth).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
                     (status, Json(result)).into_response()
@@ -355,7 +406,19 @@ where
 
         let delete_booking_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.delete_booking(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.delete_booking(ctx, auth).await {
                     Ok(_) => {
                         let status = StatusCode::NO_CONTENT;
                         status.into_response()

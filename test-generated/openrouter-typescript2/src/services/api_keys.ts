@@ -1,0 +1,778 @@
+import type { BadRequestResponse, CreateKeysRequest, CreateKeysResponse, DeleteKeysResponse, GetCurrentKeyResponse, GetKeyResponse, InternalServerResponse, ListResponse, NotFoundResponse, TooManyRequestsResponse, UnauthorizedResponse, UpdateKeysRequest, UpdateKeysResponse } from '../types';
+import { UnexpectedError } from '../types/errors';
+import type { SDKHooks, SDKRequestInit, SecurityConfig } from './client';
+
+/**
+ * Error thrown when getCurrentKey returns status 401.
+ */
+export class GetCurrentKeyUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: UnauthorizedResponse;
+  constructor(body: UnauthorizedResponse) {
+    super(`GetCurrentKeyUnauthorizedError`);
+    this.name = 'GetCurrentKeyUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when getCurrentKey returns status 500.
+ */
+export class GetCurrentKeyInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: InternalServerResponse;
+  constructor(body: InternalServerResponse) {
+    super(`GetCurrentKeyInternalServerErrorError`);
+    this.name = 'GetCurrentKeyInternalServerErrorError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when list returns status 401.
+ */
+export class ListUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: UnauthorizedResponse;
+  constructor(body: UnauthorizedResponse) {
+    super(`ListUnauthorizedError`);
+    this.name = 'ListUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when list returns status 429.
+ */
+export class ListTooManyRequestsError extends globalThis.Error {
+  readonly status = 429;
+  readonly body: TooManyRequestsResponse;
+  constructor(body: TooManyRequestsResponse) {
+    super(`ListTooManyRequestsError`);
+    this.name = 'ListTooManyRequestsError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when list returns status 500.
+ */
+export class ListInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: InternalServerResponse;
+  constructor(body: InternalServerResponse) {
+    super(`ListInternalServerErrorError`);
+    this.name = 'ListInternalServerErrorError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createKeys returns status 400.
+ */
+export class CreateKeysBadRequestError extends globalThis.Error {
+  readonly status = 400;
+  readonly body: BadRequestResponse;
+  constructor(body: BadRequestResponse) {
+    super(`CreateKeysBadRequestError`);
+    this.name = 'CreateKeysBadRequestError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createKeys returns status 401.
+ */
+export class CreateKeysUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: UnauthorizedResponse;
+  constructor(body: UnauthorizedResponse) {
+    super(`CreateKeysUnauthorizedError`);
+    this.name = 'CreateKeysUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createKeys returns status 429.
+ */
+export class CreateKeysTooManyRequestsError extends globalThis.Error {
+  readonly status = 429;
+  readonly body: TooManyRequestsResponse;
+  constructor(body: TooManyRequestsResponse) {
+    super(`CreateKeysTooManyRequestsError`);
+    this.name = 'CreateKeysTooManyRequestsError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when createKeys returns status 500.
+ */
+export class CreateKeysInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: InternalServerResponse;
+  constructor(body: InternalServerResponse) {
+    super(`CreateKeysInternalServerErrorError`);
+    this.name = 'CreateKeysInternalServerErrorError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when getKey returns status 401.
+ */
+export class GetKeyUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: UnauthorizedResponse;
+  constructor(body: UnauthorizedResponse) {
+    super(`GetKeyUnauthorizedError`);
+    this.name = 'GetKeyUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when getKey returns status 404.
+ */
+export class GetKeyNotFoundError extends globalThis.Error {
+  readonly status = 404;
+  readonly body: NotFoundResponse;
+  constructor(body: NotFoundResponse) {
+    super(`GetKeyNotFoundError`);
+    this.name = 'GetKeyNotFoundError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when getKey returns status 429.
+ */
+export class GetKeyTooManyRequestsError extends globalThis.Error {
+  readonly status = 429;
+  readonly body: TooManyRequestsResponse;
+  constructor(body: TooManyRequestsResponse) {
+    super(`GetKeyTooManyRequestsError`);
+    this.name = 'GetKeyTooManyRequestsError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when getKey returns status 500.
+ */
+export class GetKeyInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: InternalServerResponse;
+  constructor(body: InternalServerResponse) {
+    super(`GetKeyInternalServerErrorError`);
+    this.name = 'GetKeyInternalServerErrorError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when deleteKeys returns status 401.
+ */
+export class DeleteKeysUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: UnauthorizedResponse;
+  constructor(body: UnauthorizedResponse) {
+    super(`DeleteKeysUnauthorizedError`);
+    this.name = 'DeleteKeysUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when deleteKeys returns status 404.
+ */
+export class DeleteKeysNotFoundError extends globalThis.Error {
+  readonly status = 404;
+  readonly body: NotFoundResponse;
+  constructor(body: NotFoundResponse) {
+    super(`DeleteKeysNotFoundError`);
+    this.name = 'DeleteKeysNotFoundError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when deleteKeys returns status 429.
+ */
+export class DeleteKeysTooManyRequestsError extends globalThis.Error {
+  readonly status = 429;
+  readonly body: TooManyRequestsResponse;
+  constructor(body: TooManyRequestsResponse) {
+    super(`DeleteKeysTooManyRequestsError`);
+    this.name = 'DeleteKeysTooManyRequestsError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when deleteKeys returns status 500.
+ */
+export class DeleteKeysInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: InternalServerResponse;
+  constructor(body: InternalServerResponse) {
+    super(`DeleteKeysInternalServerErrorError`);
+    this.name = 'DeleteKeysInternalServerErrorError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when updateKeys returns status 400.
+ */
+export class UpdateKeysBadRequestError extends globalThis.Error {
+  readonly status = 400;
+  readonly body: BadRequestResponse;
+  constructor(body: BadRequestResponse) {
+    super(`UpdateKeysBadRequestError`);
+    this.name = 'UpdateKeysBadRequestError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when updateKeys returns status 401.
+ */
+export class UpdateKeysUnauthorizedError extends globalThis.Error {
+  readonly status = 401;
+  readonly body: UnauthorizedResponse;
+  constructor(body: UnauthorizedResponse) {
+    super(`UpdateKeysUnauthorizedError`);
+    this.name = 'UpdateKeysUnauthorizedError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when updateKeys returns status 404.
+ */
+export class UpdateKeysNotFoundError extends globalThis.Error {
+  readonly status = 404;
+  readonly body: NotFoundResponse;
+  constructor(body: NotFoundResponse) {
+    super(`UpdateKeysNotFoundError`);
+    this.name = 'UpdateKeysNotFoundError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when updateKeys returns status 429.
+ */
+export class UpdateKeysTooManyRequestsError extends globalThis.Error {
+  readonly status = 429;
+  readonly body: TooManyRequestsResponse;
+  constructor(body: TooManyRequestsResponse) {
+    super(`UpdateKeysTooManyRequestsError`);
+    this.name = 'UpdateKeysTooManyRequestsError';
+    this.body = body;
+  }
+}
+
+/**
+ * Error thrown when updateKeys returns status 500.
+ */
+export class UpdateKeysInternalServerErrorError extends globalThis.Error {
+  readonly status = 500;
+  readonly body: InternalServerResponse;
+  constructor(body: InternalServerResponse) {
+    super(`UpdateKeysInternalServerErrorError`);
+    this.name = 'UpdateKeysInternalServerErrorError';
+    this.body = body;
+  }
+}
+export class ApiKeysService {
+  constructor(private baseUrl: string, private security: SecurityConfig, private hooks: SDKHooks) {
+  }
+  private async raise(error: globalThis.Error): Promise<never> {
+    await this.hooks.onError?.(error);
+    throw error;
+  }
+  /**
+   * Get current API key
+   * 
+   * Get information on the API key associated with the current authentication session
+   * @throws {GetCurrentKeyUnauthorizedError | GetCurrentKeyInternalServerErrorError | UnexpectedError}
+   */
+  async getCurrentKey(): Promise<GetCurrentKeyResponse> {
+    const path = '/key';
+    const url = `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = { method: 'GET', url, headers };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, { method: request.method, headers: request.headers });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          try {
+            const body = await response.json() as UnauthorizedResponse;
+            await this.raise(new GetCurrentKeyUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof GetCurrentKeyUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as InternalServerResponse;
+            await this.raise(new GetCurrentKeyInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof GetCurrentKeyInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+  /**
+   * List API keys
+   * 
+   * @throws {ListUnauthorizedError | ListTooManyRequestsError | ListInternalServerErrorError | UnexpectedError}
+   */
+  async list(params: { includeDisabled?: string; offset?: string }): Promise<ListResponse> {
+    const path = '/keys';
+    const queryParams = new URLSearchParams();
+    if (params.includeDisabled !== undefined) {
+      queryParams.append('include_disabled', String(params.includeDisabled));
+    }
+    if (params.offset !== undefined) {
+      queryParams.append('offset', String(params.offset));
+    }
+    const queryString = queryParams.toString();
+    const url = queryString ? `${this.baseUrl}${path}?${queryString}` : `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = { method: 'GET', url, headers };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, { method: request.method, headers: request.headers });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          try {
+            const body = await response.json() as UnauthorizedResponse;
+            await this.raise(new ListUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof ListUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 429: {
+          try {
+            const body = await response.json() as TooManyRequestsResponse;
+            await this.raise(new ListTooManyRequestsError(body));
+          } catch (e) {
+            if (e instanceof ListTooManyRequestsError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as InternalServerResponse;
+            await this.raise(new ListInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof ListInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+  /**
+   * Create a new API key
+   * 
+   * @throws {CreateKeysBadRequestError | CreateKeysUnauthorizedError | CreateKeysTooManyRequestsError | CreateKeysInternalServerErrorError | UnexpectedError}
+   */
+  async createKeys(params: { body: CreateKeysRequest }): Promise<CreateKeysResponse> {
+    const path = '/keys';
+    const url = `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    headers['Content-Type'] = 'application/json';
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = {
+      method: 'POST',
+      url,
+      headers,
+      body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 400: {
+          try {
+            const body = await response.json() as BadRequestResponse;
+            await this.raise(new CreateKeysBadRequestError(body));
+          } catch (e) {
+            if (e instanceof CreateKeysBadRequestError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 401: {
+          try {
+            const body = await response.json() as UnauthorizedResponse;
+            await this.raise(new CreateKeysUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof CreateKeysUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 429: {
+          try {
+            const body = await response.json() as TooManyRequestsResponse;
+            await this.raise(new CreateKeysTooManyRequestsError(body));
+          } catch (e) {
+            if (e instanceof CreateKeysTooManyRequestsError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as InternalServerResponse;
+            await this.raise(new CreateKeysInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof CreateKeysInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+  /**
+   * Get a single API key
+   * 
+   * @throws {GetKeyUnauthorizedError | GetKeyNotFoundError | GetKeyTooManyRequestsError | GetKeyInternalServerErrorError | UnexpectedError}
+   */
+  async getKey(params: { hash: string }): Promise<GetKeyResponse> {
+    const path = `/keys/{hash}`.replace('{hash}', String(params.hash));
+    const url = `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = { method: 'GET', url, headers };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, { method: request.method, headers: request.headers });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          try {
+            const body = await response.json() as UnauthorizedResponse;
+            await this.raise(new GetKeyUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof GetKeyUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 404: {
+          try {
+            const body = await response.json() as NotFoundResponse;
+            await this.raise(new GetKeyNotFoundError(body));
+          } catch (e) {
+            if (e instanceof GetKeyNotFoundError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 429: {
+          try {
+            const body = await response.json() as TooManyRequestsResponse;
+            await this.raise(new GetKeyTooManyRequestsError(body));
+          } catch (e) {
+            if (e instanceof GetKeyTooManyRequestsError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as InternalServerResponse;
+            await this.raise(new GetKeyInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof GetKeyInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+  /**
+   * Delete an API key
+   * 
+   * @throws {DeleteKeysUnauthorizedError | DeleteKeysNotFoundError | DeleteKeysTooManyRequestsError | DeleteKeysInternalServerErrorError | UnexpectedError}
+   */
+  async deleteKeys(params: { hash: string }): Promise<DeleteKeysResponse> {
+    const path = `/keys/{hash}`.replace('{hash}', String(params.hash));
+    const url = `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = { method: 'DELETE', url, headers };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, { method: request.method, headers: request.headers });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          try {
+            const body = await response.json() as UnauthorizedResponse;
+            await this.raise(new DeleteKeysUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof DeleteKeysUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 404: {
+          try {
+            const body = await response.json() as NotFoundResponse;
+            await this.raise(new DeleteKeysNotFoundError(body));
+          } catch (e) {
+            if (e instanceof DeleteKeysNotFoundError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 429: {
+          try {
+            const body = await response.json() as TooManyRequestsResponse;
+            await this.raise(new DeleteKeysTooManyRequestsError(body));
+          } catch (e) {
+            if (e instanceof DeleteKeysTooManyRequestsError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as InternalServerResponse;
+            await this.raise(new DeleteKeysInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof DeleteKeysInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+  /**
+   * Update an API key
+   * 
+   * @throws {UpdateKeysBadRequestError | UpdateKeysUnauthorizedError | UpdateKeysNotFoundError | UpdateKeysTooManyRequestsError | UpdateKeysInternalServerErrorError | UnexpectedError}
+   */
+  async updateKeys(params: { hash: string; body: UpdateKeysRequest }): Promise<UpdateKeysResponse> {
+    const path = `/keys/{hash}`.replace('{hash}', String(params.hash));
+    const url = `${this.baseUrl}${path}`;
+
+    const headers: Record<string, string> = {};
+    headers['Content-Type'] = 'application/json';
+    if (this.security.apiKey) {
+      headers['Authorization'] = `Bearer ${this.security.apiKey}`;
+    }
+
+    const request: SDKRequestInit = {
+      method: 'PATCH',
+      url,
+      headers,
+      body: JSON.stringify(params.body),
+    };
+    await this.hooks.onRequest?.(request);
+
+    const response = await fetch(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+
+    await this.hooks.onResponse?.({
+      method: request.method,
+      url: request.url,
+      status: response.status,
+      headers: response.headers,
+    });
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 400: {
+          try {
+            const body = await response.json() as BadRequestResponse;
+            await this.raise(new UpdateKeysBadRequestError(body));
+          } catch (e) {
+            if (e instanceof UpdateKeysBadRequestError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 401: {
+          try {
+            const body = await response.json() as UnauthorizedResponse;
+            await this.raise(new UpdateKeysUnauthorizedError(body));
+          } catch (e) {
+            if (e instanceof UpdateKeysUnauthorizedError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 404: {
+          try {
+            const body = await response.json() as NotFoundResponse;
+            await this.raise(new UpdateKeysNotFoundError(body));
+          } catch (e) {
+            if (e instanceof UpdateKeysNotFoundError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 429: {
+          try {
+            const body = await response.json() as TooManyRequestsResponse;
+            await this.raise(new UpdateKeysTooManyRequestsError(body));
+          } catch (e) {
+            if (e instanceof UpdateKeysTooManyRequestsError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        case 500: {
+          try {
+            const body = await response.json() as InternalServerResponse;
+            await this.raise(new UpdateKeysInternalServerErrorError(body));
+          } catch (e) {
+            if (e instanceof UpdateKeysInternalServerErrorError) {
+              throw e;
+            }
+            await this.raise(new UnexpectedError(response.status, await response.text()));
+          }
+        }
+        default:
+          await this.raise(new UnexpectedError(response.status, await response.text()));
+      }
+    }
+
+    return response.json();
+  }
+}

@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // ListEndpointsZdr types
@@ -96,6 +99,7 @@ impl IntoResponse for ListEndpointsError {
 ///     async fn list_endpoints_zdr(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> ListEndpointsZdrResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_listendpointszdrresponse) or Err(error)
@@ -105,6 +109,7 @@ impl IntoResponse for ListEndpointsError {
 ///     async fn list_endpoints(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         author: String,
 ///         slug: String,
 ///     ) -> ListEndpointsResult {
@@ -133,12 +138,14 @@ where
     fn list_endpoints_zdr(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = ListEndpointsZdrResult> + Send;
 
     /// Get /models/{author}/{slug}/endpoints
     fn list_endpoints(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         author: String,
         slug: String,
     ) -> impl std::future::Future<Output = ListEndpointsResult> + Send;
@@ -147,7 +154,19 @@ where
     fn router(self) -> Router<S> {
         let list_endpoints_zdr_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.list_endpoints_zdr(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list_endpoints_zdr(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -160,8 +179,20 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<(String, String)>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let (author, slug) = path_params;
-                match service.list_endpoints(ctx, author, slug).await {
+                match service.list_endpoints(ctx, auth, author, slug).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

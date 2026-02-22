@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // GetModels types
@@ -121,6 +124,7 @@ impl IntoResponse for ListModelsUserError {
 ///     async fn get_models(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: GetModelsQuery,
 ///     ) -> GetModelsResult {
 ///         // Implement your business logic here
@@ -131,6 +135,7 @@ impl IntoResponse for ListModelsUserError {
 ///     async fn list_models_count(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> ListModelsCountResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_modelscountresponse) or Err(error)
@@ -140,6 +145,7 @@ impl IntoResponse for ListModelsUserError {
 ///     async fn list_models_user(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///     ) -> ListModelsUserResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_modelslistresponse) or Err(error)
@@ -166,6 +172,7 @@ where
     fn get_models(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: GetModelsQuery,
     ) -> impl std::future::Future<Output = GetModelsResult> + Send;
 
@@ -173,12 +180,14 @@ where
     fn list_models_count(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = ListModelsCountResult> + Send;
 
     /// Get /models/user
     fn list_models_user(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
     ) -> impl std::future::Future<Output = ListModelsUserResult> + Send;
 
     /// Create a router for this service
@@ -187,7 +196,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<GetModelsQuery>| async move {
-                match service.get_models(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_models(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -198,7 +219,19 @@ where
 
         let list_models_count_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.list_models_count(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list_models_count(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -209,7 +242,19 @@ where
 
         let list_models_user_handler =
             |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.list_models_user(ctx).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.list_models_user(ctx, auth).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

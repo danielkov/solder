@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // ExchangeAuthCodeForApiKey types
@@ -114,6 +117,7 @@ impl IntoResponse for CreateAuthKeysCodeError {
 ///     async fn exchange_auth_code_for_api_key(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: open_router_api::types::ExchangeAuthCodeForApiKeyRequest,
 ///     ) -> ExchangeAuthCodeForApiKeyResult {
 ///         // Implement your business logic here
@@ -124,6 +128,7 @@ impl IntoResponse for CreateAuthKeysCodeError {
 ///     async fn create_auth_keys_code(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: open_router_api::types::CreateAuthKeysCodeRequest,
 ///     ) -> CreateAuthKeysCodeResult {
 ///         // Implement your business logic here
@@ -151,6 +156,7 @@ where
     fn exchange_auth_code_for_api_key(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::ExchangeAuthCodeForApiKeyRequest,
     ) -> impl std::future::Future<Output = ExchangeAuthCodeForApiKeyResult> + Send;
 
@@ -158,6 +164,7 @@ where
     fn create_auth_keys_code(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::CreateAuthKeysCodeRequest,
     ) -> impl std::future::Future<Output = CreateAuthKeysCodeResult> + Send;
 
@@ -167,7 +174,22 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::ExchangeAuthCodeForApiKeyRequest>| async move {
-                match service.exchange_auth_code_for_api_key(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service
+                    .exchange_auth_code_for_api_key(ctx, auth, body)
+                    .await
+                {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()
@@ -180,7 +202,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::CreateAuthKeysCodeRequest>| async move {
-                match service.create_auth_keys_code(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.create_auth_keys_code(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

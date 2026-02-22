@@ -1,0 +1,15 @@
+import { array, object, string, typed } from '@speakeasy-api/tonic';
+import type { TypedSchema } from '@speakeasy-api/tonic';
+/**
+ * PaymentLinksResourceShippingAddressCollection
+ * 
+ * 
+ */
+export interface PaymentLinksResourceShippingAddressCollection {
+  /**
+   * An array of two-letter ISO country codes representing which countries Checkout should provide as options for shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
+   */
+  allowedCountries: Array<string>;
+}
+
+export const PaymentLinksResourceShippingAddressCollectionSchema: TypedSchema<PaymentLinksResourceShippingAddressCollection> = typed<PaymentLinksResourceShippingAddressCollection>(object({ allowedCountries: array(string()) }));

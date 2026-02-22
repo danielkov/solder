@@ -8,6 +8,13 @@ use axum::{
 
 use crate::shared::RequestContext;
 
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
+
 // Per-operation result and error types
 // BuyMuseumTickets types
 pub type BuyMuseumTicketsResult =
@@ -107,6 +114,7 @@ impl IntoResponse for GetTicketCodeError {
 ///     async fn buy_museum_tickets(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         body: redocly_museum_api::types::BuyMuseumTickets,
 ///     ) -> BuyMuseumTicketsResult {
 ///         // Implement your business logic here
@@ -117,6 +125,7 @@ impl IntoResponse for GetTicketCodeError {
 ///     async fn get_ticket_code(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         ticket_id: String,
 ///     ) -> GetTicketCodeResult {
 ///         // Implement your business logic here
@@ -144,6 +153,7 @@ where
     fn buy_museum_tickets(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         body: crate::types::BuyMuseumTickets,
     ) -> impl std::future::Future<Output = BuyMuseumTicketsResult> + Send;
 
@@ -151,6 +161,7 @@ where
     fn get_ticket_code(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         ticket_id: String,
     ) -> impl std::future::Future<Output = GetTicketCodeResult> + Send;
 
@@ -160,7 +171,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              Json(body): Json<crate::types::BuyMuseumTickets>| async move {
-                match service.buy_museum_tickets(ctx, body).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.buy_museum_tickets(ctx, auth, body).await {
                     Ok(result) => {
                         let status = StatusCode::CREATED;
                         (status, Json(result)).into_response()
@@ -173,8 +196,20 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Path(path_params): axum::extract::Path<String>| async move {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
                 let ticket_id = path_params;
-                match service.get_ticket_code(ctx, ticket_id).await {
+                match service.get_ticket_code(ctx, auth, ticket_id).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         // Binary response - use the wrapper's IntoResponse which sets Content-Type

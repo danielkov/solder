@@ -1,0 +1,11 @@
+import { string, typed, union } from '@speakeasy-api/tonic';
+import type { TypedSchema } from '@speakeasy-api/tonic';
+
+import type { PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObject } from './PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObject';
+import { PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObjectSchema } from './PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObject';
+/**
+ * Shipping information for this payment.
+ */
+export type PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetails = PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObject | string;
+
+export const PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsSchema: TypedSchema<PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetails> = typed<PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetails>(union(PostPaymentRecordsIdReportPaymentAttemptInformationalRequestShippingDetailsObjectSchema, string()));

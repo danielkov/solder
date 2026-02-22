@@ -8,6 +8,13 @@ use axum::{
 
 use crate::shared::RequestContext;
 
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
+
 // Per-operation result and error types
 // GetMuseumHours types
 pub type GetMuseumHoursResult = Result<crate::types::MuseumHours, GetMuseumHoursError>;
@@ -71,6 +78,7 @@ impl IntoResponse for GetMuseumHoursError {
 ///     async fn get_museum_hours(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: GetMuseumHoursQuery,
 ///     ) -> GetMuseumHoursResult {
 ///         // Implement your business logic here
@@ -98,6 +106,7 @@ where
     fn get_museum_hours(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: GetMuseumHoursQuery,
     ) -> impl std::future::Future<Output = GetMuseumHoursResult> + Send;
 
@@ -107,7 +116,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<GetMuseumHoursQuery>| async move {
-                match service.get_museum_hours(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_museum_hours(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

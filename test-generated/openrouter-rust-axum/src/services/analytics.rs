@@ -8,9 +8,12 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-/// Bearer authentication token
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
 
 // Per-operation result and error types
 // GetUserActivity types
@@ -88,6 +91,7 @@ impl IntoResponse for GetUserActivityError {
 ///     async fn get_user_activity(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: GetUserActivityQuery,
 ///     ) -> GetUserActivityResult {
 ///         // Implement your business logic here
@@ -115,6 +119,7 @@ where
     fn get_user_activity(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: GetUserActivityQuery,
     ) -> impl std::future::Future<Output = GetUserActivityResult> + Send;
 
@@ -124,7 +129,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<GetUserActivityQuery>| async move {
-                match service.get_user_activity(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_user_activity(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

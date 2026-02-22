@@ -8,6 +8,13 @@ use axum::{
 
 use crate::shared::RequestContext;
 
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum Auth {
+    /// Bearer token from Authorization header
+    Bearer(String),
+}
+
 // Per-operation result and error types
 // GetStations types
 pub type GetStationsResult = Result<crate::types::GetStationsUnion, GetStationsError>;
@@ -89,6 +96,7 @@ impl IntoResponse for GetStationsError {
 ///     async fn get_stations(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+///         auth: Auth,
 ///         query: GetStationsQuery,
 ///     ) -> GetStationsResult {
 ///         // Implement your business logic here
@@ -116,6 +124,7 @@ where
     fn get_stations(
         &self,
         ctx: RequestContext<S>,
+        auth: Auth,
         query: GetStationsQuery,
     ) -> impl std::future::Future<Output = GetStationsResult> + Send;
 
@@ -125,7 +134,19 @@ where
             |ctx: RequestContext<S>,
              Extension(service): Extension<Self>,
              axum::extract::Query(query): axum::extract::Query<GetStationsQuery>| async move {
-                match service.get_stations(ctx, query).await {
+                let auth = 'auth: {
+                    if let Some(v) = ctx
+                        .headers
+                        .get(axum::http::header::AUTHORIZATION)
+                        .and_then(|v| v.to_str().ok())
+                    {
+                        if let Some(token) = v.strip_prefix("Bearer ") {
+                            break 'auth Auth::Bearer(token.to_string());
+                        }
+                    }
+                    return StatusCode::UNAUTHORIZED.into_response();
+                };
+                match service.get_stations(ctx, auth, query).await {
                     Ok(result) => {
                         let status = StatusCode::OK;
                         (status, Json(result)).into_response()

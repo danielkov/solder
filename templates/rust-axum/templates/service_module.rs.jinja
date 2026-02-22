@@ -10,16 +10,19 @@ use axum::{
 
 use crate::shared::RequestContext;
 
-{% if has_bearer_auth -%}
-/// Bearer authentication token
+{% if has_auth -%}
+/// Authentication credential extracted from the request.
 #[derive(Clone, Debug)]
-pub struct AuthBearer(pub String);
-
-{% endif -%}
-{% if has_api_key_auth -%}
-/// API Key authentication
-#[derive(Clone, Debug)]
-pub struct AuthApiKey(pub String);
+pub enum Auth {
+    {% if has_bearer_auth -%}
+    /// Bearer token from Authorization header
+    Bearer(String),
+    {% endif -%}
+    {% if has_api_key_auth -%}
+    /// API key value
+    ApiKey(String),
+    {% endif -%}
+}
 
 {% endif -%}
 
@@ -421,6 +424,9 @@ impl {{ op.name.pascal }}Request {
 ///     async fn {{ op.name.snake|escape_rust_keyword }}(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
+{% if !op_wrap.auth.is_empty() -%}
+///         auth: Auth,
+{% endif -%}
 {% for param in op.http.path_params -%}
 ///         {{ param.name.snake|escape_rust_keyword }}: String,
 {% endfor -%}
@@ -469,6 +475,9 @@ where
     fn {{ op.name.snake|escape_rust_keyword }}(
         &self,
         ctx: RequestContext<S>,
+        {% if !op_wrap.auth.is_empty() -%}
+        auth: Auth,
+        {% endif -%}
         {% for param in op.http.path_params -%}
         {{ param.name.snake|escape_rust_keyword }}: String,
         {% endfor -%}
@@ -510,6 +519,33 @@ where
         {% when RequestContentType::None -%}
         {% endmatch %}
         | async move {
+            {% if !op_wrap.auth.is_empty() -%}
+            let auth = 'auth: {
+                {% for a in op_wrap.auth -%}
+                {% match a.kind -%}
+                {% when ResolvedAuthKind::Bearer -%}
+                if let Some(v) = ctx.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+                    if let Some(token) = v.strip_prefix("Bearer ") {
+                        break 'auth Auth::Bearer(token.to_string());
+                    }
+                }
+                {% when ResolvedAuthKind::ApiKeyHeader with { header_name } -%}
+                if let Some(v) = ctx.headers.get("{{ header_name }}").and_then(|v| v.to_str().ok()) {
+                    break 'auth Auth::ApiKey(v.to_string());
+                }
+                {% when ResolvedAuthKind::ApiKeyQuery with { param_name } -%}
+                if let Some(v) = ctx.uri.query().and_then(|q| url::form_urlencoded::parse(q.as_bytes()).find(|(k, _)| k == "{{ param_name }}").map(|(_, v)| v.to_string())) {
+                    break 'auth Auth::ApiKey(v);
+                }
+                {% when ResolvedAuthKind::ApiKeyCookie with { cookie_name } -%}
+                if let Some(v) = ctx.headers.get(axum::http::header::COOKIE).and_then(|v| v.to_str().ok()).and_then(|c| c.split("; ").find_map(|p| p.strip_prefix("{{ cookie_name }}="))) {
+                    break 'auth Auth::ApiKey(v.to_string());
+                }
+                {% endmatch -%}
+                {% endfor -%}
+                return StatusCode::UNAUTHORIZED.into_response();
+            };
+            {% endif -%}
             {% if op.http.path_params .len() == 1 -%}
             let {{ op.http.path_params[0].name.snake|escape_rust_keyword }} = path_params;
             {% else if op.http.path_params .len() > 1 -%}
@@ -520,6 +556,9 @@ where
 
             match service.{{ op.name.snake|escape_rust_keyword }}(
                 ctx,
+                {% if !op_wrap.auth.is_empty() -%}
+                auth,
+                {% endif -%}
                 {% for param in op.http.path_params -%}
                 {{ param.name.snake|escape_rust_keyword }},
                 {% endfor -%}

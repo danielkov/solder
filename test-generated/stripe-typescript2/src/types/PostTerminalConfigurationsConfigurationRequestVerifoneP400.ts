@@ -1,0 +1,11 @@
+import { string, typed, union } from '@speakeasy-api/tonic';
+import type { TypedSchema } from '@speakeasy-api/tonic';
+
+import type { PostTerminalConfigurationsConfigurationRequestVerifoneP400Object } from './PostTerminalConfigurationsConfigurationRequestVerifoneP400Object';
+import { PostTerminalConfigurationsConfigurationRequestVerifoneP400ObjectSchema } from './PostTerminalConfigurationsConfigurationRequestVerifoneP400Object';
+/**
+ * An object containing device type specific settings for Verifone P400 readers.
+ */
+export type PostTerminalConfigurationsConfigurationRequestVerifoneP400 = PostTerminalConfigurationsConfigurationRequestVerifoneP400Object | string;
+
+export const PostTerminalConfigurationsConfigurationRequestVerifoneP400Schema: TypedSchema<PostTerminalConfigurationsConfigurationRequestVerifoneP400> = typed<PostTerminalConfigurationsConfigurationRequestVerifoneP400>(union(PostTerminalConfigurationsConfigurationRequestVerifoneP400ObjectSchema, string()));

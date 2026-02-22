@@ -1,0 +1,14 @@
+import { object, optional, string, typed } from '@speakeasy-api/tonic';
+import type { TypedSchema } from '@speakeasy-api/tonic';
+/**
+ * payment_intent_payment_method_options_param
+ */
+export interface PostPaymentIntentsRequestLinkObject {
+  captureMethod?: string;
+  setupFutureUsage?: string;
+}
+
+export const PostPaymentIntentsRequestLinkObjectSchema: TypedSchema<PostPaymentIntentsRequestLinkObject> = typed<PostPaymentIntentsRequestLinkObject>(object({
+  captureMethod: optional(string()),
+  setupFutureUsage: optional(string()),
+}));
