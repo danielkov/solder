@@ -16,7 +16,9 @@ use ir::gen_ir::{
     Additional, AliasTarget, CanonicalName, Composite, ErrorUse, Literal, Service, StableId,
     TypeDecl, TypeKind, TypeMod, TypeRef,
 };
-use service_codegen::ServiceModuleGenerator;
+use service_codegen::{
+    resolve_operation_auth, ResolvedAuth, ResolvedAuthKind, ServiceModuleGenerator,
+};
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::PathBuf;
@@ -24,6 +26,26 @@ use std::path::PathBuf;
 /// Represents edges that need Box wrapping to break cycles.
 /// Key is (source_type_id, target_type_id) pair.
 type BoxedEdges = BTreeSet<(StableId, StableId)>;
+
+/// Pick a module name that doesn't collide with any tag name.
+/// Tries `desired` first, then each fallback, then underscore-prefixed variants.
+fn disambiguate_module(desired: &str, tag_names: &BTreeSet<String>, fallbacks: &[&str]) -> String {
+    if !tag_names.contains(desired) {
+        return desired.to_string();
+    }
+    for fallback in fallbacks {
+        if !tag_names.contains(*fallback) {
+            return fallback.to_string();
+        }
+    }
+    for i in 1..=12 {
+        let prefixed = format!("{}{}", "_".repeat(i), desired);
+        if !tag_names.contains(&prefixed) {
+            return prefixed;
+        }
+    }
+    desired.to_string()
+}
 
 /// Validates a version string as semver. Returns "0.0.1" if invalid.
 fn sanitize_version(version: &str) -> Cow<'_, str> {
@@ -557,23 +579,15 @@ impl RustAxumGenerator {
         boxed_edges.contains(&(source_type.clone(), target_type.clone()))
     }
 
-    /// Generate types in a single file with feature flags.
-    /// Only generates types that are actually referenced from services/operations.
-    /// Feature flags are computed from which services reference each type (not from type_decl.tags).
+    /// Generate types split into per-tag files under `src/types/`.
+    /// Tag-exclusive types (referenced by exactly 1 service) go into `src/types/{tag}.rs`.
+    /// Shared types (0 tags or 2+ tags) go into `src/types/{common}.rs`.
+    /// A `src/types/mod.rs` re-exports everything so `crate::types::X` paths remain valid.
     fn generate_types(&self, ir: &GenIr, _config: &Config, vfs: &mut VirtualFS) -> Result<()> {
-        // Allow unused imports when no features are enabled (all types are feature-gated)
-        let mut content = String::from(
-            "//! API types\n\n#[allow(unused_imports)]\nuse serde::{Deserialize, Serialize};\n\n",
-        );
-
-        // Compute which edges need Box wrapping to break cycles
         let boxed_edges = self.compute_boxed_edges(ir);
-
-        // Collect the authoritative set of referenced types with their service tags
-        // This is our source of truth for both which types to generate AND their feature flags
         let referenced_types = self.collect_referenced_types(ir);
 
-        // Collect type IDs used in multipart request bodies (these will be generated in service modules)
+        // Collect type IDs used in multipart request bodies (generated in service modules)
         let mut multipart_request_types = BTreeSet::new();
         for service in &ir.services {
             for operation in &service.operations {
@@ -587,41 +601,120 @@ impl RustAxumGenerator {
             }
         }
 
-        // Generate only referenced types (iterate over referenced set, not ir.types)
+        // Collect all tag names (snake_case) for module name disambiguation
+        let tag_names: BTreeSet<String> = ir
+            .services
+            .iter()
+            .filter(|s| s.name.canonical != "default")
+            .map(|s| s.name.snake.clone())
+            .collect();
+
+        let common_module = disambiguate_module(
+            "common",
+            &tag_names,
+            &["shared_types", "base_types", "core_types"],
+        );
+
+        // Partition types: tag-exclusive vs shared
+        let mut tag_types: BTreeMap<String, Vec<(&StableId, &TypeDecl)>> = BTreeMap::new();
+        let mut shared_types: Vec<(&StableId, &TypeDecl, &BTreeSet<String>)> = Vec::new();
+
         for (type_id, service_tags) in &referenced_types {
-            // Skip multipart request types (generated inline in service modules)
             if multipart_request_types.contains(type_id) {
                 continue;
             }
-
-            // Look up the type declaration
             let Some(type_decl) = ir.types.get(type_id) else {
                 continue;
             };
 
-            // Use service tags collected during traversal for feature flags
-            // This ensures types referenced only by specific services get proper flags
-            let features = service_tags;
-
-            // Add feature flag if type is referenced by specific services (not default)
-            if !features.is_empty() {
-                let feature_list: Vec<String> = features
-                    .iter()
-                    .map(|f| format!("feature = \"{}\"", f))
-                    .collect();
-                if feature_list.len() > 1 {
-                    content.push_str(&format!("#[cfg(any({}))]\n", feature_list.join(", ")));
-                } else {
-                    content.push_str(&format!("#[cfg({})]\n", feature_list[0]));
-                }
+            if service_tags.len() == 1 {
+                let tag = service_tags.iter().next().unwrap();
+                tag_types
+                    .entry(tag.clone())
+                    .or_default()
+                    .push((type_id, type_decl));
+            } else {
+                shared_types.push((type_id, type_decl, service_tags));
             }
-
-            let rendered = self.render_type(type_decl, ir, &boxed_edges)?;
-            content.push_str(&rendered);
-            content.push_str("\n\n");
         }
 
-        vfs.add_file("src/types.rs", content);
+        let type_file_header = "#[allow(unused_imports)]\nuse serde::{Deserialize, Serialize};\n\n";
+
+        // Build a set of type IDs per tag for cross-reference detection
+        let tag_type_ids: BTreeMap<&String, BTreeSet<&StableId>> = tag_types
+            .iter()
+            .map(|(tag, types)| (tag, types.iter().map(|(id, _)| *id).collect()))
+            .collect();
+
+        // Generate per-tag type files (no per-type #[cfg] needed — module is feature-gated)
+        for (tag, types) in &tag_types {
+            // Check if any type in this tag references a Named type outside this tag's set
+            let own_ids = &tag_type_ids[tag];
+            let needs_super = types.iter().any(|(_, type_decl)| {
+                let deps = self.collect_direct_deps(type_decl, ir);
+                deps.iter()
+                    .any(|dep| matches!(dep, StableId::Named(_)) && !own_ids.contains(dep))
+            });
+
+            let mut content = format!("//! Types for the {} service\n\n{}", tag, type_file_header);
+            if needs_super {
+                content.push_str("use super::*;\n\n");
+            }
+
+            for (_, type_decl) in types {
+                let rendered = self.render_type(type_decl, ir, &boxed_edges)?;
+                content.push_str(&rendered);
+                content.push_str("\n\n");
+            }
+
+            vfs.add_file(format!("src/types/{}.rs", tag), content);
+        }
+
+        // Generate shared types file
+        {
+            let mut content = format!("//! Shared API types\n\n{}", type_file_header);
+
+            for (_, type_decl, service_tags) in &shared_types {
+                if !service_tags.is_empty() {
+                    let feature_list: Vec<String> = service_tags
+                        .iter()
+                        .map(|f| format!("feature = \"{}\"", f))
+                        .collect();
+                    if feature_list.len() > 1 {
+                        content.push_str(&format!("#[cfg(any({}))]\n", feature_list.join(", ")));
+                    } else {
+                        content.push_str(&format!("#[cfg({})]\n", feature_list[0]));
+                    }
+                }
+
+                let rendered = self.render_type(type_decl, ir, &boxed_edges)?;
+                content.push_str(&rendered);
+                content.push_str("\n\n");
+            }
+
+            vfs.add_file(format!("src/types/{}.rs", common_module), content);
+        }
+
+        // Generate types/mod.rs
+        {
+            let mut mod_content = String::from("//! API types\n\n");
+
+            // Common module — always available
+            mod_content.push_str(&format!(
+                "pub mod {};\npub use {}::*;\n\n",
+                common_module, common_module
+            ));
+
+            // Per-tag modules — feature-gated
+            for tag in tag_types.keys() {
+                mod_content.push_str(&format!(
+                    "#[cfg(feature = \"{tag}\")]\npub mod {tag};\n#[cfg(feature = \"{tag}\")]\npub use {tag}::*;\n\n",
+                ));
+            }
+
+            vfs.add_file("src/types/mod.rs", mod_content);
+        }
+
         Ok(())
     }
 
@@ -1046,10 +1139,116 @@ impl RustAxumGenerator {
         }
     }
 
-    /// Generate service modules (one per tag)
-    fn generate_services(&self, ir: &GenIr, _config: &Config, vfs: &mut VirtualFS) -> Result<()> {
+    /// Compute unique auth permutations across all operations.
+    /// Returns a map from scheme-ID-set to auth group (name + resolved schemes).
+    fn compute_auth_groups(
+        &self,
+        ir: &GenIr,
+    ) -> BTreeMap<BTreeSet<StableId>, AuthGroup> {
+        let mut scheme_sets: BTreeMap<BTreeSet<StableId>, Vec<ResolvedAuth>> = BTreeMap::new();
+
         for service in &ir.services {
-            self.generate_service_module(service, ir, vfs)?;
+            for op in &service.operations {
+                if op.auth.is_empty() {
+                    continue;
+                }
+                let key: BTreeSet<StableId> =
+                    op.auth.iter().map(|a| a.scheme.clone()).collect();
+                scheme_sets
+                    .entry(key)
+                    .or_insert_with(|| resolve_operation_auth(op, &ir.auth_schemes));
+            }
+        }
+
+        // Drop entries where no schemes actually resolved (e.g. empty security
+        // requirements like `[{}]` or references to non-existent schemes).
+        scheme_sets.retain(|_, resolved| !resolved.is_empty());
+
+        let use_simple_name = scheme_sets.len() <= 1;
+
+        // Assign names, disambiguating duplicates with numeric suffixes.
+        let mut used_names: BTreeSet<String> = BTreeSet::new();
+        scheme_sets
+            .into_iter()
+            .map(|(key, resolved)| {
+                let base_name = if use_simple_name {
+                    "Auth".to_string()
+                } else {
+                    let derived = Self::derive_auth_group_name(&key, &ir.auth_schemes);
+                    if derived.is_empty() {
+                        "Auth".to_string()
+                    } else {
+                        derived
+                    }
+                };
+
+                let name = if used_names.contains(&base_name) {
+                    // Disambiguate with numeric suffix
+                    (2..)
+                        .map(|i| format!("{}{}", base_name, i))
+                        .find(|n| !used_names.contains(n))
+                        .unwrap()
+                } else {
+                    base_name
+                };
+                used_names.insert(name.clone());
+
+                let has_bearer = resolved
+                    .iter()
+                    .any(|a| matches!(a.kind, ResolvedAuthKind::Bearer));
+                let has_api_key = resolved.iter().any(|a| {
+                    matches!(
+                        a.kind,
+                        ResolvedAuthKind::ApiKeyHeader { .. }
+                            | ResolvedAuthKind::ApiKeyQuery { .. }
+                            | ResolvedAuthKind::ApiKeyCookie { .. }
+                    )
+                });
+                (
+                    key,
+                    AuthGroup {
+                        name,
+                        has_bearer,
+                        has_api_key,
+                        extractions: resolved,
+                    },
+                )
+            })
+            .collect()
+    }
+
+    /// Derive a name for an auth group from its scheme names.
+    fn derive_auth_group_name(
+        scheme_ids: &BTreeSet<StableId>,
+        auth_schemes: &[ir::gen_ir::AuthScheme],
+    ) -> String {
+        let names: Vec<String> = scheme_ids
+            .iter()
+            .filter_map(|id| {
+                auth_schemes
+                    .iter()
+                    .find(|s| &s.id == id)
+                    .map(|s| s.name.pascal.clone())
+            })
+            .collect();
+
+        if names.len() == 1 {
+            names.into_iter().next().unwrap()
+        } else {
+            names.join("Or")
+        }
+    }
+
+    /// Generate service modules (one per tag)
+    fn generate_services(
+        &self,
+        ir: &GenIr,
+        _config: &Config,
+        vfs: &mut VirtualFS,
+        auth_type_map: &BTreeMap<BTreeSet<StableId>, String>,
+    ) -> Result<()> {
+        for service in &ir.services {
+            self.generate_service_module(service, ir, vfs, auth_type_map)?;
         }
 
         self.generate_services_mod(ir, vfs)?;
@@ -1063,11 +1262,12 @@ impl RustAxumGenerator {
         service: &Service,
         ir: &GenIr,
         vfs: &mut VirtualFS,
+        auth_type_map: &BTreeMap<BTreeSet<StableId>, String>,
     ) -> Result<()> {
         let module_name = &service.name.snake;
 
         let generator =
-            ServiceModuleGenerator::new(service, &ir.auth_schemes, &ir.api.package_name.snake);
+            ServiceModuleGenerator::new(service, &ir.api.package_name.snake, auth_type_map);
         let content = generator.generate();
 
         let file_path = PathBuf::from("src")
@@ -1124,8 +1324,15 @@ impl RustAxumGenerator {
     }
 
     /// Generate shared types / utilities module
-    fn generate_shared_module(&self, vfs: &mut VirtualFS) -> Result<()> {
-        let data = Shared;
+    fn generate_shared_module(
+        &self,
+        auth_groups: &BTreeMap<BTreeSet<StableId>, AuthGroup>,
+        vfs: &mut VirtualFS,
+    ) -> Result<()> {
+        let groups: Vec<&AuthGroup> = auth_groups.values().collect();
+        let data = SharedTemplate {
+            auth_groups: groups,
+        };
         let content = data
             .render()
             .map_err(|e| Error::TemplateError(Box::new(e)))?;
@@ -1163,10 +1370,16 @@ impl Generator for RustAxumGenerator {
     fn generate(&self, ir: &GenIr, config: &Config) -> Result<VirtualFS> {
         let mut vfs = VirtualFS::new();
 
+        let auth_groups = self.compute_auth_groups(ir);
+        let auth_type_map: BTreeMap<BTreeSet<StableId>, String> = auth_groups
+            .iter()
+            .map(|(k, v)| (k.clone(), v.name.clone()))
+            .collect();
+
         self.generate_types(ir, config, &mut vfs)?;
-        self.generate_services(ir, config, &mut vfs)?;
+        self.generate_services(ir, config, &mut vfs, &auth_type_map)?;
         self.generate_cargo_toml(ir, &mut vfs)?;
-        self.generate_shared_module(&mut vfs)?;
+        self.generate_shared_module(&auth_groups, &mut vfs)?;
         self.generate_multipart_module(&mut vfs)?;
         self.generate_lib_rs(&mut vfs)?;
 
@@ -1203,6 +1416,16 @@ struct CargoTomlData<'a> {
     tags: Vec<String>,
 }
 
+/// A unique auth permutation shared across operations.
+struct AuthGroup {
+    name: String,
+    has_bearer: bool,
+    has_api_key: bool,
+    extractions: Vec<ResolvedAuth>,
+}
+
 #[derive(Template)]
 #[template(path = "shared.rs.jinja", escape = "none")]
-struct Shared;
+struct SharedTemplate<'a> {
+    auth_groups: Vec<&'a AuthGroup>,
+}

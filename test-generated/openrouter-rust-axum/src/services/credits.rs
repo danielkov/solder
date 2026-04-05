@@ -1,19 +1,12 @@
 //! Credits service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, ApiKey, Bearer};
 
 // Per-operation result and error types
 // GetCredits types
@@ -26,30 +19,29 @@ pub enum GetCreditsError {
     Forbidden(crate::types::ForbiddenResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-}
+    }
 
 impl IntoResponse for GetCreditsError {
     fn into_response(self) -> Response {
         match self {
             GetCreditsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetCreditsError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetCreditsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
 // CreateCoinbaseCharge types
-pub type CreateCoinbaseChargeResult =
-    Result<crate::types::CreateCoinbaseChargeResponse, CreateCoinbaseChargeError>;
+pub type CreateCoinbaseChargeResult = Result<crate::types::CreateCoinbaseChargeResponse, CreateCoinbaseChargeError>;
 #[derive(Debug)]
 pub enum CreateCoinbaseChargeError {
     /// Status: Code(400)
@@ -60,32 +52,35 @@ pub enum CreateCoinbaseChargeError {
     TooManyRequests(crate::types::TooManyRequestsResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-}
+    }
 
 impl IntoResponse for CreateCoinbaseChargeError {
     fn into_response(self) -> Response {
         match self {
             CreateCoinbaseChargeError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateCoinbaseChargeError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateCoinbaseChargeError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateCoinbaseChargeError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Credits service trait
 ///
@@ -122,7 +117,7 @@ impl IntoResponse for CreateCoinbaseChargeError {
 ///     async fn get_credits(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: ApiKey,
 ///     ) -> GetCreditsResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_primitive_any) or Err(error)
@@ -132,7 +127,7 @@ impl IntoResponse for CreateCoinbaseChargeError {
 ///     async fn create_coinbase_charge(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: Bearer,
 ///         body: open_router_api::types::CreateChargeRequest,
 ///     ) -> CreateCoinbaseChargeResult {
 ///         // Implement your business logic here
@@ -160,65 +155,47 @@ where
     fn get_credits(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
-    ) -> impl std::future::Future<Output = GetCreditsResult> + Send;
+        auth: ApiKey,
+        ) -> impl std::future::Future<Output = GetCreditsResult> + Send;
 
     /// Post /credits/coinbase
     fn create_coinbase_charge(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
+        auth: Bearer,
         body: crate::types::CreateChargeRequest,
-    ) -> impl std::future::Future<Output = CreateCoinbaseChargeResult> + Send;
+        ) -> impl std::future::Future<Output = CreateCoinbaseChargeResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_credits_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-            let auth = 'auth: {
-                if let Some(v) = ctx
-                    .headers
-                    .get(axum::http::header::AUTHORIZATION)
-                    .and_then(|v| v.to_str().ok())
-                {
-                    if let Some(token) = v.strip_prefix("Bearer ") {
-                        break 'auth Auth::Bearer(token.to_string());
-                    }
-                }
-                return StatusCode::UNAUTHORIZED.into_response();
-            };
-            match service.get_credits(ctx, auth).await {
+        let get_credits_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>
+        | async move {
+            match service.get_credits(
+                ctx,
+                auth,
+                ).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
-                    (status, Json(result)).into_response()
-                }
+                    (status, axum::Json(result)).into_response()
+                    }
                 Err(e) => e.into_response(),
             }
         };
 
-        let create_coinbase_charge_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::CreateChargeRequest>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let create_coinbase_charge_handler = |ctx: RequestContext<S>, auth: Bearer, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::CreateChargeRequest>
+        | async move {
+            match service.create_coinbase_charge(
+                ctx,
+                auth,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.create_coinbase_charge(ctx, auth, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/credits", get(get_credits_handler))

@@ -1,24 +1,16 @@
 //! BetaResponses service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::post,
+    routing::{post},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, ApiKey};
 
 // Per-operation result and error types
 // CreateResponses types
-pub type CreateResponsesResult =
-    Result<crate::types::OpenResponsesNonStreamingResponse, CreateResponsesError>;
+pub type CreateResponsesResult = Result<crate::types::OpenResponsesNonStreamingResponse, CreateResponsesError>;
 #[derive(Debug)]
 pub enum CreateResponsesError {
     /// Status: Code(400)
@@ -47,70 +39,71 @@ pub enum CreateResponsesError {
     Status524(crate::types::EdgeNetworkTimeoutResponse),
     /// Status: Code(529)
     Status529(crate::types::ProviderOverloadedResponse),
-}
+    }
 
 impl IntoResponse for CreateResponsesError {
     fn into_response(self) -> Response {
         match self {
             CreateResponsesError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::Status402(err) => {
                 let status = StatusCode::PAYMENT_REQUIRED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::Status408(err) => {
                 let status = StatusCode::REQUEST_TIMEOUT;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::Status413(err) => {
                 let status = StatusCode::PAYLOAD_TOO_LARGE;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::UnprocessableEntity(err) => {
                 let status = StatusCode::UNPROCESSABLE_ENTITY;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::BadGateway(err) => {
                 let status = StatusCode::BAD_GATEWAY;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::ServiceUnavailable(err) => {
                 let status = StatusCode::SERVICE_UNAVAILABLE;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::Status524(err) => {
-                let status =
-                    { StatusCode::from_u16(524).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
-                (status, Json(err)).into_response()
-            }
+                let status = { StatusCode::from_u16(524).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
+                (status, axum::Json(err)).into_response()
+                }
             CreateResponsesError::Status529(err) => {
-                let status =
-                    { StatusCode::from_u16(529).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
-                (status, Json(err)).into_response()
+                let status = { StatusCode::from_u16(529).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// BetaResponses service trait
 ///
@@ -146,7 +139,7 @@ impl IntoResponse for CreateResponsesError {
 ///     async fn create_responses(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: ApiKey,
 ///         body: open_router_api::types::OpenResponsesRequest,
 ///     ) -> CreateResponsesResult {
 ///         // Implement your business logic here
@@ -174,36 +167,26 @@ where
     fn create_responses(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
+        auth: ApiKey,
         body: crate::types::OpenResponsesRequest,
-    ) -> impl std::future::Future<Output = CreateResponsesResult> + Send;
+        ) -> impl std::future::Future<Output = CreateResponsesResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let create_responses_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::OpenResponsesRequest>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let create_responses_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::OpenResponsesRequest>
+        | async move {
+            match service.create_responses(
+                ctx,
+                auth,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.create_responses(ctx, auth, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/responses", post(create_responses_handler))

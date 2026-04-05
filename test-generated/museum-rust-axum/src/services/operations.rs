@@ -1,19 +1,12 @@
 //! Operations service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, Auth};
 
 // Per-operation result and error types
 // GetMuseumHours types
@@ -24,24 +17,27 @@ pub enum GetMuseumHoursError {
     BadRequest(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for GetMuseumHoursError {
     fn into_response(self) -> Response {
         match self {
             GetMuseumHoursError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetMuseumHoursError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Operations service trait
 ///
@@ -108,34 +104,24 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         query: GetMuseumHoursQuery,
-    ) -> impl std::future::Future<Output = GetMuseumHoursResult> + Send;
+        ) -> impl std::future::Future<Output = GetMuseumHoursResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_museum_hours_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Query(query): axum::extract::Query<GetMuseumHoursQuery>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let get_museum_hours_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<GetMuseumHoursQuery>
+        | async move {
+            match service.get_museum_hours(
+                ctx,
+                auth,
+                query,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.get_museum_hours(ctx, auth, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/museum-hours", get(get_museum_hours_handler))
@@ -149,4 +135,6 @@ pub struct GetMuseumHoursQuery {
     pub start_date: Option<String>,
     pub page: Option<String>,
     pub limit: Option<String>,
+    
 }
+

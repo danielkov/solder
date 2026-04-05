@@ -1,68 +1,62 @@
 //! Endpoints service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, ApiKey};
 
 // Per-operation result and error types
 // ListEndpointsZdr types
-pub type ListEndpointsZdrResult =
-    Result<crate::types::ListEndpointsZdrResponse, ListEndpointsZdrError>;
+pub type ListEndpointsZdrResult = Result<crate::types::ListEndpointsZdrResponse, ListEndpointsZdrError>;
 #[derive(Debug)]
 pub enum ListEndpointsZdrError {
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-}
+    }
 
 impl IntoResponse for ListEndpointsZdrError {
     fn into_response(self) -> Response {
         match self {
             ListEndpointsZdrError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
 // ListEndpoints types
-pub type ListEndpointsResult =
-    Result<crate::types::EndpointsListEndpointsResponse, ListEndpointsError>;
+pub type ListEndpointsResult = Result<crate::types::EndpointsListEndpointsResponse, ListEndpointsError>;
 #[derive(Debug)]
 pub enum ListEndpointsError {
     /// Status: Code(404)
     NotFound(crate::types::NotFoundResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-}
+    }
 
 impl IntoResponse for ListEndpointsError {
     fn into_response(self) -> Response {
         match self {
             ListEndpointsError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             ListEndpointsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Endpoints service trait
 ///
@@ -99,7 +93,7 @@ impl IntoResponse for ListEndpointsError {
 ///     async fn list_endpoints_zdr(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: ApiKey,
 ///     ) -> ListEndpointsZdrResult {
 ///         // Implement your business logic here
 ///         // Return Ok(your_listendpointszdrresponse) or Err(error)
@@ -109,7 +103,7 @@ impl IntoResponse for ListEndpointsError {
 ///     async fn list_endpoints(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: ApiKey,
 ///         author: String,
 ///         slug: String,
 ///     ) -> ListEndpointsResult {
@@ -138,75 +132,54 @@ where
     fn list_endpoints_zdr(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
-    ) -> impl std::future::Future<Output = ListEndpointsZdrResult> + Send;
+        auth: ApiKey,
+        ) -> impl std::future::Future<Output = ListEndpointsZdrResult> + Send;
 
     /// Get /models/{author}/{slug}/endpoints
     fn list_endpoints(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
+        auth: ApiKey,
         author: String,
         slug: String,
-    ) -> impl std::future::Future<Output = ListEndpointsResult> + Send;
+        ) -> impl std::future::Future<Output = ListEndpointsResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_endpoints_zdr_handler =
-            |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let list_endpoints_zdr_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>
+        | async move {
+            match service.list_endpoints_zdr(
+                ctx,
+                auth,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.list_endpoints_zdr(ctx, auth).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let list_endpoints_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<(String, String)>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let list_endpoints_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<(String, String)>
+        | async move {
+            let (author, slug) = path_params;
+            match service.list_endpoints(
+                ctx,
+                auth,
+                author,
+                slug,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                let (author, slug) = path_params;
-                match service.list_endpoints(ctx, auth, author, slug).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/endpoints/zdr", get(list_endpoints_zdr_handler))
-            .route(
-                "/models/{author}/{slug}/endpoints",
-                get(list_endpoints_handler),
-            )
+            .route("/models/{author}/{slug}/endpoints", get(list_endpoints_handler))
             .layer(Extension(self))
     }
 }

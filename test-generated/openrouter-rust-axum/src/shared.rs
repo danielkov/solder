@@ -32,3 +32,56 @@ where
         })
     }
 }
+
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum ApiKey {
+    /// Bearer token from Authorization header
+    Bearer(String),
+    }
+
+impl<S> axum::extract::FromRequestParts<S> for ApiKey
+where
+    S: Clone + Send + Sync + 'static,
+{
+    type Rejection = axum::http::StatusCode;
+
+    async fn from_request_parts(
+        parts: &mut axum::http::request::Parts,
+        _state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        if let Some(v) = parts.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+            if let Some(token) = v.strip_prefix("Bearer ") {
+                return Ok(ApiKey::Bearer(token.to_string()));
+            }
+        }
+        Err(axum::http::StatusCode::UNAUTHORIZED)
+    }
+}
+
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum Bearer {
+    /// Bearer token from Authorization header
+    Bearer(String),
+    }
+
+impl<S> axum::extract::FromRequestParts<S> for Bearer
+where
+    S: Clone + Send + Sync + 'static,
+{
+    type Rejection = axum::http::StatusCode;
+
+    async fn from_request_parts(
+        parts: &mut axum::http::request::Parts,
+        _state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        if let Some(v) = parts.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+            if let Some(token) = v.strip_prefix("Bearer ") {
+                return Ok(Bearer::Bearer(token.to_string()));
+            }
+        }
+        Err(axum::http::StatusCode::UNAUTHORIZED)
+    }
+}
+

@@ -32,3 +32,55 @@ where
         })
     }
 }
+
+{% for group in auth_groups -%}
+/// Authentication credential extracted from the request.
+#[derive(Clone, Debug)]
+pub enum {{ group.name }} {
+    {% if group.has_bearer -%}
+    /// Bearer token from Authorization header
+    Bearer(String),
+    {% endif -%}
+    {% if group.has_api_key -%}
+    /// API key value
+    ApiKey(String),
+    {% endif -%}
+}
+
+impl<S> axum::extract::FromRequestParts<S> for {{ group.name }}
+where
+    S: Clone + Send + Sync + 'static,
+{
+    type Rejection = axum::http::StatusCode;
+
+    async fn from_request_parts(
+        parts: &mut axum::http::request::Parts,
+        _state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        {% for a in group.extractions -%}
+        {% match a.kind -%}
+        {% when ResolvedAuthKind::Bearer -%}
+        if let Some(v) = parts.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+            if let Some(token) = v.strip_prefix("Bearer ") {
+                return Ok({{ group.name }}::Bearer(token.to_string()));
+            }
+        }
+        {% when ResolvedAuthKind::ApiKeyHeader with { header_name } -%}
+        if let Some(v) = parts.headers.get("{{ header_name }}").and_then(|v| v.to_str().ok()) {
+            return Ok({{ group.name }}::ApiKey(v.to_string()));
+        }
+        {% when ResolvedAuthKind::ApiKeyQuery with { param_name } -%}
+        if let Some(v) = parts.uri.query().and_then(|q| url::form_urlencoded::parse(q.as_bytes()).find(|(k, _)| k == "{{ param_name }}").map(|(_, v)| v.to_string())) {
+            return Ok({{ group.name }}::ApiKey(v));
+        }
+        {% when ResolvedAuthKind::ApiKeyCookie with { cookie_name } -%}
+        if let Some(v) = parts.headers.get(axum::http::header::COOKIE).and_then(|v| v.to_str().ok()).and_then(|c| c.split("; ").find_map(|p| p.strip_prefix("{{ cookie_name }}="))) {
+            return Ok({{ group.name }}::ApiKey(v.to_string()));
+        }
+        {% endmatch -%}
+        {% endfor -%}
+        Err(axum::http::StatusCode::UNAUTHORIZED)
+    }
+}
+
+{% endfor -%}

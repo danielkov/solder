@@ -1,7 +1,8 @@
 //! Service module code generation
 
 use askama::Template;
-use ir::gen_ir::{ApiKeyLocation, AuthKind, AuthScheme, HttpMethod, Operation, Service};
+use ir::gen_ir::{ApiKeyLocation, AuthKind, AuthScheme, HttpMethod, Operation, Service, StableId};
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Escape Rust keywords with r# prefix.
 /// Note: `self` and `Self` cannot be raw identifiers, so they use underscore prefix instead.
@@ -146,16 +147,60 @@ mod filters {
 
 /// Resolved authentication requirement for a single operation
 #[derive(Debug, Clone)]
-struct ResolvedAuth {
-    kind: ResolvedAuthKind,
+pub struct ResolvedAuth {
+    pub kind: ResolvedAuthKind,
 }
 
 #[derive(Debug, Clone)]
-enum ResolvedAuthKind {
+pub enum ResolvedAuthKind {
     Bearer,
     ApiKeyHeader { header_name: String },
     ApiKeyQuery { param_name: String },
     ApiKeyCookie { cookie_name: String },
+}
+
+/// Resolve auth requirements for an operation against the global auth schemes.
+pub fn resolve_operation_auth(
+    operation: &Operation,
+    auth_schemes: &[AuthScheme],
+) -> Vec<ResolvedAuth> {
+    operation
+        .auth
+        .iter()
+        .filter_map(|auth_use| {
+            auth_schemes
+                .iter()
+                .find(|s| s.id == auth_use.scheme)
+                .map(|scheme| match &scheme.kind {
+                    AuthKind::Http { scheme: s, .. } if s == "bearer" => ResolvedAuth {
+                        kind: ResolvedAuthKind::Bearer,
+                    },
+                    AuthKind::ApiKey {
+                        location,
+                        param_name,
+                    } => match location {
+                        ApiKeyLocation::Header => ResolvedAuth {
+                            kind: ResolvedAuthKind::ApiKeyHeader {
+                                header_name: param_name.clone(),
+                            },
+                        },
+                        ApiKeyLocation::Query => ResolvedAuth {
+                            kind: ResolvedAuthKind::ApiKeyQuery {
+                                param_name: param_name.clone(),
+                            },
+                        },
+                        ApiKeyLocation::Cookie => ResolvedAuth {
+                            kind: ResolvedAuthKind::ApiKeyCookie {
+                                cookie_name: param_name.clone(),
+                            },
+                        },
+                    },
+                    _ => ResolvedAuth {
+                        kind: ResolvedAuthKind::Bearer,
+                    },
+                })
+        })
+        .collect()
 }
 
 /// Wrapper for operations with preprocessed data for templates
@@ -167,8 +212,8 @@ struct OperationTemplate<'a> {
     response_content_type: ResponseContentType,
     /// For binary responses with multiple content types, this contains all supported types
     binary_content_types: Vec<String>,
-    /// Resolved auth requirements for this operation
-    auth: Vec<ResolvedAuth>,
+    /// Auth type name for this operation (None if no auth required)
+    auth_type_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -197,46 +242,7 @@ impl<'a> OperationTemplate<'a> {
         ct == "application/json" || ct.starts_with("application/json;") || ct.ends_with("+json")
     }
 
-    fn new(operation: &'a Operation, auth_schemes: &[AuthScheme]) -> Self {
-        // Resolve auth requirements for this operation
-        let auth: Vec<ResolvedAuth> = operation
-            .auth
-            .iter()
-            .filter_map(|auth_use| {
-                auth_schemes
-                    .iter()
-                    .find(|s| s.id == auth_use.scheme)
-                    .map(|scheme| match &scheme.kind {
-                        AuthKind::Http { scheme: s, .. } if s == "bearer" => ResolvedAuth {
-                            kind: ResolvedAuthKind::Bearer,
-                        },
-                        AuthKind::ApiKey {
-                            location,
-                            param_name,
-                        } => match location {
-                            ApiKeyLocation::Header => ResolvedAuth {
-                                kind: ResolvedAuthKind::ApiKeyHeader {
-                                    header_name: param_name.clone(),
-                                },
-                            },
-                            ApiKeyLocation::Query => ResolvedAuth {
-                                kind: ResolvedAuthKind::ApiKeyQuery {
-                                    param_name: param_name.clone(),
-                                },
-                            },
-                            ApiKeyLocation::Cookie => ResolvedAuth {
-                                kind: ResolvedAuthKind::ApiKeyCookie {
-                                    cookie_name: param_name.clone(),
-                                },
-                            },
-                        },
-                        _ => ResolvedAuth {
-                            kind: ResolvedAuthKind::Bearer,
-                        },
-                    })
-            })
-            .collect();
-
+    fn new(operation: &'a Operation, auth_type_name: Option<String>) -> Self {
         let method_fn = match operation.http.method {
             HttpMethod::Get => "get",
             HttpMethod::Post => "post",
@@ -302,7 +308,7 @@ impl<'a> OperationTemplate<'a> {
             request_content_type,
             response_content_type,
             binary_content_types,
-            auth,
+            auth_type_name,
         }
     }
 }
@@ -314,58 +320,60 @@ struct ServiceModuleTemplate<'a> {
     trait_name: &'a str,
     module_name: &'a str,
     package_name: &'a str,
-    has_auth: bool,
-    has_bearer_auth: bool,
-    has_api_key_auth: bool,
+    auth_imports: Vec<String>,
     operations: Vec<OperationTemplate<'a>>,
     methods: Vec<&'static str>,
 }
 
 pub struct ServiceModuleGenerator<'a> {
     service: &'a Service,
-    auth_schemes: &'a [AuthScheme],
     package_name: &'a str,
+    auth_type_map: &'a BTreeMap<BTreeSet<StableId>, String>,
 }
 
 impl<'a> ServiceModuleGenerator<'a> {
     pub fn new(
         service: &'a Service,
-        auth_schemes: &'a [AuthScheme],
         package_name: &'a str,
+        auth_type_map: &'a BTreeMap<BTreeSet<StableId>, String>,
     ) -> Self {
         Self {
             service,
-            auth_schemes,
             package_name,
+            auth_type_map,
         }
     }
 
     pub fn generate(&self) -> String {
-        // Wrap operations with preprocessed data (resolves per-operation auth)
         let operations: Vec<OperationTemplate> = self
             .service
             .operations
             .iter()
-            .map(|op| OperationTemplate::new(op, self.auth_schemes))
+            .map(|op| {
+                let auth_type_name = if op.auth.is_empty() {
+                    None
+                } else {
+                    let key: BTreeSet<StableId> =
+                        op.auth.iter().map(|a| a.scheme.clone()).collect();
+                    self.auth_type_map
+                        .get(&key)
+                        .cloned()
+                        .filter(|n| !n.is_empty())
+                };
+                OperationTemplate::new(op, auth_type_name)
+            })
             .collect();
 
-        // Derive module-level auth booleans from operations' resolved auth
-        let has_bearer_auth = operations.iter().any(|op| {
-            op.auth
-                .iter()
-                .any(|a| matches!(a.kind, ResolvedAuthKind::Bearer))
-        });
-        let has_api_key_auth = operations.iter().any(|op| {
-            op.auth.iter().any(|a| {
-                matches!(
-                    a.kind,
-                    ResolvedAuthKind::ApiKeyHeader { .. }
-                        | ResolvedAuthKind::ApiKeyQuery { .. }
-                        | ResolvedAuthKind::ApiKeyCookie { .. }
-                )
-            })
-        });
-        let has_auth = has_bearer_auth || has_api_key_auth;
+        // Collect unique auth type imports needed by this module
+        let auth_imports: Vec<String> = {
+            let mut set = BTreeSet::new();
+            for op in &operations {
+                if let Some(name) = &op.auth_type_name {
+                    set.insert(name.clone());
+                }
+            }
+            set.into_iter().collect()
+        };
 
         // Collect unique HTTP methods used
         let mut methods: Vec<&'static str> = operations
@@ -380,9 +388,7 @@ impl<'a> ServiceModuleGenerator<'a> {
             trait_name: &self.service.name.pascal,
             module_name: &self.service.name.snake,
             package_name: self.package_name,
-            has_auth,
-            has_bearer_auth,
-            has_api_key_auth,
+            auth_imports,
             operations,
             methods,
         };

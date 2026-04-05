@@ -1,24 +1,16 @@
 //! Analytics service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, ApiKey};
 
 // Per-operation result and error types
 // GetUserActivity types
-pub type GetUserActivityResult =
-    Result<crate::types::GetUserActivityResponse, GetUserActivityError>;
+pub type GetUserActivityResult = Result<crate::types::GetUserActivityResponse, GetUserActivityError>;
 #[derive(Debug)]
 pub enum GetUserActivityError {
     /// Status: Code(400)
@@ -29,32 +21,35 @@ pub enum GetUserActivityError {
     Forbidden(crate::types::ForbiddenResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-}
+    }
 
 impl IntoResponse for GetUserActivityError {
     fn into_response(self) -> Response {
         match self {
             GetUserActivityError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetUserActivityError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetUserActivityError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetUserActivityError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Analytics service trait
 ///
@@ -91,7 +86,7 @@ impl IntoResponse for GetUserActivityError {
 ///     async fn get_user_activity(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: ApiKey,
 ///         query: GetUserActivityQuery,
 ///     ) -> GetUserActivityResult {
 ///         // Implement your business logic here
@@ -119,36 +114,26 @@ where
     fn get_user_activity(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
+        auth: ApiKey,
         query: GetUserActivityQuery,
-    ) -> impl std::future::Future<Output = GetUserActivityResult> + Send;
+        ) -> impl std::future::Future<Output = GetUserActivityResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_user_activity_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Query(query): axum::extract::Query<GetUserActivityQuery>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let get_user_activity_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<GetUserActivityQuery>
+        | async move {
+            match service.get_user_activity(
+                ctx,
+                auth,
+                query,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.get_user_activity(ctx, auth, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/activity", get(get_user_activity_handler))
@@ -160,4 +145,6 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct GetUserActivityQuery {
     pub date: Option<String>,
+    
 }
+

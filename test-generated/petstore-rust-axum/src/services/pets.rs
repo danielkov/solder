@@ -1,12 +1,12 @@
 //! Pets service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
     routing::{delete, get, post, put},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
+use crate::shared::{RequestContext};
 
 // Per-operation result and error types
 // ListPets types
@@ -17,20 +17,20 @@ pub enum ListPetsError {
     BadRequest(crate::types::Error),
     /// Status: Code(500)
     InternalServerError(crate::types::Error),
-}
+    }
 
 impl IntoResponse for ListPetsError {
     fn into_response(self) -> Response {
         match self {
             ListPetsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             ListPetsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -40,16 +40,16 @@ pub type CreatePetResult = Result<crate::types::Pet, CreatePetError>;
 pub enum CreatePetError {
     /// Status: Code(400)
     BadRequest(crate::types::Error),
-}
+    }
 
 impl IntoResponse for CreatePetError {
     fn into_response(self) -> Response {
         match self {
             CreatePetError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -60,19 +60,15 @@ pub struct ExportPetsResponse(pub bytes::Bytes);
 
 impl IntoResponse for ExportPetsResponse {
     fn into_response(self) -> Response {
-        (
-            [(axum::http::header::CONTENT_TYPE, "application/zip")],
-            self.0,
-        )
-            .into_response()
-    }
+        ([(axum::http::header::CONTENT_TYPE, "application/zip")], self.0).into_response()
+        }
 }
 
 pub type ExportPetsResult = Result<ExportPetsResponse, ExportPetsError>;
 #[derive(Debug)]
 pub enum ExportPetsError {
     InternalError(String),
-}
+    }
 
 impl IntoResponse for ExportPetsError {
     fn into_response(self) -> Response {
@@ -80,7 +76,7 @@ impl IntoResponse for ExportPetsError {
             ExportPetsError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
-        }
+            }
     }
 }
 
@@ -92,14 +88,14 @@ pub struct ExportPetsCsvResponse(pub bytes::Bytes);
 impl IntoResponse for ExportPetsCsvResponse {
     fn into_response(self) -> Response {
         ([(axum::http::header::CONTENT_TYPE, "text/csv")], self.0).into_response()
-    }
+        }
 }
 
 pub type ExportPetsCsvResult = Result<ExportPetsCsvResponse, ExportPetsCsvError>;
 #[derive(Debug)]
 pub enum ExportPetsCsvError {
     InternalError(String),
-}
+    }
 
 impl IntoResponse for ExportPetsCsvError {
     fn into_response(self) -> Response {
@@ -107,7 +103,7 @@ impl IntoResponse for ExportPetsCsvError {
             ExportPetsCsvError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
-        }
+            }
     }
 }
 
@@ -117,16 +113,16 @@ pub type GetPetByIdResult = Result<crate::types::Pet, GetPetByIdError>;
 pub enum GetPetByIdError {
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for GetPetByIdError {
     fn into_response(self) -> Response {
         match self {
             GetPetByIdError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -136,16 +132,16 @@ pub type UpdatePetResult = Result<crate::types::Pet, UpdatePetError>;
 pub enum UpdatePetError {
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for UpdatePetError {
     fn into_response(self) -> Response {
         match self {
             UpdatePetError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -155,16 +151,16 @@ pub type DeletePetResult = Result<(), DeletePetError>;
 pub enum DeletePetError {
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for DeletePetError {
     fn into_response(self) -> Response {
         match self {
             DeletePetError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -180,20 +176,15 @@ pub enum GetPetDocumentsResponse {
     /// Response with Content-Type: image/png
     ImagePng(bytes::Bytes),
     /// Custom content type response
-    Custom {
-        content_type: String,
-        body: bytes::Bytes,
-    },
+    Custom { content_type: String, body: bytes::Bytes },
 }
 
 impl IntoResponse for GetPetDocumentsResponse {
     fn into_response(self) -> Response {
         match self {
-            GetPetDocumentsResponse::ApplicationPdf(body) => (
-                [(axum::http::header::CONTENT_TYPE, "application/pdf")],
-                body,
-            )
-                .into_response(),
+            GetPetDocumentsResponse::ApplicationPdf(body) => {
+                ([(axum::http::header::CONTENT_TYPE, "application/pdf")], body).into_response()
+            }
             GetPetDocumentsResponse::ImageJpeg(body) => {
                 ([(axum::http::header::CONTENT_TYPE, "image/jpeg")], body).into_response()
             }
@@ -212,7 +203,7 @@ pub type GetPetDocumentsResult = Result<GetPetDocumentsResponse, GetPetDocuments
 pub enum GetPetDocumentsError {
     /// Status: Code(404)
     NotFound,
-}
+    }
 
 impl IntoResponse for GetPetDocumentsError {
     fn into_response(self) -> Response {
@@ -220,8 +211,8 @@ impl IntoResponse for GetPetDocumentsError {
             GetPetDocumentsError::NotFound => {
                 let status = StatusCode::NOT_FOUND;
                 status.into_response()
+                }
             }
-        }
     }
 }
 
@@ -233,7 +224,7 @@ pub struct GetPetPhotoResponse(pub bytes::Bytes);
 impl IntoResponse for GetPetPhotoResponse {
     fn into_response(self) -> Response {
         ([(axum::http::header::CONTENT_TYPE, "image/jpeg")], self.0).into_response()
-    }
+        }
 }
 
 pub type GetPetPhotoResult = Result<GetPetPhotoResponse, GetPetPhotoError>;
@@ -241,7 +232,7 @@ pub type GetPetPhotoResult = Result<GetPetPhotoResponse, GetPetPhotoError>;
 pub enum GetPetPhotoError {
     /// Status: Code(404)
     NotFound,
-}
+    }
 
 impl IntoResponse for GetPetPhotoError {
     fn into_response(self) -> Response {
@@ -249,12 +240,15 @@ impl IntoResponse for GetPetPhotoError {
             GetPetPhotoError::NotFound => {
                 let status = StatusCode::NOT_FOUND;
                 status.into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Pets service trait
 ///
@@ -407,33 +401,33 @@ where
         &self,
         ctx: RequestContext<S>,
         query: ListPetsQuery,
-    ) -> impl std::future::Future<Output = ListPetsResult> + Send;
+        ) -> impl std::future::Future<Output = ListPetsResult> + Send;
 
     /// Post /pets
     fn create_pet(
         &self,
         ctx: RequestContext<S>,
         body: crate::types::NewPet,
-    ) -> impl std::future::Future<Output = CreatePetResult> + Send;
+        ) -> impl std::future::Future<Output = CreatePetResult> + Send;
 
     /// Get /pets/export
     fn export_pets(
         &self,
         ctx: RequestContext<S>,
-    ) -> impl std::future::Future<Output = ExportPetsResult> + Send;
+        ) -> impl std::future::Future<Output = ExportPetsResult> + Send;
 
     /// Get /pets/export/csv
     fn export_pets_csv(
         &self,
         ctx: RequestContext<S>,
-    ) -> impl std::future::Future<Output = ExportPetsCsvResult> + Send;
+        ) -> impl std::future::Future<Output = ExportPetsCsvResult> + Send;
 
     /// Get /pets/{petId}
     fn get_pet_by_id(
         &self,
         ctx: RequestContext<S>,
         pet_id: String,
-    ) -> impl std::future::Future<Output = GetPetByIdResult> + Send;
+        ) -> impl std::future::Future<Output = GetPetByIdResult> + Send;
 
     /// Put /pets/{petId}
     fn update_pet(
@@ -441,14 +435,14 @@ where
         ctx: RequestContext<S>,
         pet_id: String,
         body: crate::types::UpdatePet,
-    ) -> impl std::future::Future<Output = UpdatePetResult> + Send;
+        ) -> impl std::future::Future<Output = UpdatePetResult> + Send;
 
     /// Delete /pets/{petId}
     fn delete_pet(
         &self,
         ctx: RequestContext<S>,
         pet_id: String,
-    ) -> impl std::future::Future<Output = DeletePetResult> + Send;
+        ) -> impl std::future::Future<Output = DeletePetResult> + Send;
 
     /// Get /pets/{petId}/documents
     fn get_pet_documents(
@@ -456,139 +450,151 @@ where
         ctx: RequestContext<S>,
         pet_id: String,
         query: GetPetDocumentsQuery,
-    ) -> impl std::future::Future<Output = GetPetDocumentsResult> + Send;
+        ) -> impl std::future::Future<Output = GetPetDocumentsResult> + Send;
 
     /// Get /pets/{petId}/photo
     fn get_pet_photo(
         &self,
         ctx: RequestContext<S>,
         pet_id: String,
-    ) -> impl std::future::Future<Output = GetPetPhotoResult> + Send;
+        ) -> impl std::future::Future<Output = GetPetPhotoResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_pets_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Query(query): axum::extract::Query<ListPetsQuery>| async move {
-                match service.list_pets(ctx, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
-
-        let create_pet_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::NewPet>| async move {
-                match service.create_pet(ctx, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::CREATED;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
-
-        let export_pets_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-            match service.export_pets(ctx).await {
+        let list_pets_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<ListPetsQuery>
+        | async move {
+            match service.list_pets(
+                ctx,
+                query,
+                ).await {
                 Ok(result) => {
                     let status = StatusCode::OK;
-                    // Binary response - use the wrapper's IntoResponse which sets Content-Type
-                    (status, result).into_response()
-                }
+                    (status, axum::Json(result)).into_response()
+                    }
                 Err(e) => e.into_response(),
             }
         };
 
-        let export_pets_csv_handler =
-            |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                match service.export_pets_csv(ctx).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        // Binary response - use the wrapper's IntoResponse which sets Content-Type
-                        (status, result).into_response()
+        let create_pet_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::NewPet>
+        | async move {
+            match service.create_pet(
+                ctx,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::CREATED;
+                    (status, axum::Json(result)).into_response()
                     }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let get_pet_by_id_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<String>| async move {
-                let pet_id = path_params;
-                match service.get_pet_by_id(ctx, pet_id).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
+        let export_pets_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
+        | async move {
+            match service.export_pets(
+                ctx,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    // Binary response - use the wrapper's IntoResponse which sets Content-Type
+                    (status, result).into_response()
                     }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let update_pet_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<String>,
-             Json(body): Json<crate::types::UpdatePet>| async move {
-                let pet_id = path_params;
-                match service.update_pet(ctx, pet_id, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
+        let export_pets_csv_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>
+        | async move {
+            match service.export_pets_csv(
+                ctx,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    // Binary response - use the wrapper's IntoResponse which sets Content-Type
+                    (status, result).into_response()
                     }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let delete_pet_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<String>| async move {
-                let pet_id = path_params;
-                match service.delete_pet(ctx, pet_id).await {
-                    Ok(_) => {
-                        let status = StatusCode::NO_CONTENT;
-                        status.into_response()
+        let get_pet_by_id_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>
+        | async move {
+            let pet_id = path_params;
+            match service.get_pet_by_id(
+                ctx,
+                pet_id,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let get_pet_documents_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<String>,
-             axum::extract::Query(query): axum::extract::Query<GetPetDocumentsQuery>| async move {
-                let pet_id = path_params;
-                match service.get_pet_documents(ctx, pet_id, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        // Multiple binary content types - result implements IntoResponse with proper headers
-                        (status, result).into_response()
+        let update_pet_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>, axum::Json(body): axum::Json<crate::types::UpdatePet>
+        | async move {
+            let pet_id = path_params;
+            match service.update_pet(
+                ctx,
+                pet_id,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let get_pet_photo_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<String>| async move {
-                let pet_id = path_params;
-                match service.get_pet_photo(ctx, pet_id).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        // Binary response - use the wrapper's IntoResponse which sets Content-Type
-                        (status, result).into_response()
+        let delete_pet_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>
+        | async move {
+            let pet_id = path_params;
+            match service.delete_pet(
+                ctx,
+                pet_id,
+                ).await {
+                Ok(_) => {
+                    let status = StatusCode::NO_CONTENT;
+                    status.into_response()
                     }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
+
+        let get_pet_documents_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>, axum::extract::Query(query): axum::extract::Query<GetPetDocumentsQuery>
+        | async move {
+            let pet_id = path_params;
+            match service.get_pet_documents(
+                ctx,
+                pet_id,
+                query,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    // Multiple binary content types - result implements IntoResponse with proper headers
+                    (status, result).into_response()
+                    }
+                Err(e) => e.into_response(),
+            }
+        };
+
+        let get_pet_photo_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>
+        | async move {
+            let pet_id = path_params;
+            match service.get_pet_photo(
+                ctx,
+                pet_id,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    // Binary response - use the wrapper's IntoResponse which sets Content-Type
+                    (status, result).into_response()
+                    }
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/pets", get(list_pets_handler))
@@ -610,9 +616,12 @@ pub struct ListPetsQuery {
     pub limit: Option<String>,
     pub offset: Option<String>,
     pub status: Option<String>,
+    
 }
 
 #[derive(Debug, serde::Deserialize)]
 pub struct GetPetDocumentsQuery {
     pub format: Option<String>,
+    
 }
+

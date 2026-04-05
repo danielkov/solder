@@ -1,19 +1,12 @@
 //! Users service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
     routing::{delete, get, post, put},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, Auth};
 
 // Per-operation result and error types
 // ListUsers types
@@ -24,20 +17,20 @@ pub enum ListUsersError {
     BadRequest(crate::types::Error),
     /// Status: Code(401)
     Unauthorized(crate::types::Error),
-}
+    }
 
 impl IntoResponse for ListUsersError {
     fn into_response(self) -> Response {
         match self {
             ListUsersError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             ListUsersError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -51,24 +44,24 @@ pub enum CreateUserError {
     Unauthorized(crate::types::Error),
     /// Status: Code(409)
     Conflict(crate::types::Error),
-}
+    }
 
 impl IntoResponse for CreateUserError {
     fn into_response(self) -> Response {
         match self {
             CreateUserError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateUserError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             CreateUserError::Conflict(err) => {
                 let status = StatusCode::CONFLICT;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -80,20 +73,20 @@ pub enum GetUserByIdError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for GetUserByIdError {
     fn into_response(self) -> Response {
         match self {
             GetUserByIdError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetUserByIdError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -107,24 +100,24 @@ pub enum UpdateUserError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for UpdateUserError {
     fn into_response(self) -> Response {
         match self {
             UpdateUserError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             UpdateUserError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             UpdateUserError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -136,24 +129,27 @@ pub enum DeleteUserError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for DeleteUserError {
     fn into_response(self) -> Response {
         match self {
             DeleteUserError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             DeleteUserError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Users service trait
 ///
@@ -265,7 +261,7 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         query: ListUsersQuery,
-    ) -> impl std::future::Future<Output = ListUsersResult> + Send;
+        ) -> impl std::future::Future<Output = ListUsersResult> + Send;
 
     /// Post /users
     fn create_user(
@@ -273,14 +269,14 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         body: crate::types::UserCreate,
-    ) -> impl std::future::Future<Output = CreateUserResult> + Send;
+        ) -> impl std::future::Future<Output = CreateUserResult> + Send;
 
     /// Get /users/{userId}
     fn get_user_by_id(
         &self,
         ctx: RequestContext<S>,
         auth: Auth,
-    ) -> impl std::future::Future<Output = GetUserByIdResult> + Send;
+        ) -> impl std::future::Future<Output = GetUserByIdResult> + Send;
 
     /// Put /users/{userId}
     fn update_user(
@@ -288,133 +284,86 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         body: crate::types::UserUpdate,
-    ) -> impl std::future::Future<Output = UpdateUserResult> + Send;
+        ) -> impl std::future::Future<Output = UpdateUserResult> + Send;
 
     /// Delete /users/{userId}
     fn delete_user(
         &self,
         ctx: RequestContext<S>,
         auth: Auth,
-    ) -> impl std::future::Future<Output = DeleteUserResult> + Send;
+        ) -> impl std::future::Future<Output = DeleteUserResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_users_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Query(query): axum::extract::Query<ListUsersQuery>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let list_users_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<ListUsersQuery>
+        | async move {
+            match service.list_users(
+                ctx,
+                auth,
+                query,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.list_users(ctx, auth, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let create_user_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::UserCreate>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let create_user_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::UserCreate>
+        | async move {
+            match service.create_user(
+                ctx,
+                auth,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::CREATED;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.create_user(ctx, auth, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::CREATED;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let get_user_by_id_handler =
-            |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let get_user_by_id_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>
+        | async move {
+            match service.get_user_by_id(
+                ctx,
+                auth,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.get_user_by_id(ctx, auth).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let update_user_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::UserUpdate>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let update_user_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::UserUpdate>
+        | async move {
+            match service.update_user(
+                ctx,
+                auth,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.update_user(ctx, auth, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let delete_user_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>| async move {
-            let auth = 'auth: {
-                if let Some(v) = ctx
-                    .headers
-                    .get(axum::http::header::AUTHORIZATION)
-                    .and_then(|v| v.to_str().ok())
-                {
-                    if let Some(token) = v.strip_prefix("Bearer ") {
-                        break 'auth Auth::Bearer(token.to_string());
-                    }
-                }
-                return StatusCode::UNAUTHORIZED.into_response();
-            };
-            match service.delete_user(ctx, auth).await {
+        let delete_user_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>
+        | async move {
+            match service.delete_user(
+                ctx,
+                auth,
+                ).await {
                 Ok(_) => {
                     let status = StatusCode::NO_CONTENT;
                     status.into_response()
-                }
+                    }
                 Err(e) => e.into_response(),
             }
         };
@@ -437,4 +386,6 @@ pub struct ListUsersQuery {
     pub status: Option<String>,
     pub role: Option<String>,
     pub search: Option<String>,
+    
 }
+

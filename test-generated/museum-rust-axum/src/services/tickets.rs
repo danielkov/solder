@@ -1,44 +1,36 @@
 //! Tickets service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, Auth};
 
 // Per-operation result and error types
 // BuyMuseumTickets types
-pub type BuyMuseumTicketsResult =
-    Result<crate::types::MuseumTicketsConfirmation, BuyMuseumTicketsError>;
+pub type BuyMuseumTicketsResult = Result<crate::types::MuseumTicketsConfirmation, BuyMuseumTicketsError>;
 #[derive(Debug)]
 pub enum BuyMuseumTicketsError {
     /// Status: Code(400)
     BadRequest(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for BuyMuseumTicketsError {
     fn into_response(self) -> Response {
         match self {
             BuyMuseumTicketsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             BuyMuseumTicketsError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
@@ -50,7 +42,7 @@ pub struct GetTicketCodeResponse(pub crate::types::TicketCodeImage);
 impl IntoResponse for GetTicketCodeResponse {
     fn into_response(self) -> Response {
         ([(axum::http::header::CONTENT_TYPE, "image/png")], self.0).into_response()
-    }
+        }
 }
 
 pub type GetTicketCodeResult = Result<GetTicketCodeResponse, GetTicketCodeError>;
@@ -60,24 +52,27 @@ pub enum GetTicketCodeError {
     BadRequest(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-}
+    }
 
 impl IntoResponse for GetTicketCodeError {
     fn into_response(self) -> Response {
         match self {
             GetTicketCodeError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetTicketCodeError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Tickets service trait
 ///
@@ -155,7 +150,7 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         body: crate::types::BuyMuseumTickets,
-    ) -> impl std::future::Future<Output = BuyMuseumTicketsResult> + Send;
+        ) -> impl std::future::Future<Output = BuyMuseumTicketsResult> + Send;
 
     /// Get /tickets/{ticketId}/qr
     fn get_ticket_code(
@@ -163,61 +158,41 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         ticket_id: String,
-    ) -> impl std::future::Future<Output = GetTicketCodeResult> + Send;
+        ) -> impl std::future::Future<Output = GetTicketCodeResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let buy_museum_tickets_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::BuyMuseumTickets>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let buy_museum_tickets_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::BuyMuseumTickets>
+        | async move {
+            match service.buy_museum_tickets(
+                ctx,
+                auth,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::CREATED;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.buy_museum_tickets(ctx, auth, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::CREATED;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
-        let get_ticket_code_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<String>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let get_ticket_code_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<String>
+        | async move {
+            let ticket_id = path_params;
+            match service.get_ticket_code(
+                ctx,
+                auth,
+                ticket_id,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    // Binary response - use the wrapper's IntoResponse which sets Content-Type
+                    (status, result).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                let ticket_id = path_params;
-                match service.get_ticket_code(ctx, auth, ticket_id).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        // Binary response - use the wrapper's IntoResponse which sets Content-Type
-                        (status, result).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/tickets", post(buy_museum_tickets_handler))

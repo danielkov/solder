@@ -1,19 +1,12 @@
 //! Parameters service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, Bearer};
 
 // Per-operation result and error types
 // GetParameters types
@@ -26,28 +19,31 @@ pub enum GetParametersError {
     NotFound(crate::types::NotFoundResponse),
     /// Status: Code(500)
     InternalServerError(crate::types::InternalServerResponse),
-}
+    }
 
 impl IntoResponse for GetParametersError {
     fn into_response(self) -> Response {
         match self {
             GetParametersError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetParametersError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetParametersError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Parameters service trait
 ///
@@ -84,7 +80,7 @@ impl IntoResponse for GetParametersError {
 ///     async fn get_parameters(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: Bearer,
 ///         author: String,
 ///         slug: String,
 ///         query: GetParametersQuery,
@@ -114,40 +110,31 @@ where
     fn get_parameters(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
+        auth: Bearer,
         author: String,
         slug: String,
         query: GetParametersQuery,
-    ) -> impl std::future::Future<Output = GetParametersResult> + Send;
+        ) -> impl std::future::Future<Output = GetParametersResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_parameters_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Path(path_params): axum::extract::Path<(String, String)>,
-             axum::extract::Query(query): axum::extract::Query<GetParametersQuery>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let get_parameters_handler = |ctx: RequestContext<S>, auth: Bearer, Extension(service): Extension<Self>, axum::extract::Path(path_params): axum::extract::Path<(String, String)>, axum::extract::Query(query): axum::extract::Query<GetParametersQuery>
+        | async move {
+            let (author, slug) = path_params;
+            match service.get_parameters(
+                ctx,
+                auth,
+                author,
+                slug,
+                query,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                let (author, slug) = path_params;
-                match service.get_parameters(ctx, auth, author, slug, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/parameters/{author}/{slug}", get(get_parameters_handler))
@@ -159,4 +146,6 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct GetParametersQuery {
     pub provider: Option<String>,
+    
 }
+

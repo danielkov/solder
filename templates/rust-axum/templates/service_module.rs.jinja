@@ -5,26 +5,10 @@ use axum::{
     routing::{
         {%- for method in methods %}{{ method }}{% if !loop.last %}, {% endif %}{% endfor -%}
     },
-    Extension, Json, Router,
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-{% if has_auth -%}
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    {% if has_bearer_auth -%}
-    /// Bearer token from Authorization header
-    Bearer(String),
-    {% endif -%}
-    {% if has_api_key_auth -%}
-    /// API key value
-    ApiKey(String),
-    {% endif -%}
-}
-
-{% endif -%}
+use crate::shared::{RequestContext{% for auth in auth_imports %}, {{ auth }}{% endfor %}};
 
 // Per-operation result and error types
 {% for op_wrap in operations -%}
@@ -126,7 +110,7 @@ impl IntoResponse for {{ op.name.pascal }}Error {
                 let status = StatusCode::BAD_REQUEST;
                 {% endmatch -%}
                 {% if variant.ty.is_some() -%}
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
                 {% else -%}
                 status.into_response()
                 {% endif -%}
@@ -424,8 +408,8 @@ impl {{ op.name.pascal }}Request {
 ///     async fn {{ op.name.snake|escape_rust_keyword }}(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-{% if !op_wrap.auth.is_empty() -%}
-///         auth: Auth,
+{% if let Some(auth_name) = &op_wrap.auth_type_name -%}
+///         auth: {{ auth_name }},
 {% endif -%}
 {% for param in op.http.path_params -%}
 ///         {{ param.name.snake|escape_rust_keyword }}: String,
@@ -475,8 +459,8 @@ where
     fn {{ op.name.snake|escape_rust_keyword }}(
         &self,
         ctx: RequestContext<S>,
-        {% if !op_wrap.auth.is_empty() -%}
-        auth: Auth,
+        {% if let Some(auth_name) = &op_wrap.auth_type_name -%}
+        auth: {{ auth_name }},
         {% endif -%}
         {% for param in op.http.path_params -%}
         {{ param.name.snake|escape_rust_keyword }}: String,
@@ -505,7 +489,7 @@ where
     fn router(self) -> Router<S> {
         {% for op_wrap in operations -%}
         {% set op = op_wrap.operation -%}
-        let {{ op.name.snake|escape_rust_keyword }}_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>{% if op.http.path_params .len() == 1 %}, axum::extract::Path(path_params): axum::extract::Path<String>{% else if op.http.path_params .len() > 1 %}, axum::extract::Path(path_params): axum::extract::Path<({% for p in op.http.path_params -%}
+        let {{ op.name.snake|escape_rust_keyword }}_handler = |ctx: RequestContext<S>{% if let Some(auth_name) = &op_wrap.auth_type_name %}, auth: {{ auth_name }}{% endif %}, Extension(service): Extension<Self>{% if op.http.path_params .len() == 1 %}, axum::extract::Path(path_params): axum::extract::Path<String>{% else if op.http.path_params .len() > 1 %}, axum::extract::Path(path_params): axum::extract::Path<({% for p in op.http.path_params -%}
             String{% if !loop.last %}, {% endif -%}
         {% endfor %})>{% endif -%}
         {% if op.http.query .len() > 0 %}, axum::extract::Query(query): axum::extract::Query<{{ op.name.pascal }}Query>{% endif -%}
@@ -514,38 +498,11 @@ where
         {%- when RequestContentType::OctetStream -%}, body: bytes::Bytes
         {%- when RequestContentType::Json -%}
         {% if let Some(body) = op.http.body -%}
-        {% if let Some(variant) = body.variants.first() %}, Json(body): Json<{{ variant.ty.target|render_type }}>{% endif -%}
+        {% if let Some(variant) = body.variants.first() %}, axum::Json(body): axum::Json<{{ variant.ty.target|render_type }}>{% endif -%}
         {% endif -%}
         {% when RequestContentType::None -%}
         {% endmatch %}
         | async move {
-            {% if !op_wrap.auth.is_empty() -%}
-            let auth = 'auth: {
-                {% for a in op_wrap.auth -%}
-                {% match a.kind -%}
-                {% when ResolvedAuthKind::Bearer -%}
-                if let Some(v) = ctx.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
-                    if let Some(token) = v.strip_prefix("Bearer ") {
-                        break 'auth Auth::Bearer(token.to_string());
-                    }
-                }
-                {% when ResolvedAuthKind::ApiKeyHeader with { header_name } -%}
-                if let Some(v) = ctx.headers.get("{{ header_name }}").and_then(|v| v.to_str().ok()) {
-                    break 'auth Auth::ApiKey(v.to_string());
-                }
-                {% when ResolvedAuthKind::ApiKeyQuery with { param_name } -%}
-                if let Some(v) = ctx.uri.query().and_then(|q| url::form_urlencoded::parse(q.as_bytes()).find(|(k, _)| k == "{{ param_name }}").map(|(_, v)| v.to_string())) {
-                    break 'auth Auth::ApiKey(v);
-                }
-                {% when ResolvedAuthKind::ApiKeyCookie with { cookie_name } -%}
-                if let Some(v) = ctx.headers.get(axum::http::header::COOKIE).and_then(|v| v.to_str().ok()).and_then(|c| c.split("; ").find_map(|p| p.strip_prefix("{{ cookie_name }}="))) {
-                    break 'auth Auth::ApiKey(v.to_string());
-                }
-                {% endmatch -%}
-                {% endfor -%}
-                return StatusCode::UNAUTHORIZED.into_response();
-            };
-            {% endif -%}
             {% if op.http.path_params .len() == 1 -%}
             let {{ op.http.path_params[0].name.snake|escape_rust_keyword }} = path_params;
             {% else if op.http.path_params .len() > 1 -%}
@@ -556,7 +513,7 @@ where
 
             match service.{{ op.name.snake|escape_rust_keyword }}(
                 ctx,
-                {% if !op_wrap.auth.is_empty() -%}
+                {% if op_wrap.auth_type_name.is_some() -%}
                 auth,
                 {% endif -%}
                 {% for param in op.http.path_params -%}
@@ -588,7 +545,7 @@ where
                     // Multiple binary content types - result implements IntoResponse with proper headers
                     (status, result).into_response()
                     {% when _ -%}
-                    (status, Json(result)).into_response()
+                    (status, axum::Json(result)).into_response()
                     {% endmatch -%}
                     {% else -%}
                     status.into_response()

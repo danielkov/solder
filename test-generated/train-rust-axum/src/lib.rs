@@ -1,6 +1,6 @@
 //! Generated Axum API
 
-pub mod multipart;
+pub mod types;
 pub mod services;
 pub mod shared;
-pub mod types;
+pub mod multipart;

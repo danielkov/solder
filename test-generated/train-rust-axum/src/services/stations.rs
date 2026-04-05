@@ -1,19 +1,12 @@
 //! Stations service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{get},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, Auth};
 
 // Per-operation result and error types
 // GetStations types
@@ -30,36 +23,39 @@ pub enum GetStationsError {
     TooManyRequests(crate::types::Problem),
     /// Status: Code(500)
     InternalServerError(crate::types::Problem),
-}
+    }
 
 impl IntoResponse for GetStationsError {
     fn into_response(self) -> Response {
         match self {
             GetStationsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetStationsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetStationsError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetStationsError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             GetStationsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Stations service trait
 ///
@@ -126,34 +122,24 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         query: GetStationsQuery,
-    ) -> impl std::future::Future<Output = GetStationsResult> + Send;
+        ) -> impl std::future::Future<Output = GetStationsResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_stations_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             axum::extract::Query(query): axum::extract::Query<GetStationsQuery>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let get_stations_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<GetStationsQuery>
+        | async move {
+            match service.get_stations(
+                ctx,
+                auth,
+                query,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.get_stations(ctx, auth, query).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
             .route("/stations", get(get_stations_handler))
@@ -169,4 +155,6 @@ pub struct GetStationsQuery {
     pub coordinates: Option<String>,
     pub search: Option<String>,
     pub country: Option<String>,
+    
 }
+

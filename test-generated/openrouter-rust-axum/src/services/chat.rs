@@ -1,24 +1,16 @@
 //! Chat service module
 use axum::{
-    Extension, Json, Router,
-    http::StatusCode,
+    http::{StatusCode},
     response::{IntoResponse, Response},
-    routing::post,
+    routing::{post},
+    Extension, Router,
 };
 
-use crate::shared::RequestContext;
-
-/// Authentication credential extracted from the request.
-#[derive(Clone, Debug)]
-pub enum Auth {
-    /// Bearer token from Authorization header
-    Bearer(String),
-}
+use crate::shared::{RequestContext, ApiKey};
 
 // Per-operation result and error types
 // SendChatCompletionRequest types
-pub type SendChatCompletionRequestResult =
-    Result<crate::types::ChatResponse, SendChatCompletionRequestError>;
+pub type SendChatCompletionRequestResult = Result<crate::types::ChatResponse, SendChatCompletionRequestError>;
 #[derive(Debug)]
 pub enum SendChatCompletionRequestError {
     /// Status: Code(400)
@@ -29,32 +21,35 @@ pub enum SendChatCompletionRequestError {
     TooManyRequests(crate::types::ChatError),
     /// Status: Code(500)
     InternalServerError(crate::types::ChatError),
-}
+    }
 
 impl IntoResponse for SendChatCompletionRequestError {
     fn into_response(self) -> Response {
         match self {
             SendChatCompletionRequestError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             SendChatCompletionRequestError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             SendChatCompletionRequestError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
-                (status, Json(err)).into_response()
-            }
+                (status, axum::Json(err)).into_response()
+                }
             SendChatCompletionRequestError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
-                (status, Json(err)).into_response()
+                (status, axum::Json(err)).into_response()
+                }
             }
-        }
     }
 }
 
+
+
 // Multipart request structs
+
 
 /// Chat service trait
 ///
@@ -90,7 +85,7 @@ impl IntoResponse for SendChatCompletionRequestError {
 ///     async fn send_chat_completion_request(
 ///         &self,
 ///         ctx: RequestContext<AppState>,
-///         auth: Auth,
+///         auth: ApiKey,
 ///         body: open_router_api::types::ChatGenerationParams,
 ///     ) -> SendChatCompletionRequestResult {
 ///         // Implement your business logic here
@@ -118,42 +113,29 @@ where
     fn send_chat_completion_request(
         &self,
         ctx: RequestContext<S>,
-        auth: Auth,
+        auth: ApiKey,
         body: crate::types::ChatGenerationParams,
-    ) -> impl std::future::Future<Output = SendChatCompletionRequestResult> + Send;
+        ) -> impl std::future::Future<Output = SendChatCompletionRequestResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let send_chat_completion_request_handler =
-            |ctx: RequestContext<S>,
-             Extension(service): Extension<Self>,
-             Json(body): Json<crate::types::ChatGenerationParams>| async move {
-                let auth = 'auth: {
-                    if let Some(v) = ctx
-                        .headers
-                        .get(axum::http::header::AUTHORIZATION)
-                        .and_then(|v| v.to_str().ok())
-                    {
-                        if let Some(token) = v.strip_prefix("Bearer ") {
-                            break 'auth Auth::Bearer(token.to_string());
-                        }
+        let send_chat_completion_request_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::ChatGenerationParams>
+        | async move {
+            match service.send_chat_completion_request(
+                ctx,
+                auth,
+                body,
+                ).await {
+                Ok(result) => {
+                    let status = StatusCode::OK;
+                    (status, axum::Json(result)).into_response()
                     }
-                    return StatusCode::UNAUTHORIZED.into_response();
-                };
-                match service.send_chat_completion_request(ctx, auth, body).await {
-                    Ok(result) => {
-                        let status = StatusCode::OK;
-                        (status, Json(result)).into_response()
-                    }
-                    Err(e) => e.into_response(),
-                }
-            };
+                Err(e) => e.into_response(),
+            }
+        };
 
         Router::new()
-            .route(
-                "/chat/completions",
-                post(send_chat_completion_request_handler),
-            )
+            .route("/chat/completions", post(send_chat_completion_request_handler))
             .layer(Extension(self))
     }
 }
