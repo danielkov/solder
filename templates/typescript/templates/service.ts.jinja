@@ -91,14 +91,11 @@ export class {{ error.class_name }} extends globalThis.Error {
     if (!response.ok) {
 {% if operation.has_errors %}      switch (response.status) {
 {% for error in operation.error_variants %}        case {{ error.status_code }}: {
-{% if error.has_body %}          try {
-            const body = await response.json() as {{ error.body_type }};
-            await this.raise(new {{ error.class_name }}(body));
-          } catch (e) {
-            if (e instanceof {{ error.class_name }}) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+{% if error.has_body %}          const body = await response.json() as {{ error.body_type }};
+          await this.raise(new {{ error.class_name }}(body));
+          break;
 {% else %}          await this.raise(new {{ error.class_name }}());
+          break;
 {% endif %}        }
 {% endfor %}        default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
