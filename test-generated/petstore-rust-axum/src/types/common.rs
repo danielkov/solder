@@ -26,4 +26,3 @@ pub struct Owner {
     pub last_name: String,
     pub phone: Option<String>,
 }
-

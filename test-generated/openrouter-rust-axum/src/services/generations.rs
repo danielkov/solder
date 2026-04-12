@@ -1,12 +1,12 @@
 //! Generations service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{get},
     Extension, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::get,
 };
 
-use crate::shared::{RequestContext, ApiKey};
+use crate::shared::{ApiKey, RequestContext};
 
 // Per-operation result and error types
 // GetGeneration types
@@ -29,7 +29,7 @@ pub enum GetGenerationError {
     Status524(crate::types::EdgeNetworkTimeoutResponse),
     /// Status: Code(529)
     Status529(crate::types::ProviderOverloadedResponse),
-    }
+}
 
 impl IntoResponse for GetGenerationError {
     fn into_response(self) -> Response {
@@ -37,43 +37,42 @@ impl IntoResponse for GetGenerationError {
             GetGenerationError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetGenerationError::Status402(err) => {
                 let status = StatusCode::PAYMENT_REQUIRED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetGenerationError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetGenerationError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetGenerationError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetGenerationError::BadGateway(err) => {
                 let status = StatusCode::BAD_GATEWAY;
                 (status, axum::Json(err)).into_response()
-                }
-            GetGenerationError::Status524(err) => {
-                let status = { StatusCode::from_u16(524).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
-                (status, axum::Json(err)).into_response()
-                }
-            GetGenerationError::Status529(err) => {
-                let status = { StatusCode::from_u16(529).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
-                (status, axum::Json(err)).into_response()
-                }
             }
+            GetGenerationError::Status524(err) => {
+                let status =
+                    { StatusCode::from_u16(524).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
+                (status, axum::Json(err)).into_response()
+            }
+            GetGenerationError::Status529(err) => {
+                let status =
+                    { StatusCode::from_u16(529).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR) };
+                (status, axum::Json(err)).into_response()
+            }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Generations service trait
 ///
@@ -140,24 +139,23 @@ where
         ctx: RequestContext<S>,
         auth: ApiKey,
         query: GetGenerationQuery,
-        ) -> impl std::future::Future<Output = GetGenerationResult> + Send;
+    ) -> impl std::future::Future<Output = GetGenerationResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_generation_handler = |ctx: RequestContext<S>, auth: ApiKey, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<GetGenerationQuery>
-        | async move {
-            match service.get_generation(
-                ctx,
-                auth,
-                query,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, axum::Json(result)).into_response()
+        let get_generation_handler =
+            |ctx: RequestContext<S>,
+             auth: ApiKey,
+             Extension(service): Extension<Self>,
+             axum::extract::Query(query): axum::extract::Query<GetGenerationQuery>| async move {
+                match service.get_generation(ctx, auth, query).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/generation", get(get_generation_handler))
@@ -169,6 +167,4 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct GetGenerationQuery {
     pub id: String,
-    
 }
-

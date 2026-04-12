@@ -36,4 +36,3 @@ pub struct ExchangeAuthCodeForApiKeyResponse {
     pub key: String,
     pub user_id: String,
 }
-

@@ -94,22 +94,14 @@ export class OperationsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetMuseumHoursBadRequestError(body));
-          } catch (e) {
-            if (e instanceof GetMuseumHoursBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetMuseumHoursBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetMuseumHoursNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetMuseumHoursNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetMuseumHoursNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

@@ -304,22 +304,14 @@ export class ProductsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListProductsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof ListProductsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListProductsBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListProductsUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof ListProductsUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListProductsUnauthorizedError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -373,31 +365,19 @@ export class ProductsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateProductBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateProductBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateProductBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateProductUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateProductUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateProductUnauthorizedError(body));
+          break;
         }
         case 409: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateProductConflictError(body));
-          } catch (e) {
-            if (e instanceof CreateProductConflictError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateProductConflictError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -445,22 +425,14 @@ export class ProductsService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetProductByIdUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetProductByIdUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetProductByIdUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetProductByIdNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetProductByIdNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetProductByIdNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -514,31 +486,19 @@ export class ProductsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateProductBadRequestError(body));
-          } catch (e) {
-            if (e instanceof UpdateProductBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateProductBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateProductUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof UpdateProductUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateProductUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateProductNotFoundError(body));
-          } catch (e) {
-            if (e instanceof UpdateProductNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateProductNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -586,22 +546,14 @@ export class ProductsService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteProductUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof DeleteProductUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteProductUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteProductNotFoundError(body));
-          } catch (e) {
-            if (e instanceof DeleteProductNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteProductNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -655,31 +607,19 @@ export class ProductsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateProductInventoryBadRequestError(body));
-          } catch (e) {
-            if (e instanceof UpdateProductInventoryBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateProductInventoryBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateProductInventoryUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof UpdateProductInventoryUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateProductInventoryUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateProductInventoryNotFoundError(body));
-          } catch (e) {
-            if (e instanceof UpdateProductInventoryNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateProductInventoryNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

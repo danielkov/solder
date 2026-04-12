@@ -1680,16 +1680,20 @@ fn convert_security_requirements(
         return Vec::new();
     };
 
-    // OpenAPI security is an array of alternatives (OR)
-    // Each SecurityRequirement is a tuple struct wrapping a BTreeMap of scheme names to scopes
-    // For now, we'll flatten all schemes into a single list
+    // OpenAPI security is an array of alternatives (OR). An empty requirement
+    // object (`{}`) is a special marker indicating that anonymous access is
+    // allowed alongside any other alternatives. When present, mark every
+    // resolved AuthUse as optional so downstream generators can emit an
+    // extractor that tolerates missing credentials.
+    let allows_anonymous = security.iter().any(|req| req.0.is_empty());
+
     security
         .iter()
         .flat_map(|req| {
-            req.0.iter().map(|(scheme_name, scopes)| AuthUse {
+            req.0.iter().map(move |(scheme_name, scopes)| AuthUse {
                 scheme: StableId::new(scheme_name),
                 scopes: scopes.clone(),
-                optional: false, // TODO: determine if this is optional based on context
+                optional: allows_anonymous,
             })
         })
         .collect()

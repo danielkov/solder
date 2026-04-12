@@ -1,9 +1,11 @@
 //! Service interfaces organized by tag
 
-#[cfg(feature = "api_keys")]
-pub mod api_keys;
 #[cfg(feature = "analytics")]
 pub mod analytics;
+#[cfg(feature = "api_keys")]
+pub mod api_keys;
+#[cfg(feature = "beta_responses")]
+pub mod beta_responses;
 #[cfg(feature = "chat")]
 pub mod chat;
 #[cfg(feature = "completions")]
@@ -24,5 +26,3 @@ pub mod o_auth;
 pub mod parameters;
 #[cfg(feature = "providers")]
 pub mod providers;
-#[cfg(feature = "beta_responses")]
-pub mod beta_responses;

@@ -174,22 +174,14 @@ export class PetsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListPetsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof ListPetsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListPetsBadRequestError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListPetsInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListPetsInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListPetsInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -240,13 +232,9 @@ export class PetsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreatePetBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreatePetBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreatePetBadRequestError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -371,13 +359,9 @@ export class PetsService {
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetPetByIdNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetPetByIdNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetPetByIdNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -430,13 +414,9 @@ export class PetsService {
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdatePetNotFoundError(body));
-          } catch (e) {
-            if (e instanceof UpdatePetNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdatePetNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -485,13 +465,9 @@ export class PetsService {
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeletePetNotFoundError(body));
-          } catch (e) {
-            if (e instanceof DeletePetNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeletePetNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -548,6 +524,7 @@ export class PetsService {
       switch (response.status) {
         case 404: {
           await this.raise(new GetPetDocumentsNotFoundError());
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -597,6 +574,7 @@ export class PetsService {
       switch (response.status) {
         case 404: {
           await this.raise(new GetPetPhotoNotFoundError());
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

@@ -169,76 +169,44 @@ export class GenerationsService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new GetGenerationUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetGenerationUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new GetGenerationUnauthorizedError(body));
+          break;
         }
         case 402: {
-          try {
-            const body = await response.json() as PaymentRequiredResponse;
-            await this.raise(new GetGenerationStatus402Error(body));
-          } catch (e) {
-            if (e instanceof GetGenerationStatus402Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as PaymentRequiredResponse;
+          await this.raise(new GetGenerationStatus402Error(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new GetGenerationNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetGenerationNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new GetGenerationNotFoundError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new GetGenerationTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof GetGenerationTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new GetGenerationTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new GetGenerationInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetGenerationInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new GetGenerationInternalServerErrorError(body));
+          break;
         }
         case 502: {
-          try {
-            const body = await response.json() as BadGatewayResponse;
-            await this.raise(new GetGenerationBadGatewayError(body));
-          } catch (e) {
-            if (e instanceof GetGenerationBadGatewayError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadGatewayResponse;
+          await this.raise(new GetGenerationBadGatewayError(body));
+          break;
         }
         case 524: {
-          try {
-            const body = await response.json() as EdgeNetworkTimeoutResponse;
-            await this.raise(new GetGenerationStatus524Error(body));
-          } catch (e) {
-            if (e instanceof GetGenerationStatus524Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as EdgeNetworkTimeoutResponse;
+          await this.raise(new GetGenerationStatus524Error(body));
+          break;
         }
         case 529: {
-          try {
-            const body = await response.json() as ProviderOverloadedResponse;
-            await this.raise(new GetGenerationStatus529Error(body));
-          } catch (e) {
-            if (e instanceof GetGenerationStatus529Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ProviderOverloadedResponse;
+          await this.raise(new GetGenerationStatus529Error(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

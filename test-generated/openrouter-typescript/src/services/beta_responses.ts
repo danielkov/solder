@@ -238,121 +238,69 @@ export class BetaResponsesService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new CreateResponsesBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new CreateResponsesBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new CreateResponsesUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new CreateResponsesUnauthorizedError(body));
+          break;
         }
         case 402: {
-          try {
-            const body = await response.json() as PaymentRequiredResponse;
-            await this.raise(new CreateResponsesStatus402Error(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesStatus402Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as PaymentRequiredResponse;
+          await this.raise(new CreateResponsesStatus402Error(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new CreateResponsesNotFoundError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new CreateResponsesNotFoundError(body));
+          break;
         }
         case 408: {
-          try {
-            const body = await response.json() as RequestTimeoutResponse;
-            await this.raise(new CreateResponsesStatus408Error(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesStatus408Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as RequestTimeoutResponse;
+          await this.raise(new CreateResponsesStatus408Error(body));
+          break;
         }
         case 413: {
-          try {
-            const body = await response.json() as PayloadTooLargeResponse;
-            await this.raise(new CreateResponsesStatus413Error(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesStatus413Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as PayloadTooLargeResponse;
+          await this.raise(new CreateResponsesStatus413Error(body));
+          break;
         }
         case 422: {
-          try {
-            const body = await response.json() as UnprocessableEntityResponse;
-            await this.raise(new CreateResponsesUnprocessableEntityError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesUnprocessableEntityError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnprocessableEntityResponse;
+          await this.raise(new CreateResponsesUnprocessableEntityError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new CreateResponsesTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new CreateResponsesTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new CreateResponsesInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new CreateResponsesInternalServerErrorError(body));
+          break;
         }
         case 502: {
-          try {
-            const body = await response.json() as BadGatewayResponse;
-            await this.raise(new CreateResponsesBadGatewayError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesBadGatewayError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadGatewayResponse;
+          await this.raise(new CreateResponsesBadGatewayError(body));
+          break;
         }
         case 503: {
-          try {
-            const body = await response.json() as ServiceUnavailableResponse;
-            await this.raise(new CreateResponsesServiceUnavailableError(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesServiceUnavailableError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ServiceUnavailableResponse;
+          await this.raise(new CreateResponsesServiceUnavailableError(body));
+          break;
         }
         case 524: {
-          try {
-            const body = await response.json() as EdgeNetworkTimeoutResponse;
-            await this.raise(new CreateResponsesStatus524Error(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesStatus524Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as EdgeNetworkTimeoutResponse;
+          await this.raise(new CreateResponsesStatus524Error(body));
+          break;
         }
         case 529: {
-          try {
-            const body = await response.json() as ProviderOverloadedResponse;
-            await this.raise(new CreateResponsesStatus529Error(body));
-          } catch (e) {
-            if (e instanceof CreateResponsesStatus529Error) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ProviderOverloadedResponse;
+          await this.raise(new CreateResponsesStatus529Error(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

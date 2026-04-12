@@ -35,6 +35,11 @@ where
 
 {% for group in auth_groups -%}
 /// Authentication credential extracted from the request.
+{% if group.allows_anonymous -%}
+/// This extractor tolerates missing credentials and resolves to
+/// `Anonymous` in that case, reflecting an OpenAPI security list that
+/// includes an empty requirement (`- {}`).
+{% endif -%}
 #[derive(Clone, Debug)]
 pub enum {{ group.name }} {
     {% if group.has_bearer -%}
@@ -44,6 +49,10 @@ pub enum {{ group.name }} {
     {% if group.has_api_key -%}
     /// API key value
     ApiKey(String),
+    {% endif -%}
+    {% if group.allows_anonymous -%}
+    /// No credentials presented; anonymous access permitted for this endpoint
+    Anonymous,
     {% endif -%}
 }
 
@@ -79,7 +88,11 @@ where
         }
         {% endmatch -%}
         {% endfor -%}
+        {% if group.allows_anonymous -%}
+        Ok({{ group.name }}::Anonymous)
+        {% else -%}
         Err(axum::http::StatusCode::UNAUTHORIZED)
+        {% endif -%}
     }
 }
 

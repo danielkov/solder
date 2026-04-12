@@ -115,40 +115,24 @@ export class AnalyticsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new GetUserActivityBadRequestError(body));
-          } catch (e) {
-            if (e instanceof GetUserActivityBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new GetUserActivityBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new GetUserActivityUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetUserActivityUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new GetUserActivityUnauthorizedError(body));
+          break;
         }
         case 403: {
-          try {
-            const body = await response.json() as ForbiddenResponse;
-            await this.raise(new GetUserActivityForbiddenError(body));
-          } catch (e) {
-            if (e instanceof GetUserActivityForbiddenError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ForbiddenResponse;
+          await this.raise(new GetUserActivityForbiddenError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new GetUserActivityInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetUserActivityInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new GetUserActivityInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

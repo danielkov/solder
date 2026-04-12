@@ -43,4 +43,3 @@ pub struct GetGenerationResponseData {
     pub upstream_inference_cost: f32,
     pub usage: f32,
 }
-

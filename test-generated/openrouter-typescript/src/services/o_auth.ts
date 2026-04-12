@@ -140,31 +140,19 @@ export class OAuthService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new ExchangeAuthCodeForApiKeyBadRequestError(body));
-          } catch (e) {
-            if (e instanceof ExchangeAuthCodeForApiKeyBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new ExchangeAuthCodeForApiKeyBadRequestError(body));
+          break;
         }
         case 403: {
-          try {
-            const body = await response.json() as ForbiddenResponse;
-            await this.raise(new ExchangeAuthCodeForApiKeyForbiddenError(body));
-          } catch (e) {
-            if (e instanceof ExchangeAuthCodeForApiKeyForbiddenError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ForbiddenResponse;
+          await this.raise(new ExchangeAuthCodeForApiKeyForbiddenError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ExchangeAuthCodeForApiKeyInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ExchangeAuthCodeForApiKeyInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ExchangeAuthCodeForApiKeyInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -218,31 +206,19 @@ export class OAuthService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new CreateAuthKeysCodeBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateAuthKeysCodeBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new CreateAuthKeysCodeBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new CreateAuthKeysCodeUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateAuthKeysCodeUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new CreateAuthKeysCodeUnauthorizedError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new CreateAuthKeysCodeInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof CreateAuthKeysCodeInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new CreateAuthKeysCodeInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

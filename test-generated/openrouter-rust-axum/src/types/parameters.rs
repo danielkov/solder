@@ -13,4 +13,3 @@ pub struct GetParametersResponseData {
     pub model: String,
     pub supported_parameters: Vec<String>,
 }
-

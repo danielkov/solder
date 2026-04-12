@@ -132,22 +132,14 @@ export class ModelsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new GetModelsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof GetModelsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new GetModelsBadRequestError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new GetModelsInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetModelsInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new GetModelsInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -193,13 +185,9 @@ export class ModelsService {
     if (!response.ok) {
       switch (response.status) {
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ListModelsCountInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListModelsCountInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ListModelsCountInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -245,22 +233,14 @@ export class ModelsService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new ListModelsUserUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof ListModelsUserUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new ListModelsUserUnauthorizedError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ListModelsUserInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListModelsUserInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ListModelsUserInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

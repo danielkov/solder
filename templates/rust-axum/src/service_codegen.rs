@@ -4,6 +4,16 @@ use askama::Template;
 use ir::gen_ir::{ApiKeyLocation, AuthKind, AuthScheme, HttpMethod, Operation, Service, StableId};
 use std::collections::{BTreeMap, BTreeSet};
 
+/// Lookup key used to find the generated auth extractor type name for an
+/// operation. Includes whether anonymous access is allowed so that operations
+/// with the same scheme set but different optionality can resolve to
+/// different extractors (`Auth` vs `OptionalAuth`).
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct AuthTypeKey {
+    pub schemes: BTreeSet<StableId>,
+    pub allows_anonymous: bool,
+}
+
 /// Escape Rust keywords with r# prefix.
 /// Note: `self` and `Self` cannot be raw identifiers, so they use underscore prefix instead.
 fn escape_keyword(name: &str) -> String {
@@ -328,14 +338,14 @@ struct ServiceModuleTemplate<'a> {
 pub struct ServiceModuleGenerator<'a> {
     service: &'a Service,
     package_name: &'a str,
-    auth_type_map: &'a BTreeMap<BTreeSet<StableId>, String>,
+    auth_type_map: &'a BTreeMap<AuthTypeKey, String>,
 }
 
 impl<'a> ServiceModuleGenerator<'a> {
     pub fn new(
         service: &'a Service,
         package_name: &'a str,
-        auth_type_map: &'a BTreeMap<BTreeSet<StableId>, String>,
+        auth_type_map: &'a BTreeMap<AuthTypeKey, String>,
     ) -> Self {
         Self {
             service,
@@ -353,8 +363,10 @@ impl<'a> ServiceModuleGenerator<'a> {
                 let auth_type_name = if op.auth.is_empty() {
                     None
                 } else {
-                    let key: BTreeSet<StableId> =
-                        op.auth.iter().map(|a| a.scheme.clone()).collect();
+                    let key = AuthTypeKey {
+                        schemes: op.auth.iter().map(|a| a.scheme.clone()).collect(),
+                        allows_anonymous: op.auth.iter().any(|a| a.optional),
+                    };
                     self.auth_type_map
                         .get(&key)
                         .cloned()

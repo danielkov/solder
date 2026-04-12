@@ -22,4 +22,3 @@ pub struct ActivityItem {
 pub struct GetUserActivityResponse {
     pub data: Vec<ActivityItem>,
 }
-

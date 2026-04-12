@@ -171,4 +171,3 @@ pub struct UpdateKeysResponseData {
     pub usage_monthly: f32,
     pub usage_weekly: f32,
 }
-

@@ -257,22 +257,14 @@ export class OrdersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListOrdersBadRequestError(body));
-          } catch (e) {
-            if (e instanceof ListOrdersBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListOrdersBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListOrdersUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof ListOrdersUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListOrdersUnauthorizedError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -326,22 +318,14 @@ export class OrdersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateOrderBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateOrderBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateOrderBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateOrderUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateOrderUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateOrderUnauthorizedError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -389,22 +373,14 @@ export class OrdersService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetOrderByIdUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetOrderByIdUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetOrderByIdUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetOrderByIdNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetOrderByIdNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetOrderByIdNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -452,31 +428,19 @@ export class OrdersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteOrderBadRequestError(body));
-          } catch (e) {
-            if (e instanceof DeleteOrderBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteOrderBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteOrderUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof DeleteOrderUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteOrderUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteOrderNotFoundError(body));
-          } catch (e) {
-            if (e instanceof DeleteOrderNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteOrderNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -530,31 +494,19 @@ export class OrdersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CancelOrderBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CancelOrderBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CancelOrderBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CancelOrderUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CancelOrderUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CancelOrderUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CancelOrderNotFoundError(body));
-          } catch (e) {
-            if (e instanceof CancelOrderNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CancelOrderNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

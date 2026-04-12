@@ -39,4 +39,3 @@ pub struct HttpError {
     #[serde(rename = "statusCode")]
     pub status_code: i32,
 }
-

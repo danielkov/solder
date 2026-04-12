@@ -15,4 +15,3 @@ pub struct NewOwner {
     pub last_name: String,
     pub phone: Option<String>,
 }
-

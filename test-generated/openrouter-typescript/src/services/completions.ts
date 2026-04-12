@@ -112,40 +112,24 @@ export class CompletionsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new CreateCompletionsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateCompletionsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new CreateCompletionsBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new CreateCompletionsUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateCompletionsUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new CreateCompletionsUnauthorizedError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new CreateCompletionsTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof CreateCompletionsTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new CreateCompletionsTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new CreateCompletionsInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof CreateCompletionsInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new CreateCompletionsInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

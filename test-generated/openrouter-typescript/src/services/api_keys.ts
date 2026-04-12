@@ -358,22 +358,14 @@ export class ApiKeysService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new GetCurrentKeyUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetCurrentKeyUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new GetCurrentKeyUnauthorizedError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new GetCurrentKeyInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetCurrentKeyInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new GetCurrentKeyInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -433,31 +425,19 @@ export class ApiKeysService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new ListUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof ListUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new ListUnauthorizedError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new ListTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof ListTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new ListTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ListInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ListInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -509,40 +489,24 @@ export class ApiKeysService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new CreateKeysBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateKeysBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new CreateKeysBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new CreateKeysUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateKeysUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new CreateKeysUnauthorizedError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new CreateKeysTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof CreateKeysTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new CreateKeysTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new CreateKeysInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof CreateKeysInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new CreateKeysInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -592,40 +556,24 @@ export class ApiKeysService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new GetKeyUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetKeyUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new GetKeyUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new GetKeyNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetKeyNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new GetKeyNotFoundError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new GetKeyTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof GetKeyTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new GetKeyTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new GetKeyInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetKeyInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new GetKeyInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -675,40 +623,24 @@ export class ApiKeysService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new DeleteKeysUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof DeleteKeysUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new DeleteKeysUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new DeleteKeysNotFoundError(body));
-          } catch (e) {
-            if (e instanceof DeleteKeysNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new DeleteKeysNotFoundError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new DeleteKeysTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof DeleteKeysTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new DeleteKeysTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new DeleteKeysInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof DeleteKeysInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new DeleteKeysInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -762,49 +694,29 @@ export class ApiKeysService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as BadRequestResponse;
-            await this.raise(new UpdateKeysBadRequestError(body));
-          } catch (e) {
-            if (e instanceof UpdateKeysBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as BadRequestResponse;
+          await this.raise(new UpdateKeysBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new UpdateKeysUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof UpdateKeysUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new UpdateKeysUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new UpdateKeysNotFoundError(body));
-          } catch (e) {
-            if (e instanceof UpdateKeysNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new UpdateKeysNotFoundError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as TooManyRequestsResponse;
-            await this.raise(new UpdateKeysTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof UpdateKeysTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as TooManyRequestsResponse;
+          await this.raise(new UpdateKeysTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new UpdateKeysInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof UpdateKeysInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new UpdateKeysInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

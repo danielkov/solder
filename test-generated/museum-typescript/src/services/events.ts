@@ -225,22 +225,14 @@ export class EventsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListSpecialEventsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof ListSpecialEventsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListSpecialEventsBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListSpecialEventsNotFoundError(body));
-          } catch (e) {
-            if (e instanceof ListSpecialEventsNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListSpecialEventsNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -291,22 +283,14 @@ export class EventsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateSpecialEventBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateSpecialEventBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateSpecialEventBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateSpecialEventNotFoundError(body));
-          } catch (e) {
-            if (e instanceof CreateSpecialEventNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateSpecialEventNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -355,22 +339,14 @@ export class EventsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetSpecialEventBadRequestError(body));
-          } catch (e) {
-            if (e instanceof GetSpecialEventBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetSpecialEventBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetSpecialEventNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetSpecialEventNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetSpecialEventNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -419,31 +395,19 @@ export class EventsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteSpecialEventBadRequestError(body));
-          } catch (e) {
-            if (e instanceof DeleteSpecialEventBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteSpecialEventBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteSpecialEventUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof DeleteSpecialEventUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteSpecialEventUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteSpecialEventNotFoundError(body));
-          } catch (e) {
-            if (e instanceof DeleteSpecialEventNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteSpecialEventNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -496,22 +460,14 @@ export class EventsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateSpecialEventBadRequestError(body));
-          } catch (e) {
-            if (e instanceof UpdateSpecialEventBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateSpecialEventBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateSpecialEventNotFoundError(body));
-          } catch (e) {
-            if (e instanceof UpdateSpecialEventNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateSpecialEventNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

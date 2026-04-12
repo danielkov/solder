@@ -90,13 +90,9 @@ export class EndpointsService {
     if (!response.ok) {
       switch (response.status) {
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ListEndpointsZdrInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListEndpointsZdrInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ListEndpointsZdrInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -148,22 +144,14 @@ export class EndpointsService {
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new ListEndpointsNotFoundError(body));
-          } catch (e) {
-            if (e instanceof ListEndpointsNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new ListEndpointsNotFoundError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ListEndpointsInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListEndpointsInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ListEndpointsInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

@@ -12,4 +12,3 @@ pub struct DataProperty2 {
 pub struct ModelsCountResponse {
     pub data: DataProperty2,
 }
-

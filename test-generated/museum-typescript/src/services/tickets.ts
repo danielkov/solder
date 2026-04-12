@@ -109,22 +109,14 @@ export class TicketsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new BuyMuseumTicketsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof BuyMuseumTicketsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new BuyMuseumTicketsBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new BuyMuseumTicketsNotFoundError(body));
-          } catch (e) {
-            if (e instanceof BuyMuseumTicketsNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new BuyMuseumTicketsNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -173,22 +165,14 @@ export class TicketsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetTicketCodeBadRequestError(body));
-          } catch (e) {
-            if (e instanceof GetTicketCodeBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetTicketCodeBadRequestError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetTicketCodeNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetTicketCodeNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetTicketCodeNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

@@ -16,4 +16,3 @@ pub struct ListProvidersResponseDataItem {
     pub status_page_url: Option<String>,
     pub terms_of_service_url: Option<String>,
 }
-

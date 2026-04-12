@@ -1,12 +1,12 @@
 //! Orders service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{post},
     Extension, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::post,
 };
 
-use crate::shared::{RequestContext};
+use crate::shared::RequestContext;
 
 // Per-operation result and error types
 // CreateOrder types
@@ -14,7 +14,7 @@ pub type CreateOrderResult = Result<crate::types::Order, CreateOrderError>;
 #[derive(Debug)]
 pub enum CreateOrderError {
     InternalError(String),
-    }
+}
 
 impl IntoResponse for CreateOrderError {
     fn into_response(self) -> Response {
@@ -22,14 +22,11 @@ impl IntoResponse for CreateOrderError {
             CreateOrderError::InternalError(msg) => {
                 (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
             }
-            }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Orders service trait
 ///
@@ -93,23 +90,22 @@ where
         &self,
         ctx: RequestContext<S>,
         body: crate::types::NewOrder,
-        ) -> impl std::future::Future<Output = CreateOrderResult> + Send;
+    ) -> impl std::future::Future<Output = CreateOrderResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let create_order_handler = |ctx: RequestContext<S>, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::NewOrder>
-        | async move {
-            match service.create_order(
-                ctx,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::CREATED;
-                    (status, axum::Json(result)).into_response()
+        let create_order_handler =
+            |ctx: RequestContext<S>,
+             Extension(service): Extension<Self>,
+             axum::Json(body): axum::Json<crate::types::NewOrder>| async move {
+                match service.create_order(ctx, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::CREATED;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/orders", post(create_order_handler))

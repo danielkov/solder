@@ -163,10 +163,12 @@ pub enum CompletionTokensDetailsUnion {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CompletionTokensDetailsUnionObject {
-    pub accepted_prediction_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
+    pub accepted_prediction_tokens:
+        Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
     pub audio_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
     pub reasoning_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
-    pub rejected_prediction_tokens: Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
+    pub rejected_prediction_tokens:
+        Option<CompletionTokensDetailsUnionObjectAcceptedPredictionTokens>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -393,4 +395,3 @@ pub enum Schema0 {
     ChatCompletionFinishReason(ChatCompletionFinishReason),
     Variant2(serde_json::Value),
 }
-

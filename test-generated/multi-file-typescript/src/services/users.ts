@@ -247,22 +247,14 @@ export class UsersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListUsersBadRequestError(body));
-          } catch (e) {
-            if (e instanceof ListUsersBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListUsersBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new ListUsersUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof ListUsersUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new ListUsersUnauthorizedError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -316,31 +308,19 @@ export class UsersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateUserBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateUserBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateUserBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateUserUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateUserUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateUserUnauthorizedError(body));
+          break;
         }
         case 409: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new CreateUserConflictError(body));
-          } catch (e) {
-            if (e instanceof CreateUserConflictError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new CreateUserConflictError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -388,22 +368,14 @@ export class UsersService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetUserByIdUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetUserByIdUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetUserByIdUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new GetUserByIdNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetUserByIdNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new GetUserByIdNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -457,31 +429,19 @@ export class UsersService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateUserBadRequestError(body));
-          } catch (e) {
-            if (e instanceof UpdateUserBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateUserBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateUserUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof UpdateUserUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateUserUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new UpdateUserNotFoundError(body));
-          } catch (e) {
-            if (e instanceof UpdateUserNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new UpdateUserNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -529,22 +489,14 @@ export class UsersService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteUserUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof DeleteUserUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteUserUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as Error;
-            await this.raise(new DeleteUserNotFoundError(body));
-          } catch (e) {
-            if (e instanceof DeleteUserNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Error;
+          await this.raise(new DeleteUserNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

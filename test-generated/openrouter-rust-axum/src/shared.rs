@@ -38,7 +38,7 @@ where
 pub enum ApiKey {
     /// Bearer token from Authorization header
     Bearer(String),
-    }
+}
 
 impl<S> axum::extract::FromRequestParts<S> for ApiKey
 where
@@ -50,7 +50,11 @@ where
         parts: &mut axum::http::request::Parts,
         _state: &S,
     ) -> Result<Self, Self::Rejection> {
-        if let Some(v) = parts.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+        if let Some(v) = parts
+            .headers
+            .get(axum::http::header::AUTHORIZATION)
+            .and_then(|v| v.to_str().ok())
+        {
             if let Some(token) = v.strip_prefix("Bearer ") {
                 return Ok(ApiKey::Bearer(token.to_string()));
             }
@@ -64,7 +68,7 @@ where
 pub enum Bearer {
     /// Bearer token from Authorization header
     Bearer(String),
-    }
+}
 
 impl<S> axum::extract::FromRequestParts<S> for Bearer
 where
@@ -76,7 +80,11 @@ where
         parts: &mut axum::http::request::Parts,
         _state: &S,
     ) -> Result<Self, Self::Rejection> {
-        if let Some(v) = parts.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+        if let Some(v) = parts
+            .headers
+            .get(axum::http::header::AUTHORIZATION)
+            .and_then(|v| v.to_str().ok())
+        {
             if let Some(token) = v.strip_prefix("Bearer ") {
                 return Ok(Bearer::Bearer(token.to_string()));
             }
@@ -84,4 +92,3 @@ where
         Err(axum::http::StatusCode::UNAUTHORIZED)
     }
 }
-

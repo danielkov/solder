@@ -56,6 +56,6 @@ where
             }
         }
         Err(axum::http::StatusCode::UNAUTHORIZED)
-    }
+        }
 }
 

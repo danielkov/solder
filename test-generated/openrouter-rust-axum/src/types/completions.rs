@@ -161,4 +161,3 @@ pub enum TopLogprobsUnion2 {
     Variant1(Vec<LogitBiasUnionObject>),
     Variant2(serde_json::Value),
 }
-

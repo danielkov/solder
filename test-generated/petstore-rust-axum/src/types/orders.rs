@@ -38,4 +38,3 @@ pub enum OrderStatus {
     #[serde(rename = "cancelled")]
     Cancelled,
 }
-

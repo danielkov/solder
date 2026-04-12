@@ -123,49 +123,29 @@ export class PaymentsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new CreateBookingPaymentBadRequestError(body));
-          } catch (e) {
-            if (e instanceof CreateBookingPaymentBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new CreateBookingPaymentBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new CreateBookingPaymentUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof CreateBookingPaymentUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new CreateBookingPaymentUnauthorizedError(body));
+          break;
         }
         case 403: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new CreateBookingPaymentForbiddenError(body));
-          } catch (e) {
-            if (e instanceof CreateBookingPaymentForbiddenError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new CreateBookingPaymentForbiddenError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new CreateBookingPaymentTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof CreateBookingPaymentTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new CreateBookingPaymentTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new CreateBookingPaymentInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof CreateBookingPaymentInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new CreateBookingPaymentInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

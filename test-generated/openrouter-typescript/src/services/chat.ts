@@ -112,40 +112,24 @@ export class ChatService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new SendChatCompletionRequestBadRequestError(body));
-          } catch (e) {
-            if (e instanceof SendChatCompletionRequestBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new SendChatCompletionRequestBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new SendChatCompletionRequestUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof SendChatCompletionRequestUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new SendChatCompletionRequestUnauthorizedError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new SendChatCompletionRequestTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof SendChatCompletionRequestTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new SendChatCompletionRequestTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as ChatError;
-            await this.raise(new SendChatCompletionRequestInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof SendChatCompletionRequestInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as ChatError;
+          await this.raise(new SendChatCompletionRequestInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

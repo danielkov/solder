@@ -9,4 +9,3 @@ pub struct UploadFileWithMetadataRequestMetadata {
     pub owner_id: Option<String>,
     pub tags: Option<Vec<String>>,
 }
-

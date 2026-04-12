@@ -103,31 +103,19 @@ export class ParametersService {
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          try {
-            const body = await response.json() as UnauthorizedResponse;
-            await this.raise(new GetParametersUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetParametersUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as UnauthorizedResponse;
+          await this.raise(new GetParametersUnauthorizedError(body));
+          break;
         }
         case 404: {
-          try {
-            const body = await response.json() as NotFoundResponse;
-            await this.raise(new GetParametersNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetParametersNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as NotFoundResponse;
+          await this.raise(new GetParametersNotFoundError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new GetParametersInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetParametersInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new GetParametersInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

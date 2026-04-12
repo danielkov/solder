@@ -96,4 +96,3 @@ pub struct EmbeddingsCreateEmbeddingsRequestInputObjectContentItemObject {
     #[serde(rename = "type")]
     pub r#type: String,
 }
-

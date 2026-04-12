@@ -54,4 +54,3 @@ pub struct CreateCoinbaseChargeResponseTransferIntent {
 pub struct CreateCoinbaseChargeResponseWeb3Data {
     pub transfer_intent: CreateCoinbaseChargeResponseTransferIntent,
 }
-

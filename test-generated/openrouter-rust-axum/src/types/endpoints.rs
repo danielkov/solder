@@ -85,7 +85,4 @@ pub struct PublicEndpoint {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct QuantizationUnion {
-
-}
-
+pub struct QuantizationUnion {}

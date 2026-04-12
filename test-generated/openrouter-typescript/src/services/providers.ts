@@ -62,13 +62,9 @@ export class ProvidersService {
     if (!response.ok) {
       switch (response.status) {
         case 500: {
-          try {
-            const body = await response.json() as InternalServerResponse;
-            await this.raise(new ListProvidersInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListProvidersInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as InternalServerResponse;
+          await this.raise(new ListProvidersInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

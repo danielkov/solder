@@ -6,9 +6,7 @@ use serde::{Deserialize, Serialize};
 use super::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DetailsProperty {
-
-}
+pub struct DetailsProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Error {
@@ -102,4 +100,3 @@ pub struct UpdatePet {
     pub tags: Option<Vec<String>>,
     pub weight: Option<f32>,
 }
-

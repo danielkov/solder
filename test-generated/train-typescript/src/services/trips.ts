@@ -157,49 +157,29 @@ export class TripsService {
     if (!response.ok) {
       switch (response.status) {
         case 400: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new GetTripsBadRequestError(body));
-          } catch (e) {
-            if (e instanceof GetTripsBadRequestError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new GetTripsBadRequestError(body));
+          break;
         }
         case 401: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new GetTripsUnauthorizedError(body));
-          } catch (e) {
-            if (e instanceof GetTripsUnauthorizedError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new GetTripsUnauthorizedError(body));
+          break;
         }
         case 403: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new GetTripsForbiddenError(body));
-          } catch (e) {
-            if (e instanceof GetTripsForbiddenError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new GetTripsForbiddenError(body));
+          break;
         }
         case 429: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new GetTripsTooManyRequestsError(body));
-          } catch (e) {
-            if (e instanceof GetTripsTooManyRequestsError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new GetTripsTooManyRequestsError(body));
+          break;
         }
         case 500: {
-          try {
-            const body = await response.json() as Problem;
-            await this.raise(new GetTripsInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof GetTripsInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as Problem;
+          await this.raise(new GetTripsInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

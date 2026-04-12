@@ -84,13 +84,9 @@ export class FaqService {
     if (!response.ok) {
       switch (response.status) {
         case 500: {
-          try {
-            const body = await response.json() as HttpError;
-            await this.raise(new ListFaqItemsInternalServerErrorError(body));
-          } catch (e) {
-            if (e instanceof ListFaqItemsInternalServerErrorError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as HttpError;
+          await this.raise(new ListFaqItemsInternalServerErrorError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));
@@ -137,13 +133,9 @@ export class FaqService {
     if (!response.ok) {
       switch (response.status) {
         case 404: {
-          try {
-            const body = await response.json() as HttpError;
-            await this.raise(new GetFaqItemNotFoundError(body));
-          } catch (e) {
-            if (e instanceof GetFaqItemNotFoundError) throw e;
-            await this.raise(new UnexpectedError(response.status, await response.text()));
-          }
+          const body = await response.json() as HttpError;
+          await this.raise(new GetFaqItemNotFoundError(body));
+          break;
         }
         default:
           await this.raise(new UnexpectedError(response.status, await response.text()));

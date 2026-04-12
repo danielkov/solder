@@ -17,7 +17,7 @@ use ir::gen_ir::{
     TypeDecl, TypeKind, TypeMod, TypeRef,
 };
 use service_codegen::{
-    resolve_operation_auth, ResolvedAuth, ResolvedAuthKind, ServiceModuleGenerator,
+    AuthTypeKey, ResolvedAuth, ResolvedAuthKind, ServiceModuleGenerator, resolve_operation_auth,
 };
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -1140,20 +1140,25 @@ impl RustAxumGenerator {
     }
 
     /// Compute unique auth permutations across all operations.
-    /// Returns a map from scheme-ID-set to auth group (name + resolved schemes).
-    fn compute_auth_groups(
-        &self,
-        ir: &GenIr,
-    ) -> BTreeMap<BTreeSet<StableId>, AuthGroup> {
-        let mut scheme_sets: BTreeMap<BTreeSet<StableId>, Vec<ResolvedAuth>> = BTreeMap::new();
+    /// Returns a map from auth-group key to auth group (name + resolved schemes).
+    /// The key includes both the scheme ID set and whether anonymous access is
+    /// permitted, so optional-auth and required-auth variants of the same
+    /// scheme list get distinct extractors.
+    fn compute_auth_groups(&self, ir: &GenIr) -> BTreeMap<AuthGroupKey, AuthGroup> {
+        let mut scheme_sets: BTreeMap<AuthGroupKey, Vec<ResolvedAuth>> = BTreeMap::new();
 
         for service in &ir.services {
             for op in &service.operations {
                 if op.auth.is_empty() {
                     continue;
                 }
-                let key: BTreeSet<StableId> =
+                let schemes: BTreeSet<StableId> =
                     op.auth.iter().map(|a| a.scheme.clone()).collect();
+                let allows_anonymous = op.auth.iter().any(|a| a.optional);
+                let key = AuthGroupKey {
+                    schemes,
+                    allows_anonymous,
+                };
                 scheme_sets
                     .entry(key)
                     .or_insert_with(|| resolve_operation_auth(op, &ir.auth_schemes));
@@ -1164,7 +1169,12 @@ impl RustAxumGenerator {
         // requirements like `[{}]` or references to non-existent schemes).
         scheme_sets.retain(|_, resolved| !resolved.is_empty());
 
-        let use_simple_name = scheme_sets.len() <= 1;
+        // Determine whether a simple base name ("Auth") suffices. If only one
+        // distinct scheme set exists (regardless of optionality), we can use
+        // "Auth" / "OptionalAuth" without further disambiguation.
+        let distinct_scheme_sets: BTreeSet<&BTreeSet<StableId>> =
+            scheme_sets.keys().map(|k| &k.schemes).collect();
+        let use_simple_name = distinct_scheme_sets.len() <= 1;
 
         // Assign names, disambiguating duplicates with numeric suffixes.
         let mut used_names: BTreeSet<String> = BTreeSet::new();
@@ -1174,7 +1184,7 @@ impl RustAxumGenerator {
                 let base_name = if use_simple_name {
                     "Auth".to_string()
                 } else {
-                    let derived = Self::derive_auth_group_name(&key, &ir.auth_schemes);
+                    let derived = Self::derive_auth_group_name(&key.schemes, &ir.auth_schemes);
                     if derived.is_empty() {
                         "Auth".to_string()
                     } else {
@@ -1182,14 +1192,20 @@ impl RustAxumGenerator {
                     }
                 };
 
-                let name = if used_names.contains(&base_name) {
+                let prefixed = if key.allows_anonymous {
+                    format!("Optional{}", base_name)
+                } else {
+                    base_name
+                };
+
+                let name = if used_names.contains(&prefixed) {
                     // Disambiguate with numeric suffix
                     (2..)
-                        .map(|i| format!("{}{}", base_name, i))
+                        .map(|i| format!("{}{}", prefixed, i))
                         .find(|n| !used_names.contains(n))
                         .unwrap()
                 } else {
-                    base_name
+                    prefixed
                 };
                 used_names.insert(name.clone());
 
@@ -1204,12 +1220,14 @@ impl RustAxumGenerator {
                             | ResolvedAuthKind::ApiKeyCookie { .. }
                     )
                 });
+                let allows_anonymous = key.allows_anonymous;
                 (
                     key,
                     AuthGroup {
                         name,
                         has_bearer,
                         has_api_key,
+                        allows_anonymous,
                         extractions: resolved,
                     },
                 )
@@ -1245,7 +1263,7 @@ impl RustAxumGenerator {
         ir: &GenIr,
         _config: &Config,
         vfs: &mut VirtualFS,
-        auth_type_map: &BTreeMap<BTreeSet<StableId>, String>,
+        auth_type_map: &BTreeMap<AuthTypeKey, String>,
     ) -> Result<()> {
         for service in &ir.services {
             self.generate_service_module(service, ir, vfs, auth_type_map)?;
@@ -1262,7 +1280,7 @@ impl RustAxumGenerator {
         service: &Service,
         ir: &GenIr,
         vfs: &mut VirtualFS,
-        auth_type_map: &BTreeMap<BTreeSet<StableId>, String>,
+        auth_type_map: &BTreeMap<AuthTypeKey, String>,
     ) -> Result<()> {
         let module_name = &service.name.snake;
 
@@ -1326,7 +1344,7 @@ impl RustAxumGenerator {
     /// Generate shared types / utilities module
     fn generate_shared_module(
         &self,
-        auth_groups: &BTreeMap<BTreeSet<StableId>, AuthGroup>,
+        auth_groups: &BTreeMap<AuthGroupKey, AuthGroup>,
         vfs: &mut VirtualFS,
     ) -> Result<()> {
         let groups: Vec<&AuthGroup> = auth_groups.values().collect();
@@ -1371,7 +1389,7 @@ impl Generator for RustAxumGenerator {
         let mut vfs = VirtualFS::new();
 
         let auth_groups = self.compute_auth_groups(ir);
-        let auth_type_map: BTreeMap<BTreeSet<StableId>, String> = auth_groups
+        let auth_type_map: BTreeMap<AuthTypeKey, String> = auth_groups
             .iter()
             .map(|(k, v)| (k.clone(), v.name.clone()))
             .collect();
@@ -1416,11 +1434,17 @@ struct CargoTomlData<'a> {
     tags: Vec<String>,
 }
 
+/// Key uniquely identifying an auth group. An operation can have the same set
+/// of schemes with either anonymous access permitted or not, and those need
+/// distinct generated extractors. Shared with `service_codegen::AuthTypeKey`.
+type AuthGroupKey = AuthTypeKey;
+
 /// A unique auth permutation shared across operations.
 struct AuthGroup {
     name: String,
     has_bearer: bool,
     has_api_key: bool,
+    allows_anonymous: bool,
     extractions: Vec<ResolvedAuth>,
 }
 

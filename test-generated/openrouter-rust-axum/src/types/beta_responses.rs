@@ -428,9 +428,7 @@ pub struct OpenResponsesRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OpenResponsesRequestMetadata {
-
-}
+pub struct OpenResponsesRequestMetadata {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenResponsesResponseText {
@@ -802,9 +800,7 @@ pub struct ResponsesWebSearchUserLocation {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ServiceTierUnion {
-
-}
+pub struct ServiceTierUnion {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ToolCallStatus {
@@ -837,9 +833,7 @@ pub struct ToolsItemUnionUnion {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TruncationUnion {
-
-}
+pub struct TruncationUnion {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UrlCitation {
@@ -865,9 +859,7 @@ pub struct UnprocessableEntityResponseErrorData {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct VariablesProperty {
-
-}
+pub struct VariablesProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WebSearchPreviewToolUserLocation {
@@ -890,4 +882,3 @@ pub enum WebSearchStatus {
     #[serde(rename = "failed")]
     Failed,
 }
-
