@@ -52,4 +52,3 @@ pub struct TestResponse {
     pub items: Vec<TestItem>,
     pub pagination: PaginationMeta,
 }
-

@@ -25,4 +25,3 @@ pub struct GetTripsUnionUnion {
     #[serde(rename = "self")]
     pub _self: Option<String>,
 }
-

@@ -16,4 +16,3 @@ pub struct Error {
 
 #[cfg(any(feature = "events", feature = "tickets"))]
 pub type EventId = uuid::Uuid;
-

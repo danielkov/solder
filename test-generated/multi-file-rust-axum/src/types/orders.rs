@@ -93,4 +93,3 @@ pub struct OrderList {
     pub page_size: i32,
     pub total: i32,
 }
-

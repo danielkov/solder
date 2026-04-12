@@ -3,8 +3,73 @@
 use anyhow::{Context, Result};
 use clap::{Parser as ClapParser, Subcommand};
 use parser::{parse, read};
+use serde::Deserialize;
 use serde_json::Value;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+
+/// Top-level solder.toml configuration.
+#[derive(Debug, Clone, Default, Deserialize)]
+struct SolderConfig {
+    #[serde(rename = "rust-axum", default)]
+    rust_axum: Option<RustAxumConfig>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct RustAxumConfig {
+    /// "single-crate" (default) or "multi-crate"
+    #[serde(default = "default_layout")]
+    layout: String,
+    /// Template for tag-crate names; supports the "{tag}" placeholder.
+    #[serde(default = "default_crate_name")]
+    crate_name: String,
+    /// Full name of the common crate (no templating).
+    #[serde(default = "default_common_name")]
+    common_name: String,
+}
+
+impl Default for RustAxumConfig {
+    fn default() -> Self {
+        Self {
+            layout: default_layout(),
+            crate_name: default_crate_name(),
+            common_name: default_common_name(),
+        }
+    }
+}
+
+fn default_layout() -> String {
+    "single-crate".to_string()
+}
+fn default_crate_name() -> String {
+    "api-{tag}".to_string()
+}
+fn default_common_name() -> String {
+    "api-common".to_string()
+}
+
+/// Load solder.toml from either an explicit path or by auto-discovering it in `cwd`.
+fn load_solder_config(explicit: Option<&Path>, cwd: &Path) -> Result<SolderConfig> {
+    let path = if let Some(p) = explicit {
+        Some(p.to_path_buf())
+    } else {
+        let candidate = cwd.join("solder.toml");
+        if candidate.is_file() {
+            Some(candidate)
+        } else {
+            None
+        }
+    };
+
+    let Some(path) = path else {
+        return Ok(SolderConfig::default());
+    };
+
+    let text = std::fs::read_to_string(&path)
+        .with_context(|| format!("Failed to read config file: {}", path.display()))?;
+    let cfg: SolderConfig = toml::from_str(&text)
+        .with_context(|| format!("Failed to parse solder config: {}", path.display()))?;
+    Ok(cfg)
+}
 
 #[derive(ClapParser, Debug)]
 #[command(name = "oas-gen")]
@@ -29,6 +94,10 @@ enum Commands {
         /// Output directory for generated code
         #[arg(short, long, value_name = "DIR")]
         output: Option<PathBuf>,
+
+        /// Path to solder.toml (overrides auto-discovery in cwd)
+        #[arg(long, value_name = "PATH")]
+        config: Option<PathBuf>,
 
         /// Service organization style
         #[arg(long, value_enum, default_value = "per-service")]
@@ -122,6 +191,7 @@ fn main() -> Result<()> {
             spec,
             template,
             output,
+            config,
             service_style,
             no_docs,
             resolve,
@@ -130,6 +200,7 @@ fn main() -> Result<()> {
             spec,
             template,
             output,
+            config,
             service_style,
             no_docs,
             resolve,
@@ -191,6 +262,7 @@ fn handle_generate(
     spec: PathBuf,
     template: String,
     output: Option<PathBuf>,
+    config_path: Option<PathBuf>,
     service_style: ServiceStyleArg,
     no_docs: bool,
     resolve: bool,
@@ -246,11 +318,26 @@ fn handle_generate(
         eprintln!("📁 Output directory: {}", output_dir.display());
     }
 
-    // Create configuration
+    // Load solder.toml config (explicit path or auto-discovered in cwd).
+    let cwd = std::env::current_dir().context("Failed to get current working directory")?;
+    let solder_cfg = load_solder_config(config_path.as_deref(), &cwd)?;
+
+    // Create configuration; inject the rust-axum block as a lang_option so the
+    // generator can read it without adding a new trait dependency.
+    let mut lang_options = std::collections::BTreeMap::new();
+    if let Some(rust_axum) = &solder_cfg.rust_axum {
+        let value = serde_json::json!({
+            "layout": rust_axum.layout,
+            "crate_name": rust_axum.crate_name,
+            "common_name": rust_axum.common_name,
+        });
+        lang_options.insert("rust-axum".to_string(), value);
+    }
+
     let config = codegen::Config {
         service_style: service_style.into(),
         include_docs: !no_docs,
-        lang_options: std::collections::BTreeMap::new(),
+        lang_options,
     };
 
     if verbose {
@@ -721,5 +808,104 @@ fn deep_merge(left: Value, right: Value) -> Value {
         }
         // Primitives or mismatched types: left wins
         (left, _) => left,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn tmp_dir() -> PathBuf {
+        let mut p = std::env::temp_dir();
+        p.push(format!(
+            "solder-cfg-test-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&p).unwrap();
+        p
+    }
+
+    #[test]
+    fn load_returns_default_when_no_file_present() {
+        let dir = tmp_dir();
+        let cfg = load_solder_config(None, &dir).unwrap();
+        assert!(cfg.rust_axum.is_none());
+    }
+
+    #[test]
+    fn auto_discovers_solder_toml_in_cwd() {
+        let dir = tmp_dir();
+        std::fs::write(
+            dir.join("solder.toml"),
+            r#"
+[rust-axum]
+layout = "multi-crate"
+crate_name = "tp-api-{tag}"
+common_name = "tp-api-common"
+"#,
+        )
+        .unwrap();
+        let cfg = load_solder_config(None, &dir).unwrap();
+        let ra = cfg.rust_axum.expect("rust-axum block present");
+        assert_eq!(ra.layout, "multi-crate");
+        assert_eq!(ra.crate_name, "tp-api-{tag}");
+        assert_eq!(ra.common_name, "tp-api-common");
+    }
+
+    #[test]
+    fn explicit_path_overrides_auto_discovery() {
+        let dir = tmp_dir();
+        // The file in cwd should be ignored when --config is provided.
+        std::fs::write(
+            dir.join("solder.toml"),
+            r#"[rust-axum]
+layout = "single-crate"
+"#,
+        )
+        .unwrap();
+
+        let other = dir.join("alternate.toml");
+        std::fs::write(
+            &other,
+            r#"[rust-axum]
+layout = "multi-crate"
+crate_name = "alt-{tag}"
+common_name = "alt-common"
+"#,
+        )
+        .unwrap();
+
+        let cfg = load_solder_config(Some(&other), &dir).unwrap();
+        let ra = cfg.rust_axum.expect("rust-axum block present");
+        assert_eq!(ra.layout, "multi-crate");
+        assert_eq!(ra.crate_name, "alt-{tag}");
+    }
+
+    #[test]
+    fn missing_fields_fall_back_to_defaults() {
+        let dir = tmp_dir();
+        std::fs::write(
+            dir.join("solder.toml"),
+            r#"[rust-axum]
+layout = "multi-crate"
+"#,
+        )
+        .unwrap();
+        let cfg = load_solder_config(None, &dir).unwrap();
+        let ra = cfg.rust_axum.expect("rust-axum block present");
+        assert_eq!(ra.layout, "multi-crate");
+        assert_eq!(ra.crate_name, default_crate_name());
+        assert_eq!(ra.common_name, default_common_name());
+    }
+
+    #[test]
+    fn invalid_toml_returns_error() {
+        let dir = tmp_dir();
+        std::fs::write(dir.join("solder.toml"), "this is [not valid").unwrap();
+        assert!(load_solder_config(None, &dir).is_err());
     }
 }

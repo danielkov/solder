@@ -1,12 +1,12 @@
 //! Trips service module
 use axum::{
-    http::{StatusCode},
-    response::{IntoResponse, Response},
-    routing::{get},
     Extension, Router,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::get,
 };
 
-use crate::shared::{RequestContext, Auth};
+use crate::shared::{Auth, RequestContext};
 
 // Per-operation result and error types
 // GetTrips types
@@ -23,7 +23,7 @@ pub enum GetTripsError {
     TooManyRequests(crate::types::Problem),
     /// Status: Code(500)
     InternalServerError(crate::types::Problem),
-    }
+}
 
 impl IntoResponse for GetTripsError {
     fn into_response(self) -> Response {
@@ -31,31 +31,28 @@ impl IntoResponse for GetTripsError {
             GetTripsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetTripsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetTripsError::Forbidden(err) => {
                 let status = StatusCode::FORBIDDEN;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetTripsError::TooManyRequests(err) => {
                 let status = StatusCode::TOO_MANY_REQUESTS;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetTripsError::InternalServerError(err) => {
                 let status = StatusCode::INTERNAL_SERVER_ERROR;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Trips service trait
 ///
@@ -122,24 +119,23 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         query: GetTripsQuery,
-        ) -> impl std::future::Future<Output = GetTripsResult> + Send;
+    ) -> impl std::future::Future<Output = GetTripsResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let get_trips_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<GetTripsQuery>
-        | async move {
-            match service.get_trips(
-                ctx,
-                auth,
-                query,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, axum::Json(result)).into_response()
+        let get_trips_handler =
+            |ctx: RequestContext<S>,
+             auth: Auth,
+             Extension(service): Extension<Self>,
+             axum::extract::Query(query): axum::extract::Query<GetTripsQuery>| async move {
+                match service.get_trips(ctx, auth, query).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/trips", get(get_trips_handler))
@@ -157,6 +153,4 @@ pub struct GetTripsQuery {
     pub date: String,
     pub bicycles: Option<String>,
     pub dogs: Option<String>,
-    
 }
-

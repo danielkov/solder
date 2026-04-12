@@ -38,4 +38,3 @@ pub struct SpecialEventFields {
     pub name: Option<EventName>,
     pub price: Option<EventPrice>,
 }
-

@@ -50,4 +50,3 @@ pub enum TicketType {
     #[serde(rename = "general")]
     General,
 }
-

@@ -4,6 +4,65 @@ use askama::Template;
 use ir::gen_ir::{ApiKeyLocation, AuthKind, AuthScheme, HttpMethod, Operation, Service, StableId};
 use std::collections::{BTreeMap, BTreeSet};
 
+/// Runtime render context. Threaded into the type-reference rendering path so
+/// both the single-crate and multi-crate layouts can emit the right module
+/// prefix without any post-hoc string rewriting.
+#[derive(Debug, Clone)]
+pub struct RenderCtx {
+    /// Maps every named type in the IR to the bucket it belongs to (either a
+    /// tag or the common bucket). Computed once per generation run.
+    pub type_bucket: BTreeMap<StableId, crate::Bucket>,
+    /// The Rust module ident of the common crate (e.g. `"fixture_api_common"`).
+    /// `None` in single-crate mode.
+    pub common_ident: Option<String>,
+    /// Are we emitting into a multi-crate layout?
+    pub multi_crate: bool,
+}
+
+impl RenderCtx {
+    /// Qualify a PascalCase named type reference with the right module prefix.
+    /// Used from `render_type_ref` (the path that emits bare names inside the
+    /// types file). In single-crate mode this is unqualified (matches the
+    /// pre-existing `use super::*;` import convention). In multi-crate mode a
+    /// cross-bucket ref gets the common crate prefix; same-bucket stays bare
+    /// because it lives in the same file.
+    pub fn qualify_named(&self, target: &StableId, name: &str, source: &StableId) -> String {
+        if !self.multi_crate {
+            return name.to_string();
+        }
+        let (Some(source_bucket), Some(target_bucket)) =
+            (self.type_bucket.get(source), self.type_bucket.get(target))
+        else {
+            return name.to_string();
+        };
+        if source_bucket == target_bucket {
+            return name.to_string();
+        }
+        // Cross-bucket: the target must be in the common bucket in this
+        // codebase (tag types never reference other tags' tag-local types —
+        // any such ref would have promoted the target to the common bucket).
+        if matches!(target_bucket, crate::Bucket::Common)
+            && let Some(ident) = &self.common_ident
+        {
+            return format!("{}::{}", ident, name);
+        }
+        name.to_string()
+    }
+
+    /// Qualify a named type for the askama filter (used from service modules,
+    /// whose baseline prefix is `crate::types::<Name>`). In multi-crate mode,
+    /// cross-bucket refs swap the prefix for the common crate ident.
+    pub fn qualify_for_service(&self, target: &StableId, name: &str) -> String {
+        if self.multi_crate
+            && matches!(self.type_bucket.get(target), Some(crate::Bucket::Common))
+            && let Some(ident) = &self.common_ident
+        {
+            return format!("{}::{}", ident, name);
+        }
+        format!("crate::types::{}", name)
+    }
+}
+
 /// Lookup key used to find the generated auth extractor type name for an
 /// operation. Includes whether anonymous access is allowed so that operations
 /// with the same scheme set but different optionality can resolve to
@@ -45,7 +104,7 @@ mod filters {
 
     /// Render a type reference to its Rust type
     /// Uses CanonicalName to ensure consistent pascal case naming
-    pub fn render_type(type_id: &StableId, _: &dyn askama::Values) -> askama::Result<String> {
+    pub fn render_type(type_id: &StableId, values: &dyn askama::Values) -> askama::Result<String> {
         match type_id {
             StableId::Primitive(p) => {
                 use ir::gen_ir::Primitive;
@@ -68,6 +127,11 @@ mod filters {
             StableId::Named(name) => {
                 // Use CanonicalName to get proper pascal case (handles acronyms like FAQItem -> FaqItem)
                 let pascal = CanonicalName::from_string(name).pascal;
+                // If a RenderCtx was passed via askama Values, use bucket-aware
+                // qualification. Otherwise keep the single-crate default.
+                if let Ok(ctx) = askama::get_value::<super::RenderCtx>(values, "render_ctx") {
+                    return Ok(ctx.qualify_for_service(type_id, &pascal));
+                }
                 Ok(format!("crate::types::{}", pascal))
             }
         }
@@ -333,12 +397,22 @@ struct ServiceModuleTemplate<'a> {
     auth_imports: Vec<String>,
     operations: Vec<OperationTemplate<'a>>,
     methods: Vec<&'static str>,
+    /// Module path prefix for shared items (`RequestContext`, auth extractors).
+    /// Single-crate: `crate::shared`. Multi-crate: common crate ident.
+    shared_prefix: String,
+    /// Module path prefix for multipart utilities.
+    /// Single-crate: `crate::multipart`. Multi-crate: `<common_ident>::multipart`.
+    multipart_prefix: String,
+    /// Path used in doc examples to reach shared items. Single-crate:
+    /// `<package_name>::shared`. Multi-crate: common crate ident.
+    shared_doc_prefix: String,
 }
 
 pub struct ServiceModuleGenerator<'a> {
     service: &'a Service,
     package_name: &'a str,
     auth_type_map: &'a BTreeMap<AuthTypeKey, String>,
+    render_ctx: &'a RenderCtx,
 }
 
 impl<'a> ServiceModuleGenerator<'a> {
@@ -346,11 +420,13 @@ impl<'a> ServiceModuleGenerator<'a> {
         service: &'a Service,
         package_name: &'a str,
         auth_type_map: &'a BTreeMap<AuthTypeKey, String>,
+        render_ctx: &'a RenderCtx,
     ) -> Self {
         Self {
             service,
             package_name,
             auth_type_map,
+            render_ctx,
         }
     }
 
@@ -396,6 +472,20 @@ impl<'a> ServiceModuleGenerator<'a> {
             .collect();
         methods.sort();
 
+        let (shared_prefix, multipart_prefix, shared_doc_prefix) =
+            match (self.render_ctx.multi_crate, &self.render_ctx.common_ident) {
+                (true, Some(ident)) => (
+                    ident.clone(),
+                    format!("{}::multipart", ident),
+                    ident.clone(),
+                ),
+                _ => (
+                    "crate::shared".to_string(),
+                    "crate::multipart".to_string(),
+                    format!("{}::shared", self.package_name),
+                ),
+            };
+
         let template = ServiceModuleTemplate {
             trait_name: &self.service.name.pascal,
             module_name: &self.service.name.snake,
@@ -403,10 +493,25 @@ impl<'a> ServiceModuleGenerator<'a> {
             auth_imports,
             operations,
             methods,
+            shared_prefix,
+            multipart_prefix,
+            shared_doc_prefix,
         };
 
+        use askama::Template;
+        let values: &dyn askama::Values = self.render_ctx;
         template
-            .render()
+            .render_with_values(values)
             .unwrap_or_else(|e| panic!("Failed to render service module template: {}", e))
+    }
+}
+
+impl askama::Values for RenderCtx {
+    fn get_value<'a>(&'a self, key: &str) -> Option<&'a dyn std::any::Any> {
+        if key == "render_ctx" {
+            Some(self as &dyn std::any::Any)
+        } else {
+            None
+        }
     }
 }

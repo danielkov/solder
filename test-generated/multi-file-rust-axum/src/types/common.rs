@@ -19,4 +19,3 @@ pub struct Error {
     #[serde(rename = "requestId")]
     pub request_id: Option<String>,
 }
-

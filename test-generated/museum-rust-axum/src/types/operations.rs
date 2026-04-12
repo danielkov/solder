@@ -15,4 +15,3 @@ pub struct MuseumDailyHours {
 }
 
 pub type MuseumHours = Vec<MuseumDailyHours>;
-

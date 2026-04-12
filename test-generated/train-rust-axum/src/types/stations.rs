@@ -19,4 +19,3 @@ pub struct Station {
     pub name: String,
     pub timezone: Option<String>,
 }
-

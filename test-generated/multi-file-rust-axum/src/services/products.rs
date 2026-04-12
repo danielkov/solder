@@ -1,12 +1,12 @@
 //! Products service module
 use axum::{
-    http::{StatusCode},
+    Extension, Router,
+    http::StatusCode,
     response::{IntoResponse, Response},
     routing::{delete, get, post, put},
-    Extension, Router,
 };
 
-use crate::shared::{RequestContext, Auth};
+use crate::shared::{Auth, RequestContext};
 
 // Per-operation result and error types
 // ListProducts types
@@ -17,7 +17,7 @@ pub enum ListProductsError {
     BadRequest(crate::types::Error),
     /// Status: Code(401)
     Unauthorized(crate::types::Error),
-    }
+}
 
 impl IntoResponse for ListProductsError {
     fn into_response(self) -> Response {
@@ -25,12 +25,12 @@ impl IntoResponse for ListProductsError {
             ListProductsError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             ListProductsError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
@@ -44,7 +44,7 @@ pub enum CreateProductError {
     Unauthorized(crate::types::Error),
     /// Status: Code(409)
     Conflict(crate::types::Error),
-    }
+}
 
 impl IntoResponse for CreateProductError {
     fn into_response(self) -> Response {
@@ -52,16 +52,16 @@ impl IntoResponse for CreateProductError {
             CreateProductError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             CreateProductError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             CreateProductError::Conflict(err) => {
                 let status = StatusCode::CONFLICT;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
@@ -73,7 +73,7 @@ pub enum GetProductByIdError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-    }
+}
 
 impl IntoResponse for GetProductByIdError {
     fn into_response(self) -> Response {
@@ -81,12 +81,12 @@ impl IntoResponse for GetProductByIdError {
             GetProductByIdError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             GetProductByIdError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
@@ -100,7 +100,7 @@ pub enum UpdateProductError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-    }
+}
 
 impl IntoResponse for UpdateProductError {
     fn into_response(self) -> Response {
@@ -108,16 +108,16 @@ impl IntoResponse for UpdateProductError {
             UpdateProductError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             UpdateProductError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             UpdateProductError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
@@ -129,7 +129,7 @@ pub enum DeleteProductError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-    }
+}
 
 impl IntoResponse for DeleteProductError {
     fn into_response(self) -> Response {
@@ -137,12 +137,12 @@ impl IntoResponse for DeleteProductError {
             DeleteProductError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             DeleteProductError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
@@ -156,7 +156,7 @@ pub enum UpdateProductInventoryError {
     Unauthorized(crate::types::Error),
     /// Status: Code(404)
     NotFound(crate::types::Error),
-    }
+}
 
 impl IntoResponse for UpdateProductInventoryError {
     fn into_response(self) -> Response {
@@ -164,23 +164,20 @@ impl IntoResponse for UpdateProductInventoryError {
             UpdateProductInventoryError::BadRequest(err) => {
                 let status = StatusCode::BAD_REQUEST;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             UpdateProductInventoryError::Unauthorized(err) => {
                 let status = StatusCode::UNAUTHORIZED;
                 (status, axum::Json(err)).into_response()
-                }
+            }
             UpdateProductInventoryError::NotFound(err) => {
                 let status = StatusCode::NOT_FOUND;
                 (status, axum::Json(err)).into_response()
-                }
             }
+        }
     }
 }
 
-
-
 // Multipart request structs
-
 
 /// Products service trait
 ///
@@ -304,7 +301,7 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         query: ListProductsQuery,
-        ) -> impl std::future::Future<Output = ListProductsResult> + Send;
+    ) -> impl std::future::Future<Output = ListProductsResult> + Send;
 
     /// Post /products
     fn create_product(
@@ -312,14 +309,14 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         body: crate::types::ProductCreate,
-        ) -> impl std::future::Future<Output = CreateProductResult> + Send;
+    ) -> impl std::future::Future<Output = CreateProductResult> + Send;
 
     /// Get /products/{productId}
     fn get_product_by_id(
         &self,
         ctx: RequestContext<S>,
         auth: Auth,
-        ) -> impl std::future::Future<Output = GetProductByIdResult> + Send;
+    ) -> impl std::future::Future<Output = GetProductByIdResult> + Send;
 
     /// Put /products/{productId}
     fn update_product(
@@ -327,14 +324,14 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         body: crate::types::ProductUpdate,
-        ) -> impl std::future::Future<Output = UpdateProductResult> + Send;
+    ) -> impl std::future::Future<Output = UpdateProductResult> + Send;
 
     /// Delete /products/{productId}
     fn delete_product(
         &self,
         ctx: RequestContext<S>,
         auth: Auth,
-        ) -> impl std::future::Future<Output = DeleteProductResult> + Send;
+    ) -> impl std::future::Future<Output = DeleteProductResult> + Send;
 
     /// Put /products/{productId}/inventory
     fn update_product_inventory(
@@ -342,97 +339,87 @@ where
         ctx: RequestContext<S>,
         auth: Auth,
         body: crate::types::InventoryUpdate,
-        ) -> impl std::future::Future<Output = UpdateProductInventoryResult> + Send;
+    ) -> impl std::future::Future<Output = UpdateProductInventoryResult> + Send;
 
     /// Create a router for this service
     fn router(self) -> Router<S> {
-        let list_products_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::extract::Query(query): axum::extract::Query<ListProductsQuery>
-        | async move {
-            match service.list_products(
-                ctx,
-                auth,
-                query,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, axum::Json(result)).into_response()
+        let list_products_handler =
+            |ctx: RequestContext<S>,
+             auth: Auth,
+             Extension(service): Extension<Self>,
+             axum::extract::Query(query): axum::extract::Query<ListProductsQuery>| async move {
+                match service.list_products(ctx, auth, query).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let create_product_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::ProductCreate>
-        | async move {
-            match service.create_product(
-                ctx,
-                auth,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::CREATED;
-                    (status, axum::Json(result)).into_response()
+        let create_product_handler =
+            |ctx: RequestContext<S>,
+             auth: Auth,
+             Extension(service): Extension<Self>,
+             axum::Json(body): axum::Json<crate::types::ProductCreate>| async move {
+                match service.create_product(ctx, auth, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::CREATED;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let get_product_by_id_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>
-        | async move {
-            match service.get_product_by_id(
-                ctx,
-                auth,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, axum::Json(result)).into_response()
+        let get_product_by_id_handler =
+            |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>| async move {
+                match service.get_product_by_id(ctx, auth).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let update_product_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::ProductUpdate>
-        | async move {
-            match service.update_product(
-                ctx,
-                auth,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, axum::Json(result)).into_response()
+        let update_product_handler =
+            |ctx: RequestContext<S>,
+             auth: Auth,
+             Extension(service): Extension<Self>,
+             axum::Json(body): axum::Json<crate::types::ProductUpdate>| async move {
+                match service.update_product(ctx, auth, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let delete_product_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>
-        | async move {
-            match service.delete_product(
-                ctx,
-                auth,
-                ).await {
-                Ok(_) => {
-                    let status = StatusCode::NO_CONTENT;
-                    status.into_response()
+        let delete_product_handler =
+            |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>| async move {
+                match service.delete_product(ctx, auth).await {
+                    Ok(_) => {
+                        let status = StatusCode::NO_CONTENT;
+                        status.into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
-        let update_product_inventory_handler = |ctx: RequestContext<S>, auth: Auth, Extension(service): Extension<Self>, axum::Json(body): axum::Json<crate::types::InventoryUpdate>
-        | async move {
-            match service.update_product_inventory(
-                ctx,
-                auth,
-                body,
-                ).await {
-                Ok(result) => {
-                    let status = StatusCode::OK;
-                    (status, axum::Json(result)).into_response()
+        let update_product_inventory_handler =
+            |ctx: RequestContext<S>,
+             auth: Auth,
+             Extension(service): Extension<Self>,
+             axum::Json(body): axum::Json<crate::types::InventoryUpdate>| async move {
+                match service.update_product_inventory(ctx, auth, body).await {
+                    Ok(result) => {
+                        let status = StatusCode::OK;
+                        (status, axum::Json(result)).into_response()
                     }
-                Err(e) => e.into_response(),
-            }
-        };
+                    Err(e) => e.into_response(),
+                }
+            };
 
         Router::new()
             .route("/products", get(list_products_handler))
@@ -440,7 +427,10 @@ where
             .route("/products/{productId}", get(get_product_by_id_handler))
             .route("/products/{productId}", put(update_product_handler))
             .route("/products/{productId}", delete(delete_product_handler))
-            .route("/products/{productId}/inventory", put(update_product_inventory_handler))
+            .route(
+                "/products/{productId}/inventory",
+                put(update_product_inventory_handler),
+            )
             .layer(Extension(self))
     }
 }
@@ -456,6 +446,4 @@ pub struct ListProductsQuery {
     pub max_price: Option<String>,
     pub search: Option<String>,
     pub tags: Option<String>,
-    
 }
-

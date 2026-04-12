@@ -12,7 +12,12 @@ pub struct GetBookingsUnionUnion {
     pub _self: Option<String>,
 }
 
-#[cfg(any(feature = "bookings", feature = "payments", feature = "stations", feature = "trips"))]
+#[cfg(any(
+    feature = "bookings",
+    feature = "payments",
+    feature = "stations",
+    feature = "trips"
+))]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Problem {
     pub detail: Option<String>,
@@ -22,4 +27,3 @@ pub struct Problem {
     #[serde(rename = "type")]
     pub r#type: Option<String>,
 }
-

@@ -22,4 +22,3 @@ pub use stations::*;
 pub mod trips;
 #[cfg(feature = "trips")]
 pub use trips::*;
-

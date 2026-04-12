@@ -65,7 +65,4 @@ pub struct ProductUpdate {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SpecificationsProperty {
-
-}
-
+pub struct SpecificationsProperty {}

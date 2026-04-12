@@ -35,4 +35,3 @@ pub struct LinksSelf {
     #[serde(rename = "self")]
     pub _self: Option<String>,
 }
-

@@ -4,9 +4,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MetadataProperty {
-
-}
+pub struct MetadataProperty {}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -56,4 +54,3 @@ pub struct UserUpdate {
     pub role: Option<String>,
     pub status: Option<String>,
 }
-

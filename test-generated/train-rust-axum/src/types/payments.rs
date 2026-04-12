@@ -59,4 +59,3 @@ pub struct SourceUnionObject2 {
     pub object: Option<String>,
     pub sort_code: Option<String>,
 }
-

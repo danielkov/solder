@@ -38,7 +38,7 @@ where
 pub enum Auth {
     /// Bearer token from Authorization header
     Bearer(String),
-    }
+}
 
 impl<S> axum::extract::FromRequestParts<S> for Auth
 where
@@ -50,12 +50,15 @@ where
         parts: &mut axum::http::request::Parts,
         _state: &S,
     ) -> Result<Self, Self::Rejection> {
-        if let Some(v) = parts.headers.get(axum::http::header::AUTHORIZATION).and_then(|v| v.to_str().ok()) {
+        if let Some(v) = parts
+            .headers
+            .get(axum::http::header::AUTHORIZATION)
+            .and_then(|v| v.to_str().ok())
+        {
             if let Some(token) = v.strip_prefix("Bearer ") {
                 return Ok(Auth::Bearer(token.to_string()));
             }
         }
         Err(axum::http::StatusCode::UNAUTHORIZED)
-        }
+    }
 }
-

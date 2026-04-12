@@ -17,11 +17,91 @@ use ir::gen_ir::{
     TypeDecl, TypeKind, TypeMod, TypeRef,
 };
 use service_codegen::{
-    AuthTypeKey, ResolvedAuth, ResolvedAuthKind, ServiceModuleGenerator, resolve_operation_auth,
+    AuthTypeKey, RenderCtx, ResolvedAuth, ResolvedAuthKind, ServiceModuleGenerator,
+    resolve_operation_auth,
 };
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::PathBuf;
+
+/// Where a generated type lives. In single-crate mode everything is in the
+/// same crate (`Bucket::Tag`/`Bucket::Common` only affects which file inside
+/// `src/types/`). In multi-crate mode this also dictates which Cargo crate
+/// the type lands in.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Bucket {
+    /// Type owned by a single tag (crate in multi-crate mode).
+    Tag(String),
+    /// Type shared across tags (common crate in multi-crate mode).
+    Common,
+}
+
+/// Chosen output layout. `MultiCrate` carries the names needed to emit
+/// Cargo.toml files and cross-crate import paths.
+#[derive(Debug, Clone)]
+pub enum Layout {
+    SingleCrate,
+    MultiCrate {
+        common_name: String,
+        crate_name_template: String,
+    },
+}
+
+impl Layout {
+    fn from_config(config: &Config) -> Self {
+        let Some(opts) = config.lang_options.get("rust-axum") else {
+            return Layout::SingleCrate;
+        };
+        let Some(obj) = opts.as_object() else {
+            return Layout::SingleCrate;
+        };
+        let layout = obj.get("layout").and_then(|v| v.as_str()).unwrap_or("");
+        if layout != "multi-crate" {
+            return Layout::SingleCrate;
+        }
+        let crate_name_template = obj
+            .get("crate_name")
+            .and_then(|v| v.as_str())
+            .unwrap_or("api-{tag}")
+            .to_string();
+        let common_name = obj
+            .get("common_name")
+            .and_then(|v| v.as_str())
+            .unwrap_or("api-common")
+            .to_string();
+        Layout::MultiCrate {
+            common_name,
+            crate_name_template,
+        }
+    }
+
+    fn is_multi_crate(&self) -> bool {
+        matches!(self, Layout::MultiCrate { .. })
+    }
+
+    fn tag_crate_name(&self, tag: &str) -> Option<String> {
+        match self {
+            Layout::MultiCrate {
+                crate_name_template,
+                ..
+            } => Some(crate_name_template.replace("{tag}", tag)),
+            Layout::SingleCrate => None,
+        }
+    }
+
+    fn common_name(&self) -> Option<&str> {
+        match self {
+            Layout::MultiCrate { common_name, .. } => Some(common_name),
+            Layout::SingleCrate => None,
+        }
+    }
+}
+
+/// Convert a crate name like "ticket-plug-api-common" to the Rust identifier
+/// "ticket_plug_api_common" used for `use` paths.
+fn crate_name_to_ident(name: &str) -> String {
+    name.replace('-', "_")
+}
 
 /// Represents edges that need Box wrapping to break cycles.
 /// Key is (source_type_id, target_type_id) pair.
@@ -579,15 +659,24 @@ impl RustAxumGenerator {
         boxed_edges.contains(&(source_type.clone(), target_type.clone()))
     }
 
-    /// Generate types split into per-tag files under `src/types/`.
-    /// Tag-exclusive types (referenced by exactly 1 service) go into `src/types/{tag}.rs`.
-    /// Shared types (0 tags or 2+ tags) go into `src/types/{common}.rs`.
-    /// A `src/types/mod.rs` re-exports everything so `crate::types::X` paths remain valid.
-    fn generate_types(&self, ir: &GenIr, _config: &Config, vfs: &mut VirtualFS) -> Result<()> {
-        let boxed_edges = self.compute_boxed_edges(ir);
+    /// Compute a type-partitioning (the bucket map) from the referenced-types
+    /// index. `tag_types` maps each tag to the type decls it owns; `shared` is
+    /// every type referenced by 0 or 2+ tags (lives in the common bucket).
+    /// `common_module` is the disambiguated single-crate module name
+    /// (ignored under multi-crate layout).
+    #[allow(clippy::type_complexity)]
+    fn partition_types<'a>(
+        &self,
+        ir: &'a GenIr,
+    ) -> (
+        BTreeMap<String, Vec<(&'a StableId, &'a TypeDecl)>>,
+        Vec<(&'a StableId, &'a TypeDecl, BTreeSet<String>)>,
+        String,
+    ) {
         let referenced_types = self.collect_referenced_types(ir);
 
-        // Collect type IDs used in multipart request bodies (generated in service modules)
+        // Types used directly as multipart request bodies are rendered inside
+        // service modules — not emitted as shared types.
         let mut multipart_request_types = BTreeSet::new();
         for service in &ir.services {
             for operation in &service.operations {
@@ -601,7 +690,6 @@ impl RustAxumGenerator {
             }
         }
 
-        // Collect all tag names (snake_case) for module name disambiguation
         let tag_names: BTreeSet<String> = ir
             .services
             .iter()
@@ -615,67 +703,114 @@ impl RustAxumGenerator {
             &["shared_types", "base_types", "core_types"],
         );
 
-        // Partition types: tag-exclusive vs shared
-        let mut tag_types: BTreeMap<String, Vec<(&StableId, &TypeDecl)>> = BTreeMap::new();
-        let mut shared_types: Vec<(&StableId, &TypeDecl, &BTreeSet<String>)> = Vec::new();
+        let mut tag_types: BTreeMap<String, Vec<(&'a StableId, &'a TypeDecl)>> = BTreeMap::new();
+        let mut shared_types: Vec<(&'a StableId, &'a TypeDecl, BTreeSet<String>)> = Vec::new();
 
-        for (type_id, service_tags) in &referenced_types {
-            if multipart_request_types.contains(type_id) {
+        for (type_id, service_tags) in referenced_types.into_iter() {
+            if multipart_request_types.contains(&type_id) {
                 continue;
             }
-            let Some(type_decl) = ir.types.get(type_id) else {
+            // Resolve `&'a StableId` / `&'a TypeDecl` from the IR (outlives
+            // this function) rather than from the just-built map.
+            let Some((ir_id, type_decl)) = ir.types.get_key_value(&type_id) else {
                 continue;
             };
-
             if service_tags.len() == 1 {
-                let tag = service_tags.iter().next().unwrap();
-                tag_types
-                    .entry(tag.clone())
-                    .or_default()
-                    .push((type_id, type_decl));
+                let tag = service_tags.into_iter().next().unwrap();
+                tag_types.entry(tag).or_default().push((ir_id, type_decl));
             } else {
-                shared_types.push((type_id, type_decl, service_tags));
+                shared_types.push((ir_id, type_decl, service_tags));
             }
         }
 
+        (tag_types, shared_types, common_module)
+    }
+
+    /// Build the bucket map (type_id -> Bucket) used by render-time
+    /// qualification. Called once, fed into `RenderCtx`.
+    fn build_bucket_map(
+        tag_types: &BTreeMap<String, Vec<(&StableId, &TypeDecl)>>,
+        shared: &[(&StableId, &TypeDecl, BTreeSet<String>)],
+    ) -> BTreeMap<StableId, Bucket> {
+        let mut map: BTreeMap<StableId, Bucket> = BTreeMap::new();
+        for (tag, items) in tag_types {
+            for (id, _) in items {
+                map.insert((*id).clone(), Bucket::Tag(tag.clone()));
+            }
+        }
+        for (id, _, _) in shared {
+            map.insert((*id).clone(), Bucket::Common);
+        }
+        map
+    }
+
+    /// Emit the type files. In single-crate mode this lays out
+    /// `src/types/{tag}.rs`, `src/types/{common}.rs`, and `src/types/mod.rs`
+    /// (byte-identical to prior behaviour). In multi-crate mode this lays out
+    /// `<tag_crate>/src/types.rs` and `<common_crate>/src/lib.rs` directly.
+    #[allow(clippy::too_many_arguments)]
+    fn generate_types(
+        &self,
+        ir: &GenIr,
+        vfs: &mut VirtualFS,
+        ctx: &RenderCtx,
+        layout: &Layout,
+        tag_types: &BTreeMap<String, Vec<(&StableId, &TypeDecl)>>,
+        shared_types: &[(&StableId, &TypeDecl, BTreeSet<String>)],
+        common_module: &str,
+    ) -> Result<()> {
+        let boxed_edges = self.compute_boxed_edges(ir);
         let type_file_header = "#[allow(unused_imports)]\nuse serde::{Deserialize, Serialize};\n\n";
 
-        // Build a set of type IDs per tag for cross-reference detection
+        // --- Per-tag type files ---
+        // Precompute per-tag cross-ref detection (single-crate only — in
+        // multi-crate mode, cross-bucket refs emit a `<common_ident>::` path
+        // inline, so `use super::*` is never needed).
         let tag_type_ids: BTreeMap<&String, BTreeSet<&StableId>> = tag_types
             .iter()
             .map(|(tag, types)| (tag, types.iter().map(|(id, _)| *id).collect()))
             .collect();
 
-        // Generate per-tag type files (no per-type #[cfg] needed — module is feature-gated)
-        for (tag, types) in &tag_types {
-            // Check if any type in this tag references a Named type outside this tag's set
-            let own_ids = &tag_type_ids[tag];
-            let needs_super = types.iter().any(|(_, type_decl)| {
-                let deps = self.collect_direct_deps(type_decl, ir);
-                deps.iter()
-                    .any(|dep| matches!(dep, StableId::Named(_)) && !own_ids.contains(dep))
-            });
-
+        for (tag, types) in tag_types {
             let mut content = format!("//! Types for the {} service\n\n{}", tag, type_file_header);
-            if needs_super {
-                content.push_str("use super::*;\n\n");
+
+            if !layout.is_multi_crate() {
+                let own_ids = &tag_type_ids[tag];
+                let needs_super = types.iter().any(|(_, type_decl)| {
+                    let deps = self.collect_direct_deps(type_decl, ir);
+                    deps.iter()
+                        .any(|dep| matches!(dep, StableId::Named(_)) && !own_ids.contains(dep))
+                });
+                if needs_super {
+                    content.push_str("use super::*;\n\n");
+                }
             }
 
             for (_, type_decl) in types {
-                let rendered = self.render_type(type_decl, ir, &boxed_edges)?;
+                let rendered = self.render_type(type_decl, ir, &boxed_edges, ctx)?;
                 content.push_str(&rendered);
                 content.push_str("\n\n");
             }
 
-            vfs.add_file(format!("src/types/{}.rs", tag), content);
+            let path = match layout {
+                Layout::SingleCrate => format!("src/types/{}.rs", tag),
+                Layout::MultiCrate { .. } => {
+                    let crate_dir = layout.tag_crate_name(tag).unwrap();
+                    format!("{}/src/types.rs", crate_dir)
+                }
+            };
+            vfs.add_file(path, content);
         }
 
-        // Generate shared types file
+        // --- Shared/common file ---
         {
             let mut content = format!("//! Shared API types\n\n{}", type_file_header);
 
-            for (_, type_decl, service_tags) in &shared_types {
-                if !service_tags.is_empty() {
+            for (_, type_decl, service_tags) in shared_types {
+                // Feature-cfg gates only make sense under single-crate; in
+                // multi-crate mode every shared type is unconditionally
+                // available in the common crate.
+                if !layout.is_multi_crate() && !service_tags.is_empty() {
                     let feature_list: Vec<String> = service_tags
                         .iter()
                         .map(|f| format!("feature = \"{}\"", f))
@@ -687,31 +822,50 @@ impl RustAxumGenerator {
                     }
                 }
 
-                let rendered = self.render_type(type_decl, ir, &boxed_edges)?;
+                let rendered = self.render_type(type_decl, ir, &boxed_edges, ctx)?;
                 content.push_str(&rendered);
                 content.push_str("\n\n");
             }
 
-            vfs.add_file(format!("src/types/{}.rs", common_module), content);
+            let (path, prefix) = match layout {
+                Layout::SingleCrate => (format!("src/types/{}.rs", common_module), String::new()),
+                Layout::MultiCrate { common_name, .. } => (
+                    format!("{}/src/lib.rs", common_name),
+                    "//! Shared API types (generated)\n\n".to_string(),
+                ),
+            };
+            let final_content = if prefix.is_empty() {
+                content
+            } else {
+                // Replace the single-crate header with a multi-crate lib.rs
+                // header; keep the `use serde::...` import etc. Append
+                // `shared` and `multipart` module declarations so tag crates
+                // can import `RequestContext`, auth extractors, and
+                // `Spooled` through the common crate ident — nominal types
+                // must match across tag crates.
+                let without_header = content
+                    .strip_prefix("//! Shared API types\n\n")
+                    .unwrap_or(&content);
+                format!(
+                    "{}{}\npub mod shared;\npub use shared::*;\npub mod multipart;\n",
+                    prefix, without_header
+                )
+            };
+            vfs.add_file(path, final_content);
         }
 
-        // Generate types/mod.rs
-        {
+        // --- types/mod.rs (single-crate only) ---
+        if let Layout::SingleCrate = layout {
             let mut mod_content = String::from("//! API types\n\n");
-
-            // Common module — always available
             mod_content.push_str(&format!(
                 "pub mod {};\npub use {}::*;\n\n",
                 common_module, common_module
             ));
-
-            // Per-tag modules — feature-gated
             for tag in tag_types.keys() {
                 mod_content.push_str(&format!(
                     "#[cfg(feature = \"{tag}\")]\npub mod {tag};\n#[cfg(feature = \"{tag}\")]\npub use {tag}::*;\n\n",
                 ));
             }
-
             vfs.add_file("src/types/mod.rs", mod_content);
         }
 
@@ -818,6 +972,7 @@ impl RustAxumGenerator {
         type_decl: &TypeDecl,
         ir: &GenIr,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> Result<String> {
         use ir::gen_ir::TypeKind;
 
@@ -846,7 +1001,7 @@ impl RustAxumGenerator {
                     } else {
                         Self::make_valid_field_name(&f.name.canonical, &f.name.snake)
                     };
-                    let type_str = self.render_type_ref(&f.ty, ir, &type_decl.id, boxed_edges);
+                    let type_str = self.render_type_ref(&f.ty, ir, &type_decl.id, boxed_edges, ctx);
                     if needs_rename {
                         fields_str.push(format!(
                             "    #[serde(rename = \"{}\")]\n    pub {}: {},",
@@ -893,11 +1048,11 @@ impl RustAxumGenerator {
                 ))
             }
             TypeKind::Alias { aliased } => {
-                let target = self.render_alias_target(aliased, ir, &type_decl.id, boxed_edges);
+                let target = self.render_alias_target(aliased, ir, &type_decl.id, boxed_edges, ctx);
                 Ok(format!("pub type {} = {};", type_decl.name.pascal, target))
             }
             TypeKind::Union { style, variants } => {
-                self.render_union(type_decl, style, variants, ir, boxed_edges)
+                self.render_union(type_decl, style, variants, ir, boxed_edges, ctx)
             }
         }
     }
@@ -909,19 +1064,20 @@ impl RustAxumGenerator {
         variants: &[ir::gen_ir::Variant],
         ir: &GenIr,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> Result<String> {
         use ir::gen_ir::UnionStyle;
 
         match style {
-            UnionStyle::AllOf => self.render_allof(type_decl, variants, ir, boxed_edges),
+            UnionStyle::AllOf => self.render_allof(type_decl, variants, ir, boxed_edges, ctx),
             UnionStyle::OneOf => {
-                self.render_oneof_anyof(type_decl, variants, ir, false, boxed_edges)
+                self.render_oneof_anyof(type_decl, variants, ir, false, boxed_edges, ctx)
             }
             UnionStyle::AnyOf => {
-                self.render_oneof_anyof(type_decl, variants, ir, false, boxed_edges)
+                self.render_oneof_anyof(type_decl, variants, ir, false, boxed_edges, ctx)
             }
             UnionStyle::Discriminated { tag } => {
-                self.render_discriminated(type_decl, variants, tag, ir, boxed_edges)
+                self.render_discriminated(type_decl, variants, tag, ir, boxed_edges, ctx)
             }
         }
     }
@@ -932,6 +1088,7 @@ impl RustAxumGenerator {
         variants: &[ir::gen_ir::Variant],
         ir: &GenIr,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> Result<String> {
         // Collect variant names for self/Self conflict detection.
         // Track both original names AND generated names.
@@ -941,7 +1098,8 @@ impl RustAxumGenerator {
         let mut fields = Vec::new();
 
         for variant in variants {
-            let variant_type = self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges);
+            let variant_type =
+                self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges, ctx);
             let field_name = if Self::is_self_keyword(&variant.name.snake) {
                 let escaped =
                     Self::escape_self_keyword(&variant.name.snake, &used_names).map_err(|e| {
@@ -976,12 +1134,14 @@ impl RustAxumGenerator {
         ir: &GenIr,
         _is_strict: bool,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> Result<String> {
         let mut variant_lines = Vec::new();
 
         for variant in variants {
             let variant_name = Self::escape_rust_keyword(&variant.name.pascal);
-            let variant_type = self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges);
+            let variant_type =
+                self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges, ctx);
             variant_lines.push(format!("    {}({}),", variant_name, variant_type));
         }
 
@@ -999,12 +1159,14 @@ impl RustAxumGenerator {
         tag: &str,
         ir: &GenIr,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> Result<String> {
         let mut variant_lines = Vec::new();
 
         for variant in variants {
             let variant_name = Self::escape_rust_keyword(&variant.name.pascal);
-            let variant_type = self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges);
+            let variant_type =
+                self.render_type_ref(&variant.ty, ir, &type_decl.id, boxed_edges, ctx);
 
             if let Some(tag_value) = &variant.tag_value {
                 variant_lines.push(format!(
@@ -1030,6 +1192,7 @@ impl RustAxumGenerator {
         ir: &GenIr,
         source_type: &StableId,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> String {
         let target = &type_ref.target;
 
@@ -1038,10 +1201,11 @@ impl RustAxumGenerator {
 
         let base = if let Some(type_decl) = ir.types.get(target) {
             let name = type_decl.name.pascal.clone();
+            let qualified = ctx.qualify_named(target, &name, source_type);
             if needs_box {
-                format!("Box<{}>", name)
+                format!("Box<{}>", qualified)
             } else {
-                name
+                qualified
             }
         } else {
             self.render_type_id(target)
@@ -1056,7 +1220,7 @@ impl RustAxumGenerator {
                 ir::gen_ir::TypeMod::Map(value_type) => {
                     format!(
                         "std::collections::HashMap<String, {}>",
-                        self.render_type_ref(value_type, ir, source_type, boxed_edges)
+                        self.render_type_ref(value_type, ir, source_type, boxed_edges, ctx)
                     )
                 }
                 _ => result,
@@ -1099,6 +1263,7 @@ impl RustAxumGenerator {
         ir: &GenIr,
         source_type: &StableId,
         boxed_edges: &BoxedEdges,
+        ctx: &RenderCtx,
     ) -> String {
         use ir::gen_ir::{AliasTarget, Composite, Primitive};
         match target {
@@ -1117,24 +1282,24 @@ impl RustAxumGenerator {
             AliasTarget::Composite(Composite::List(inner)) => {
                 format!(
                     "Vec<{}>",
-                    self.render_type_ref(inner, ir, source_type, boxed_edges)
+                    self.render_type_ref(inner, ir, source_type, boxed_edges, ctx)
                 )
             }
             AliasTarget::Composite(Composite::Map { value, .. }) => {
                 format!(
                     "std::collections::HashMap<String, {}>",
-                    self.render_type_ref(value, ir, source_type, boxed_edges)
+                    self.render_type_ref(value, ir, source_type, boxed_edges, ctx)
                 )
             }
             AliasTarget::Composite(Composite::Tuple(types)) => {
                 let rendered: Vec<String> = types
                     .iter()
-                    .map(|t| self.render_type_ref(t, ir, source_type, boxed_edges))
+                    .map(|t| self.render_type_ref(t, ir, source_type, boxed_edges, ctx))
                     .collect();
                 format!("({})", rendered.join(", "))
             }
             AliasTarget::Reference(type_ref) => {
-                self.render_type_ref(type_ref, ir, source_type, boxed_edges)
+                self.render_type_ref(type_ref, ir, source_type, boxed_edges, ctx)
             }
         }
     }
@@ -1257,19 +1422,24 @@ impl RustAxumGenerator {
         }
     }
 
-    /// Generate service modules (one per tag)
+    /// Generate service modules (one per tag).
+    ///
+    /// In single-crate mode: everything lands under `src/services/`.
+    /// In multi-crate mode: each tag's module goes under
+    /// `<tag_crate>/src/services/{tag}.rs` plus a per-crate `services/mod.rs`.
     fn generate_services(
         &self,
         ir: &GenIr,
-        _config: &Config,
         vfs: &mut VirtualFS,
         auth_type_map: &BTreeMap<AuthTypeKey, String>,
+        ctx: &RenderCtx,
+        layout: &Layout,
     ) -> Result<()> {
         for service in &ir.services {
-            self.generate_service_module(service, ir, vfs, auth_type_map)?;
+            self.generate_service_module(service, ir, vfs, auth_type_map, ctx, layout)?;
         }
 
-        self.generate_services_mod(ir, vfs)?;
+        self.generate_services_mod(ir, vfs, layout)?;
 
         Ok(())
     }
@@ -1281,71 +1451,148 @@ impl RustAxumGenerator {
         ir: &GenIr,
         vfs: &mut VirtualFS,
         auth_type_map: &BTreeMap<AuthTypeKey, String>,
+        ctx: &RenderCtx,
+        layout: &Layout,
     ) -> Result<()> {
         let module_name = &service.name.snake;
 
         let generator =
-            ServiceModuleGenerator::new(service, &ir.api.package_name.snake, auth_type_map);
+            ServiceModuleGenerator::new(service, &ir.api.package_name.snake, auth_type_map, ctx);
         let content = generator.generate();
 
-        let file_path = PathBuf::from("src")
-            .join("services")
-            .join(format!("{}.rs", module_name));
+        let file_path = match layout {
+            Layout::SingleCrate => PathBuf::from("src")
+                .join("services")
+                .join(format!("{}.rs", module_name)),
+            Layout::MultiCrate { .. } => {
+                // Only emit service modules into their own tag's crate.
+                // (A "default" service with no tag goes nowhere in
+                // multi-crate mode.)
+                if service.name.canonical == "default" {
+                    return Ok(());
+                }
+                let crate_dir = layout.tag_crate_name(module_name).unwrap();
+                PathBuf::from(crate_dir)
+                    .join("src")
+                    .join("services")
+                    .join(format!("{}.rs", module_name))
+            }
+        };
         vfs.add_file(file_path, content);
 
         Ok(())
     }
 
-    /// Generate services/mod.rs
-    fn generate_services_mod(&self, ir: &GenIr, vfs: &mut VirtualFS) -> Result<()> {
-        let mut mod_content = String::from("//! Service interfaces organized by tag\n\n");
-
-        for service in &ir.services {
-            let feature_name = service.name.snake.clone();
-
-            if service.name.canonical == "default" {
-                mod_content.push_str(&format!("pub mod {};\n", service.name.snake));
-            } else {
-                mod_content.push_str(&format!(
-                    "#[cfg(feature = \"{}\")]\npub mod {};\n",
-                    feature_name, service.name.snake
-                ));
+    /// Generate services/mod.rs. In single-crate mode one top-level file lists
+    /// every tag with feature gates; in multi-crate mode each tag crate gets
+    /// its own single-module `services/mod.rs`.
+    fn generate_services_mod(
+        &self,
+        ir: &GenIr,
+        vfs: &mut VirtualFS,
+        layout: &Layout,
+    ) -> Result<()> {
+        match layout {
+            Layout::SingleCrate => {
+                let mut mod_content = String::from("//! Service interfaces organized by tag\n\n");
+                for service in &ir.services {
+                    let feature_name = service.name.snake.clone();
+                    if service.name.canonical == "default" {
+                        mod_content.push_str(&format!("pub mod {};\n", service.name.snake));
+                    } else {
+                        mod_content.push_str(&format!(
+                            "#[cfg(feature = \"{}\")]\npub mod {};\n",
+                            feature_name, service.name.snake
+                        ));
+                    }
+                }
+                vfs.add_file("src/services/mod.rs", mod_content);
+            }
+            Layout::MultiCrate { .. } => {
+                for service in &ir.services {
+                    if service.name.canonical == "default" {
+                        continue;
+                    }
+                    let tag = &service.name.snake;
+                    let crate_dir = layout.tag_crate_name(tag).unwrap();
+                    let content = format!("//! Service interfaces\n\npub mod {tag};\n", tag = tag);
+                    vfs.add_file(format!("{}/src/services/mod.rs", crate_dir), content);
+                }
             }
         }
-
-        vfs.add_file("src/services/mod.rs", mod_content);
         Ok(())
     }
 
-    /// Generate Cargo.toml with feature flags
-    fn generate_cargo_toml(&self, ir: &GenIr, vfs: &mut VirtualFS) -> Result<()> {
-        let mut tags: BTreeSet<String> = BTreeSet::new();
-        for service in &ir.services {
-            if service.name.canonical != "default" {
-                tags.insert(service.name.snake.clone());
-            }
-        }
-
+    /// Generate Cargo.toml(s). Single-crate: one at the root with feature
+    /// flags. Multi-crate: one per tag crate (depends on the common crate)
+    /// plus one for the common crate; no feature flags.
+    fn generate_cargo_toml(
+        &self,
+        ir: &GenIr,
+        vfs: &mut VirtualFS,
+        layout: &Layout,
+        tag_types: &BTreeMap<String, Vec<(&StableId, &TypeDecl)>>,
+    ) -> Result<()> {
         let version = sanitize_version(&ir.api.version);
-        let data = CargoTomlData {
-            package_name: &ir.api.package_name.snake,
-            version: &version,
-            tags: tags.iter().cloned().collect(),
-        };
 
-        let content = data
-            .render()
-            .map_err(|e| Error::TemplateError(Box::new(e)))?;
+        match layout {
+            Layout::SingleCrate => {
+                let mut tags: BTreeSet<String> = BTreeSet::new();
+                for service in &ir.services {
+                    if service.name.canonical != "default" {
+                        tags.insert(service.name.snake.clone());
+                    }
+                }
+                let data = CargoTomlData {
+                    package_name: &ir.api.package_name.snake,
+                    version: &version,
+                    tags: tags.iter().cloned().collect(),
+                };
+                let content = data
+                    .render()
+                    .map_err(|e| Error::TemplateError(Box::new(e)))?;
+                vfs.add_file("Cargo.toml", content);
+            }
+            Layout::MultiCrate { common_name, .. } => {
+                // Common crate Cargo.toml
+                vfs.add_file(
+                    format!("{}/Cargo.toml", common_name),
+                    render_common_cargo_toml(common_name, &version),
+                );
 
-        vfs.add_file("Cargo.toml", content);
+                // Per-tag Cargo.toml — one per distinct tag across services
+                // and tag_types (a tag may own types but have no service, or
+                // vice versa).
+                let mut tags: BTreeSet<String> = BTreeSet::new();
+                for service in &ir.services {
+                    if service.name.canonical != "default" {
+                        tags.insert(service.name.snake.clone());
+                    }
+                }
+                for tag in tag_types.keys() {
+                    tags.insert(tag.clone());
+                }
+
+                for tag in &tags {
+                    let crate_name = layout.tag_crate_name(tag).unwrap();
+                    vfs.add_file(
+                        format!("{}/Cargo.toml", crate_name),
+                        render_tag_cargo_toml(&crate_name, &version, common_name),
+                    );
+                }
+            }
+        }
         Ok(())
     }
 
-    /// Generate shared types / utilities module
+    /// Generate the `shared.rs` auth/context helper module. In multi-crate
+    /// mode it's duplicated into each tag crate.
     fn generate_shared_module(
         &self,
+        _ir: &GenIr,
         auth_groups: &BTreeMap<AuthGroupKey, AuthGroup>,
         vfs: &mut VirtualFS,
+        layout: &Layout,
     ) -> Result<()> {
         let groups: Vec<&AuthGroup> = auth_groups.values().collect();
         let data = SharedTemplate {
@@ -1354,24 +1601,61 @@ impl RustAxumGenerator {
         let content = data
             .render()
             .map_err(|e| Error::TemplateError(Box::new(e)))?;
-        vfs.add_file("src/shared.rs", content);
+
+        match layout {
+            Layout::SingleCrate => {
+                vfs.add_file("src/shared.rs", content);
+            }
+            Layout::MultiCrate { common_name, .. } => {
+                // Shared belongs to the common crate: types defined here need
+                // to be nominally identical across all tag crates. Emitting
+                // per-tag would produce byte-identical but nominally distinct
+                // types, defeating downstream interop.
+                vfs.add_file(format!("{}/src/shared.rs", common_name), content);
+            }
+        }
         Ok(())
     }
 
-    /// Generate lib.rs
-    fn generate_lib_rs(&self, vfs: &mut VirtualFS) -> Result<()> {
-        let mut content = String::from("//! Generated Axum API\n\n");
-        content.push_str("pub mod types;\n");
-        content.push_str("pub mod services;\n");
-        content.push_str("pub mod shared;\n");
-        content.push_str("pub mod multipart;\n");
-
-        vfs.add_file("src/lib.rs", content);
+    /// Generate lib.rs. Single-crate: one root lib.rs. Multi-crate: a lib.rs
+    /// per tag crate (common crate's lib.rs is emitted in `generate_types`
+    /// alongside shared types, with `pub mod shared`/`pub mod multipart`
+    /// declarations appended there).
+    fn generate_lib_rs(&self, ir: &GenIr, vfs: &mut VirtualFS, layout: &Layout) -> Result<()> {
+        match layout {
+            Layout::SingleCrate => {
+                let content = "//! Generated Axum API\n\n\
+                    pub mod types;\n\
+                    pub mod services;\n\
+                    pub mod shared;\n\
+                    pub mod multipart;\n";
+                vfs.add_file("src/lib.rs", content);
+            }
+            Layout::MultiCrate { .. } => {
+                // Tag crates don't own shared/multipart — those live in the
+                // common crate so nominal types match across tags.
+                let content = "//! Generated Axum API\n\n\
+                    pub mod types;\n\
+                    pub mod services;\n";
+                for service in &ir.services {
+                    if service.name.canonical == "default" {
+                        continue;
+                    }
+                    let crate_dir = layout.tag_crate_name(&service.name.snake).unwrap();
+                    vfs.add_file(format!("{}/src/lib.rs", crate_dir), content);
+                }
+            }
+        }
         Ok(())
     }
 
-    /// Generate multipart utilities module
-    fn generate_multipart_module(&self, vfs: &mut VirtualFS) -> Result<()> {
+    /// Generate multipart utilities module.
+    fn generate_multipart_module(
+        &self,
+        _ir: &GenIr,
+        vfs: &mut VirtualFS,
+        layout: &Layout,
+    ) -> Result<()> {
         #[derive(Template)]
         #[template(path = "multipart.rs.jinja", escape = "none")]
         struct MultipartModule;
@@ -1379,7 +1663,18 @@ impl RustAxumGenerator {
         let content = MultipartModule
             .render()
             .map_err(|e| Error::TemplateError(Box::new(e)))?;
-        vfs.add_file("src/multipart.rs", content);
+
+        match layout {
+            Layout::SingleCrate => {
+                vfs.add_file("src/multipart.rs", content);
+            }
+            Layout::MultiCrate { common_name, .. } => {
+                // Same rationale as `shared`: a `Spooled` in two distinct tag
+                // crates would be nominally distinct even though byte-
+                // identical. Consolidate in common.
+                vfs.add_file(format!("{}/src/multipart.rs", common_name), content);
+            }
+        }
         Ok(())
     }
 }
@@ -1394,12 +1689,37 @@ impl Generator for RustAxumGenerator {
             .map(|(k, v)| (k.clone(), v.name.clone()))
             .collect();
 
-        self.generate_types(ir, config, &mut vfs)?;
-        self.generate_services(ir, config, &mut vfs, &auth_type_map)?;
-        self.generate_cargo_toml(ir, &mut vfs)?;
-        self.generate_shared_module(&auth_groups, &mut vfs)?;
-        self.generate_multipart_module(&mut vfs)?;
-        self.generate_lib_rs(&mut vfs)?;
+        // Decide layout up front so every emission site can branch on it.
+        let layout = Layout::from_config(config);
+
+        // Partition types into buckets once; feed both the bucket map into
+        // `RenderCtx` (for path qualification) and the tag_types/shared_types
+        // slices into the type emitter.
+        let (tag_types, shared_types, common_module) = self.partition_types(ir);
+
+        let type_bucket = Self::build_bucket_map(&tag_types, &shared_types);
+        let common_ident = layout.common_name().map(crate_name_to_ident);
+
+        let ctx = RenderCtx {
+            type_bucket,
+            common_ident,
+            multi_crate: layout.is_multi_crate(),
+        };
+
+        self.generate_types(
+            ir,
+            &mut vfs,
+            &ctx,
+            &layout,
+            &tag_types,
+            &shared_types,
+            &common_module,
+        )?;
+        self.generate_services(ir, &mut vfs, &auth_type_map, &ctx, &layout)?;
+        self.generate_cargo_toml(ir, &mut vfs, &layout, &tag_types)?;
+        self.generate_shared_module(ir, &auth_groups, &mut vfs, &layout)?;
+        self.generate_multipart_module(ir, &mut vfs, &layout)?;
+        self.generate_lib_rs(ir, &mut vfs, &layout)?;
 
         Ok(vfs)
     }
@@ -1452,4 +1772,52 @@ struct AuthGroup {
 #[template(path = "shared.rs.jinja", escape = "none")]
 struct SharedTemplate<'a> {
     auth_groups: Vec<&'a AuthGroup>,
+}
+
+fn render_common_cargo_toml(name: &str, version: &str) -> String {
+    format!(
+        "[package]\n\
+         name = \"{name}\"\n\
+         version = \"{version}\"\n\
+         edition = \"2024\"\n\
+         description = \"Generated Axum API — shared types\"\n\
+         \n\
+         [dependencies]\n\
+         axum = {{ version = \"0.8.7\", features = [\"multipart\"] }}\n\
+         serde = {{ version = \"1.0\", features = [\"derive\"] }}\n\
+         serde_json = \"1.0\"\n\
+         bytes = \"1.10\"\n\
+         jiff = {{ version = \"0.2\", features = [\"serde\"] }}\n\
+         uuid = {{ version = \"1.11\", features = [\"serde\", \"v4\"] }}\n\
+         rust_decimal = {{ version = \"1.37\", features = [\"serde\"] }}\n\
+         tokio = {{ version = \"1\", features = [\"fs\", \"io-util\"] }}\n\
+         tempfile = \"3\"\n",
+        name = name,
+        version = version,
+    )
+}
+
+fn render_tag_cargo_toml(name: &str, version: &str, common_name: &str) -> String {
+    format!(
+        "[package]\n\
+         name = \"{name}\"\n\
+         version = \"{version}\"\n\
+         edition = \"2024\"\n\
+         description = \"Generated Axum API — {name}\"\n\
+         \n\
+         [dependencies]\n\
+         {common_name} = {{ path = \"../{common_name}\" }}\n\
+         axum = {{ version = \"0.8.7\", features = [\"multipart\"] }}\n\
+         serde = {{ version = \"1.0\", features = [\"derive\"] }}\n\
+         serde_json = \"1.0\"\n\
+         bytes = \"1.10\"\n\
+         jiff = {{ version = \"0.2\", features = [\"serde\"] }}\n\
+         uuid = {{ version = \"1.11\", features = [\"serde\", \"v4\"] }}\n\
+         rust_decimal = {{ version = \"1.37\", features = [\"serde\"] }}\n\
+         tokio = {{ version = \"1\", features = [\"fs\", \"io-util\"] }}\n\
+         tempfile = \"3\"\n",
+        name = name,
+        version = version,
+        common_name = common_name,
+    )
 }
