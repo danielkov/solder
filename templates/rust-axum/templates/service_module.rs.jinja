@@ -575,6 +575,9 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct {{ op.name.pascal }}Query {
     {% for param in op.http.query -%}
+    {% if param.wire != param.name.snake -%}
+    #[serde(rename = "{{ param.wire }}")]
+    {% endif -%}
     {% if param.required -%}
     pub {{ param.name.snake|escape_rust_keyword }}: String,
     {% else -%}

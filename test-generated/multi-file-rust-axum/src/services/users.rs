@@ -370,6 +370,7 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct ListUsersQuery {
     pub page: Option<String>,
+    #[serde(rename = "pageSize")]
     pub page_size: Option<String>,
     pub status: Option<String>,
     pub role: Option<String>,

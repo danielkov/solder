@@ -370,10 +370,15 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct ListOrdersQuery {
     pub page: Option<String>,
+    #[serde(rename = "pageSize")]
     pub page_size: Option<String>,
+    #[serde(rename = "userId")]
     pub user_id: Option<String>,
     pub status: Option<String>,
+    #[serde(rename = "paymentStatus")]
     pub payment_status: Option<String>,
+    #[serde(rename = "startDate")]
     pub start_date: Option<String>,
+    #[serde(rename = "endDate")]
     pub end_date: Option<String>,
 }

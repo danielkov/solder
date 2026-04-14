@@ -390,7 +390,9 @@ where
 // Query parameter structs
 #[derive(Debug, serde::Deserialize)]
 pub struct ListSpecialEventsQuery {
+    #[serde(rename = "startDate")]
     pub start_date: Option<String>,
+    #[serde(rename = "endDate")]
     pub end_date: Option<String>,
     pub page: Option<String>,
     pub limit: Option<String>,

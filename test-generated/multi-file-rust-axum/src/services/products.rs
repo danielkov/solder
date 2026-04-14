@@ -439,10 +439,13 @@ where
 #[derive(Debug, serde::Deserialize)]
 pub struct ListProductsQuery {
     pub page: Option<String>,
+    #[serde(rename = "pageSize")]
     pub page_size: Option<String>,
     pub category: Option<String>,
     pub status: Option<String>,
+    #[serde(rename = "minPrice")]
     pub min_price: Option<String>,
+    #[serde(rename = "maxPrice")]
     pub max_price: Option<String>,
     pub search: Option<String>,
     pub tags: Option<String>,

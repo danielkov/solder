@@ -128,6 +128,7 @@ where
 // Query parameter structs
 #[derive(Debug, serde::Deserialize)]
 pub struct GetMuseumHoursQuery {
+    #[serde(rename = "startDate")]
     pub start_date: Option<String>,
     pub page: Option<String>,
     pub limit: Option<String>,
