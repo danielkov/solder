@@ -206,7 +206,7 @@ impl IntoResponse for DeleteBookingError {
 /// # Example
 ///
 /// ```rust
-/// use train_travel_api::shared::RequestContext;
+/// use train_travel_api::shared::{RequestContext, Auth};
 /// use train_travel_api::services::bookings::{
 ///     Bookings,
 ///     GetBookingsResult,

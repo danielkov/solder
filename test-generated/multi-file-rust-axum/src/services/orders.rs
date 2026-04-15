@@ -153,7 +153,7 @@ impl IntoResponse for CancelOrderError {
 /// # Example
 ///
 /// ```rust
-/// use multi_file_reference_api::shared::RequestContext;
+/// use multi_file_reference_api::shared::{RequestContext, Auth};
 /// use multi_file_reference_api::services::orders::{
 ///     Orders,
 ///     ListOrdersResult,

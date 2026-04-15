@@ -62,7 +62,7 @@ impl IntoResponse for ListEndpointsError {
 /// # Example
 ///
 /// ```rust
-/// use open_router_api::shared::RequestContext;
+/// use open_router_api::shared::{RequestContext, ApiKey};
 /// use open_router_api::services::endpoints::{
 ///     Endpoints,
 ///     ListEndpointsZdrResult,

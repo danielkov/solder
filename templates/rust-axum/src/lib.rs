@@ -1456,8 +1456,27 @@ impl RustAxumGenerator {
     ) -> Result<()> {
         let module_name = &service.name.snake;
 
+        // In multi-crate mode the tag's own crate ident is the correct root
+        // for `use` paths emitted into this module (doctests, body types).
+        // In single-crate mode the whole output is one crate, so the root
+        // package name applies.
+        let package_ident_owned = match layout {
+            Layout::MultiCrate { .. } => layout
+                .tag_crate_name(module_name)
+                .map(|name| crate_name_to_ident(&name)),
+            Layout::SingleCrate => None,
+        };
+        let package_name: &str = package_ident_owned
+            .as_deref()
+            .unwrap_or(&ir.api.package_name.snake);
+
+        // RenderCtx's `self_crate` drives doctest qualification; scope it
+        // to the tag crate currently being emitted.
+        let mut ctx_for_service = ctx.clone();
+        ctx_for_service.self_crate = package_name.to_string();
+
         let generator =
-            ServiceModuleGenerator::new(service, &ir.api.package_name.snake, auth_type_map, ctx);
+            ServiceModuleGenerator::new(service, package_name, auth_type_map, &ctx_for_service);
         let content = generator.generate();
 
         let file_path = match layout {
@@ -1704,6 +1723,9 @@ impl Generator for RustAxumGenerator {
             type_bucket,
             common_ident,
             multi_crate: layout.is_multi_crate(),
+            // Default: the root package. Per-service renders override this
+            // with the tag crate ident so doctests reference the right crate.
+            self_crate: ir.api.package_name.snake.clone(),
         };
 
         self.generate_types(

@@ -33,7 +33,7 @@ impl IntoResponse for CreateOrderError {
 /// # Example
 ///
 /// ```rust
-/// use pet_store_api::shared::RequestContext;
+/// use pet_store_api::shared::{RequestContext};
 /// use pet_store_api::services::orders::{
 ///     Orders,
 ///     CreateOrderResult,

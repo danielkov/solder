@@ -67,7 +67,7 @@ impl IntoResponse for GetTestError {
 /// # Example
 ///
 /// ```rust
-/// use oas_gen_bug_reproduction::shared::RequestContext;
+/// use oas_gen_bug_reproduction::shared::{RequestContext};
 /// use oas_gen_bug_reproduction::services::default::{
 ///     Default,
 ///     GetRatingsResult,

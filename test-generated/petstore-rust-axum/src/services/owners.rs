@@ -50,7 +50,7 @@ impl IntoResponse for CreateOwnerError {
 /// # Example
 ///
 /// ```rust
-/// use pet_store_api::shared::RequestContext;
+/// use pet_store_api::shared::{RequestContext};
 /// use pet_store_api::services::owners::{
 ///     Owners,
 ///     ListOwnersResult,

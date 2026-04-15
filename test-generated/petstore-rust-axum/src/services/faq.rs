@@ -54,7 +54,7 @@ impl IntoResponse for GetFaqItemError {
 /// # Example
 ///
 /// ```rust
-/// use pet_store_api::shared::RequestContext;
+/// use pet_store_api::shared::{RequestContext};
 /// use pet_store_api::services::faq::{
 ///     Faq,
 ///     ListFaqItemsResult,

@@ -59,7 +59,7 @@ impl IntoResponse for GetTripsError {
 /// # Example
 ///
 /// ```rust
-/// use train_travel_api::shared::RequestContext;
+/// use train_travel_api::shared::{RequestContext, Auth};
 /// use train_travel_api::services::trips::{
 ///     Trips,
 ///     GetTripsResult,

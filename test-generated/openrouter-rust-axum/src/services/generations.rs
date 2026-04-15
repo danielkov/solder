@@ -79,7 +79,7 @@ impl IntoResponse for GetGenerationError {
 /// # Example
 ///
 /// ```rust
-/// use open_router_api::shared::RequestContext;
+/// use open_router_api::shared::{RequestContext, ApiKey};
 /// use open_router_api::services::generations::{
 ///     Generations,
 ///     GetGenerationResult,

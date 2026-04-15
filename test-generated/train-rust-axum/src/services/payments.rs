@@ -60,7 +60,7 @@ impl IntoResponse for CreateBookingPaymentError {
 /// # Example
 ///
 /// ```rust
-/// use train_travel_api::shared::RequestContext;
+/// use train_travel_api::shared::{RequestContext, Auth};
 /// use train_travel_api::services::payments::{
 ///     Payments,
 ///     CreateBookingPaymentResult,

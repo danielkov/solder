@@ -41,7 +41,7 @@ impl IntoResponse for GetMuseumHoursError {
 /// # Example
 ///
 /// ```rust
-/// use redocly_museum_api::shared::RequestContext;
+/// use redocly_museum_api::shared::{RequestContext, Auth};
 /// use redocly_museum_api::services::operations::{
 ///     Operations,
 ///     GetMuseumHoursResult,

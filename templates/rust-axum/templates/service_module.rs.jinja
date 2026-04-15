@@ -371,7 +371,7 @@ impl {{ op.name.pascal }}Request {
 /// # Example
 ///
 /// ```rust
-/// use {{ shared_doc_prefix }}::RequestContext;
+/// use {{ shared_doc_prefix }}::{RequestContext{% for auth in auth_imports %}, {{ auth }}{% endfor %}};
 /// use {{ package_name }}::services::{{ module_name }}::{
 ///     {{ trait_name }},
 {% for op_wrap in operations -%}
@@ -417,11 +417,19 @@ impl {{ op.name.pascal }}Request {
 {% if op.http.query.len() > 0 -%}
 ///         query: {{ op.name.pascal }}Query,
 {% endif -%}
+{% match op_wrap.request_content_type -%}
+{% when RequestContentType::Multipart -%}
+///         body: {{ package_name }}::services::{{ module_name }}::{{ op.name.pascal }}Request,
+{% when RequestContentType::OctetStream -%}
+///         body: bytes::Bytes,
+{% when RequestContentType::Json -%}
 {% if let Some(body) = op.http.body -%}
 {% if let Some(variant) = body.variants.first() -%}
-///         body: {{ package_name }}::types::{{ variant.ty.target }},
+///         body: {{ variant.ty.target|render_type_doc }},
 {% endif -%}
 {% endif -%}
+{% when RequestContentType::None -%}
+{% endmatch -%}
 ///     ) -> {{ op.name.pascal }}Result {
 ///         // Implement your business logic here
 {% if let Some(success) = op.success -%}

@@ -184,7 +184,7 @@ impl IntoResponse for UpdateProductInventoryError {
 /// # Example
 ///
 /// ```rust
-/// use multi_file_reference_api::shared::RequestContext;
+/// use multi_file_reference_api::shared::{RequestContext, Auth};
 /// use multi_file_reference_api::services::products::{
 ///     Products,
 ///     ListProductsResult,

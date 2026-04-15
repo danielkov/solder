@@ -118,7 +118,7 @@ impl IntoResponse for ListEmbeddingsModelsError {
 /// # Example
 ///
 /// ```rust
-/// use open_router_api::shared::RequestContext;
+/// use open_router_api::shared::{RequestContext, ApiKey};
 /// use open_router_api::services::embeddings::{
 ///     Embeddings,
 ///     CreateEmbeddingsResult,

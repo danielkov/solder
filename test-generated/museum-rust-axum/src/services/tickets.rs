@@ -77,7 +77,7 @@ impl IntoResponse for GetTicketCodeError {
 /// # Example
 ///
 /// ```rust
-/// use redocly_museum_api::shared::RequestContext;
+/// use redocly_museum_api::shared::{RequestContext, Auth};
 /// use redocly_museum_api::services::tickets::{
 ///     Tickets,
 ///     BuyMuseumTicketsResult,

@@ -261,7 +261,7 @@ impl IntoResponse for GetPetPhotoError {
 /// # Example
 ///
 /// ```rust
-/// use pet_store_api::shared::RequestContext;
+/// use pet_store_api::shared::{RequestContext};
 /// use pet_store_api::services::pets::{
 ///     Pets,
 ///     ListPetsResult,

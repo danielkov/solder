@@ -54,7 +54,7 @@ impl IntoResponse for GetUserActivityError {
 /// # Example
 ///
 /// ```rust
-/// use open_router_api::shared::RequestContext;
+/// use open_router_api::shared::{RequestContext, ApiKey};
 /// use open_router_api::services::analytics::{
 ///     Analytics,
 ///     GetUserActivityResult,

@@ -17,6 +17,11 @@ pub struct RenderCtx {
     pub common_ident: Option<String>,
     /// Are we emitting into a multi-crate layout?
     pub multi_crate: bool,
+    /// Rust ident of the crate currently being rendered. Used to qualify
+    /// type references from *outside* the crate (e.g. doctests, which
+    /// compile as external consumers). Defaults to the root package ident
+    /// in single-crate mode.
+    pub self_crate: String,
 }
 
 impl RenderCtx {
@@ -60,6 +65,20 @@ impl RenderCtx {
             return format!("{}::{}", ident, name);
         }
         format!("crate::types::{}", name)
+    }
+
+    /// Qualify a named type for a doctest, which compiles as an external
+    /// consumer of the generated crate and therefore cannot use `crate::…`
+    /// paths. Resolves to the common crate for shared types and to the
+    /// service's own crate (`self_crate`) for per-bucket types.
+    pub fn qualify_for_doc(&self, target: &StableId, name: &str) -> String {
+        if self.multi_crate
+            && matches!(self.type_bucket.get(target), Some(crate::Bucket::Common))
+            && let Some(ident) = &self.common_ident
+        {
+            return format!("{}::{}", ident, name);
+        }
+        format!("{}::types::{}", self.self_crate, name)
     }
 }
 
@@ -106,24 +125,7 @@ mod filters {
     /// Uses CanonicalName to ensure consistent pascal case naming
     pub fn render_type(type_id: &StableId, values: &dyn askama::Values) -> askama::Result<String> {
         match type_id {
-            StableId::Primitive(p) => {
-                use ir::gen_ir::Primitive;
-                let rust_type = match p {
-                    Primitive::String => "String",
-                    Primitive::Bool => "bool",
-                    Primitive::I32 => "i32",
-                    Primitive::I64 => "i64",
-                    Primitive::F32 => "f32",
-                    Primitive::F64 => "f64",
-                    Primitive::Date => "jiff::civil::Date",
-                    Primitive::DateTime => "jiff::Timestamp",
-                    Primitive::Uuid => "uuid::Uuid",
-                    Primitive::Bytes => "bytes::Bytes",
-                    Primitive::Decimal => "rust_decimal::Decimal",
-                    Primitive::Any => "serde_json::Value",
-                };
-                Ok(rust_type.to_string())
-            }
+            StableId::Primitive(p) => Ok(render_primitive(p).to_string()),
             StableId::Named(name) => {
                 // Use CanonicalName to get proper pascal case (handles acronyms like FAQItem -> FaqItem)
                 let pascal = CanonicalName::from_string(name).pascal;
@@ -134,6 +136,45 @@ mod filters {
                 }
                 Ok(format!("crate::types::{}", pascal))
             }
+        }
+    }
+
+    /// Render a type reference for use inside a doctest, where `crate::…`
+    /// paths do not resolve because rustdoc compiles the example as an
+    /// external consumer. Named types are qualified with their owning crate;
+    /// the self-crate ident is read from the `RenderCtx`.
+    pub fn render_type_doc(
+        type_id: &StableId,
+        values: &dyn askama::Values,
+    ) -> askama::Result<String> {
+        match type_id {
+            StableId::Primitive(p) => Ok(render_primitive(p).to_string()),
+            StableId::Named(name) => {
+                let pascal = CanonicalName::from_string(name).pascal;
+                let ctx = askama::get_value::<super::RenderCtx>(values, "render_ctx")
+                    .map_err(|_| askama::Error::Custom(
+                        "render_type_doc requires a RenderCtx askama value".into(),
+                    ))?;
+                Ok(ctx.qualify_for_doc(type_id, &pascal))
+            }
+        }
+    }
+
+    fn render_primitive(p: &ir::gen_ir::Primitive) -> &'static str {
+        use ir::gen_ir::Primitive;
+        match p {
+            Primitive::String => "String",
+            Primitive::Bool => "bool",
+            Primitive::I32 => "i32",
+            Primitive::I64 => "i64",
+            Primitive::F32 => "f32",
+            Primitive::F64 => "f64",
+            Primitive::Date => "jiff::civil::Date",
+            Primitive::DateTime => "jiff::Timestamp",
+            Primitive::Uuid => "uuid::Uuid",
+            Primitive::Bytes => "bytes::Bytes",
+            Primitive::Decimal => "rust_decimal::Decimal",
+            Primitive::Any => "serde_json::Value",
         }
     }
 

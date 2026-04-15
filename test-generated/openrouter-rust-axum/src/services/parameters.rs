@@ -47,7 +47,7 @@ impl IntoResponse for GetParametersError {
 /// # Example
 ///
 /// ```rust
-/// use open_router_api::shared::RequestContext;
+/// use open_router_api::shared::{RequestContext, Bearer};
 /// use open_router_api::services::parameters::{
 ///     Parameters,
 ///     GetParametersResult,

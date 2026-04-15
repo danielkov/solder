@@ -10799,7 +10799,7 @@ impl PostFilesRequest {
 /// # Example
 ///
 /// ```rust
-/// use stripe_api::shared::RequestContext;
+/// use stripe_api::shared::{RequestContext, Auth};
 /// use stripe_api::services::default::{
 ///     Default,
 ///     GetAccountResult,

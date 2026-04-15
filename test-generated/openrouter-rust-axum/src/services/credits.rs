@@ -85,7 +85,7 @@ impl IntoResponse for CreateCoinbaseChargeError {
 /// # Example
 ///
 /// ```rust
-/// use open_router_api::shared::RequestContext;
+/// use open_router_api::shared::{RequestContext, ApiKey, Bearer};
 /// use open_router_api::services::credits::{
 ///     Credits,
 ///     GetCreditsResult,
